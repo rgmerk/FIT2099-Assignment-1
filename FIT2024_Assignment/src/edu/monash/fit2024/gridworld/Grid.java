@@ -44,7 +44,7 @@ public abstract class Grid<T extends Location> extends LocationContainer<T> {
 		
 		private int angle;
 
-		/**
+		/* (non-Javadoc)
 		 * Constructor of a CompassBearing
 		 * @param angle : the angle of the bearing in degrees (Between 0 and 360, measured in degrees)
 		 */
