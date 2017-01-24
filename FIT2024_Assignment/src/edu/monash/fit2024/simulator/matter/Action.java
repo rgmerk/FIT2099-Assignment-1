@@ -27,12 +27,35 @@ import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
  * 2013-03-12: Added wildcard template to Actor parameter in execute() to pacify the IDE (ram)
  * 	Documented all the methods to pacify my own sense of the tidy (ram)
  * 2013-04-08: Added ActionInterface so that client code can have Affordances that implement it (ram)
+ * 2017-01-24: Added delay and cooldown attributes to schedule actions with durations
  */
 
 
 public abstract class Action implements ActionInterface {
 	protected MessageRenderer messageRenderer;
 	
+	//attributes to manage delay(wait time before action) and cooldown (wait time after action) for actions
+	//the total wait time for an event would be delay + cooldown
+	private int delay;
+	private int cooldown;
+	
+	//getters and setters for cool down and delay
+	public int getDelay() {
+		return delay;
+	}
+
+	public void setDelay(int delay) {
+		this.delay = delay;
+	}
+
+	public int getCooldown() {
+		return cooldown;
+	}
+
+	public void setCooldown(int cooldown) {
+		this.cooldown = cooldown;
+	}
+
 	/* (non-Javadoc)
 	 * @see edu.monash.fit2024.simulator.ActionInterface#getDuration()
 	 */
@@ -51,7 +74,7 @@ public abstract class Action implements ActionInterface {
 	@Override
 	public abstract String getDescription();
 	
-	/**
+	/* (non-Javadoc)
 	 * <p>The default constructor is private to prevent instantiation of an Action without a MessageRenderer.</p>
 	 * 
 	 */
