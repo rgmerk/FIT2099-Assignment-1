@@ -19,9 +19,11 @@ package edu.monash.fit2024.simulator.time;
 
 import java.util.PriorityQueue;
 
+import edu.monash.fit2024.simulator.matter.Action;
 import edu.monash.fit2024.simulator.matter.ActionInterface;
 import edu.monash.fit2024.simulator.matter.Actor;
 import edu.monash.fit2024.simulator.space.World;
+import hobbit.HobbitActor;
 
 public class Scheduler {
 	
@@ -89,22 +91,28 @@ public class Scheduler {
 	 * @param duration : of the event (how long it takes for the event to complete)
 	 */
 	public void schedule(ActionInterface c, Actor<?> a, int duration) {
+				
+		int delay = 0;
+		int cooldown = 0;
 		
-		//Need clarification on this
-		//this would add an event to the priority queue
-		//would work fine if the event duration is 1
-		//what is the duration is more than 5 and we want the event to happen for 5 consecutive time steps
-		//should we have a loop to add the events?
-		events.offer(new Event(c, a, now + duration));
-		
-		/*
-		 * Possible fix
-		 * 
-		 *
-		for (int currTime = 1; currTime < duration + 1; currTime++){
-			events.offer(new Event(c, a, now + currTime));
+		if (a instanceof Actor){
+			if(c instanceof Action){
+				delay = ((Action) c).getDelay();
+				cooldown = ((Action) c).getCooldown();
+				int waittime = delay + cooldown;
+				a.setWaittime(waittime);//set actor's wait time
+				
+				//add event to queue of events. Note for the actor the event will be scheduled to happen after the delay from now
+				events.offer(new Event(c, a, now + delay));
+			}
 		}
-		*/
+		else{//Non actors or null
+			//add event to queue of events. The event will happen after the duration from now
+			events.offer(new Event(c, a, now + duration));
+		}
+		
+		
+		
 	}
 	
 	/** Allow time to pass.  Process any events that are scheduled to go off between now and the next time tick.
@@ -126,6 +134,8 @@ public class Scheduler {
 			
 			//execute that event
 			e.getAction().execute(e.getActor());
+			
+			
 		}
 		//update the present time after the tick has happened
 		now = now + ticksize;
@@ -147,6 +157,7 @@ public class Scheduler {
 		events = new PriorityQueue<Event>();
 		this.ticksize = ticksize;
 	}
+	
 	
 	
 }
