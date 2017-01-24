@@ -17,13 +17,16 @@ import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
 
 public class Attack extends HobbitAffordance implements HobbitActionInterface {
 
+	
 	/**
+	 *
 	 * Constructor for the Attack class
 	 * @param theTarget the target being attacked
 	 * @param m message renderer to display messages
 	 */
 	public Attack(HobbitEntityInterface theTarget, MessageRenderer m) {
 		super(theTarget, m);
+		
 	}
 
 
@@ -103,10 +106,22 @@ public class Attack extends HobbitAffordance implements HobbitActionInterface {
 				a.takeDamage(2*energyForAttackWithWeapon); // actor uses energy. It's twice as tiring as using a weapon
 			} // if carrying something
 			if (a.isDead()) {//the actor who attacked is dead after the attack
+			
 				a.setLongDescription(a.getLongDescription() + ", that died of exhaustion while attacking someone");
+				
+				//remove the attack affordance of the dead actor so it can no longer be attacked
+				a.removeAffordance(this);
+				
+				
 			}
 			if (this.getTarget().getHitpoints() <= 0) {  // can't use isDead(), as we don't know that the target is an actor
 				target.setLongDescription(target.getLongDescription() + ", that was killed in a fight");
+				
+			
+				//remove the attack affordance of the dead actor so it can no longer be attacked
+				targetActor.removeAffordance(this);
+
+				
 			}
 		} // not game player and different teams
 		if (targetIsActor && (a.getTeam() == targetActor.getTeam())) {
