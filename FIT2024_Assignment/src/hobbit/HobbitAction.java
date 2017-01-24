@@ -34,11 +34,16 @@ public abstract class HobbitAction extends Action implements HobbitActionInterfa
 	}
 	
 	/**
-	 * Execute the action by the actor. If the Actor is not a HobbitActor or is null this method does nothing
+	 * Execute the action by the actor. If the Actor is not a HobbitActor, is dead or is null this method does nothing
+	 * 
+	 * TODO A cleaner way to make sure dead actors don't act would be to remove the event of the dead actor from the scheduled events
 	 */
 	public void execute(Actor<?> a) {
-		if (a instanceof HobbitActor)
-			act((HobbitActor) a);
+		if (a instanceof HobbitActor){//if the Actor is a HobbitActor
+			if (!((HobbitActor) a).isDead()){//not dead
+				act((HobbitActor) a);
+			}
+		}
 	}
 
 	public abstract void act(HobbitActor a);
