@@ -18,7 +18,7 @@ import hobbit.actions.Move;
 
 import java.util.HashSet;
 
-
+import edu.monash.fit2024.gridworld.Grid;
 import edu.monash.fit2024.gridworld.Grid.CompassBearing;
 import edu.monash.fit2024.simulator.matter.Actor;
 import edu.monash.fit2024.simulator.space.Location;
@@ -134,10 +134,11 @@ public abstract class HobbitActor extends Actor<HobbitAction> implements HobbitE
 	
 	/**
 	 * Setter for the symbol of the Actor
-	 *<p>Single character strings are preferred over multi character strings to avoid confusion in the text interface
-	 * Try avoiding "." as an empty space is represented on the text interface using the ".", hence your Actor might not be visible 
-	 * 	and be mistaken for an empty space
-	 * These constraints are however for the current Text interface and would not have to be followed for a GUI for example</p>
+	 *<p>Single character strings are preferred over multi character strings to avoid confusion in the text interface</p>
+	 *
+	 *<p>Try avoiding "." as an empty space is represented on the text interface using the ".", hence your Actor might not be visible 
+	 * 	and be mistaken for an empty space </p>
+	 * <p>These constraints are however for the current Text interface and would not have to be followed for a GUI for example</p>
 	 * 
 	 * TODO : assertions for a single character and .?
 	 * 
@@ -145,6 +146,7 @@ public abstract class HobbitActor extends Actor<HobbitAction> implements HobbitE
 	 *
 	 */
 	public void setSymbol(String s) {
+		assert (!s.matches(".") && (s.length()==1)):"Symbol should be a single charater and not a '.'";
 		symbol = s;
 	}
 	
@@ -200,6 +202,9 @@ public abstract class HobbitActor extends Actor<HobbitAction> implements HobbitE
 	}
 
 
+	/**
+	 * Action to be performed when the actor is alive
+	 */
 	public abstract void act();
 	
 	/**
@@ -208,7 +213,10 @@ public abstract class HobbitActor extends Actor<HobbitAction> implements HobbitE
 	 * @param the actor's current location
 	 * @author ram
 	 */
-	public void tick(Location l) {
+	/*public void tick(Location l) {
 		act();
 	}
+	*/
+	
+	
 }
