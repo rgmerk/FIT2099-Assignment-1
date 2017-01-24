@@ -41,16 +41,16 @@ public class Player extends HobbitActor {
 	 * @param l the Location of the player (not actually used)
 	 * @author ram
 	 */
-	public void tick(Location l) {
-		describeScene();
-		scheduler.schedule(TextInterface.getUserDecision(this), this, 1);
-	}
+	//public void tick(Location l) {}
 
 	@Override
 	/**
 	 * Does nothing -- the user selects what this Player does.
 	 */
 	public void act() {
+	
+		describeScene();
+		scheduler.schedule(TextInterface.getUserDecision(this), this, 1);
 		
 	}
 	/**
