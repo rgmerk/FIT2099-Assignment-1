@@ -1,4 +1,4 @@
-/**
+/*
  * Change log 
  * 2017-01-20:	Paragraph tags to the java doc (asel)
  */
