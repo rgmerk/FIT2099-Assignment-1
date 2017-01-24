@@ -25,66 +25,114 @@ package edu.monash.fit2024.simulator.matter;
 import java.util.ArrayList;
 import java.util.Set;
 
+import edu.monash.fit2024.simulator.space.Location;
 import edu.monash.fit2024.simulator.time.Scheduler;
 import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
 
 public abstract class Actor<T extends ActionInterface> extends Entity {
 
 
-protected static Scheduler s;
-protected Set<T> actions;
+	protected static Scheduler s;
+	protected Set<T> actions;
+	private int waittime;
+	
+	/**
+	 * <p>Register a new Action as part of this actor's command set.  This does nothing if the Action
+	 * is already registered, although note that it is possible to add two identically-constructed Actions
+	 * to the command set if they are not the same object, i.e. the comparison is done with == rather than
+	 * isEqual.</p>
+	 * 
+	 *
+	 * @param a the Action to add
+	 */
+	/*
+	FYI 	
+	== is a reference comparison that checks if the two object point to the same memory location
+	isEquals checks the values of the objects
+	Source "http://stackoverflow.com/questions/7520432/what-is-the-difference-between-vs-equals-in-java"
+	*/
+	public void addAction(T a) {
+		actions.add(a);
+	}
+	
+	
+	/**
+	 * Remove an Action from this actor's set of potential commands.  This does nothing if the
+	 * Action was not in that set.
+	 * 
+	 * @param a the Action to remove
+	 */
+	public void removeAction(T a) {
+		actions.remove(a);
+	}
+	
+	/**
+	 * The default constructor in the parent class (Entity) is private, so we have to pass the
+	 * super constructor a parameter.
+	 * 
+	 * @param m a MessageRenderer that will allow the Actor to communicate
+	 */
+	public Actor(MessageRenderer m) {
+		super(m);
+		waittime =0;
+	}
+	
+	/**
+	 * <p>Returns an ArrayList containing references to all the Actions this actor can currently
+	 * perform.  Does not include Affordances in objects in the same location; ask the EntityManager
+	 * about those.</p>
+	 * 
+	 * @return an ArrayList containing this Actor's Actions
+	 */
+	public ArrayList<T> getActions() {
+		ArrayList<T> newActions = new ArrayList<T>();
+		for (T action: actions)
+			newActions.add(action);
+		return newActions;
+	}
+	
+	
+	public abstract void act();
+	
+	/*
+	public void tick(){
+		if (waittime >0){
+			waittime --;
+			System.out.println("TEST COMMENT : Actor is waiting...");
+		}
+		else{
+			System.out.println("TEST COMMENT : Actor is acting...");
+			act();
+		}
+	}
+	*/
+	/**
+	 * Tick method for the actor. Allows the actor to act if it's not waiting
+	 * 
+	 * @param l is the current location of the actor.
+	 */
+	public void tick(Location l) {
+		
+		if (waittime >0){//waiting since the wait time is greater than zero
+			waittime --;
+			this.setWaittime(waittime); //update the new waiting time
+		}
+		else{
+			//perform action if not waiting
+			act();
+		}
+	}
+	
+	//setter and getter for wait time
+	public void setWaittime(int waittime){
+		this.waittime = waittime;
+	}
 
-/**
- * <p>Register a new Action as part of this actor's command set.  This does nothing if the Action
- * is already registered, although note that it is possible to add two identically-constructed Actions
- * to the command set if they are not the same object, i.e. the comparison is done with == rather than
- * isEqual.</p>
- * 
- *
- * @param a the Action to add
- */
-// FYI 	
-//== is a reference comparison that checks if the two object point to the same memory location
-//isEquals checks the values of the objects
-//Source "http://stackoverflow.com/questions/7520432/what-is-the-difference-between-vs-equals-in-java"
 
-public void addAction(T a) {
-	actions.add(a);
-}
+	public int getWaittime() {
+		return waittime;
+	}
+	
 
-
-/**
- * Remove an Action from this actor's set of potential commands.  This does nothing if the
- * Action was not in that set.
- * 
- * @param a the Action to remove
- */
-public void removeAction(T a) {
-	actions.remove(a);
-}
-
-/**
- * The default constructor in the parent class (Entity) is private, so we have to pass the
- * super constructor a parameter.
- * 
- * @param m a MessageRenderer that will allow the Actor to communicate
- */
-public Actor(MessageRenderer m) {
-	super(m);
-}
-
-/**
- * <p>Returns an ArrayList containing references to all the Actions this actor can currently
- * perform.  Does not include Affordances in objects in the same location; ask the EntityManager
- * about those.</p>
- * 
- * @return an ArrayList containing this Actor's Actions
- */
-public ArrayList<T> getActions() {
-	ArrayList<T> newActions = new ArrayList<T>();
-	for (T action: actions)
-		newActions.add(action);
-	return newActions;
-}
 }
 
