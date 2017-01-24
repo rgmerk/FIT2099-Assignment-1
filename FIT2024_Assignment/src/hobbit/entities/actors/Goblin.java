@@ -39,6 +39,8 @@ public class Goblin extends HobbitActor {
 	 * @param a this(The Goblin itself)
 	 */
 	public void act() {
+		
+			
 		// Did I hit something?  If so, bear right.
 		Grid.CompassBearing oldDirection = myDirection;
 		
@@ -52,13 +54,19 @@ public class Goblin extends HobbitActor {
 		}
 		
 		if (myDirection != oldDirection)	// we turned
-			System.out.println(this.getShortDescription() + " decides to go " + myDirection + " next.");
-		//would it be better if we handle this message using the message renderer itself? (asel)
+			messageRenderer.render(this.getShortDescription() + " decides to go " + myDirection + " next.");
 		
 		// I can see an exit.
 		Move myMove = new Move(myDirection, messageRenderer, world);
+		
+		
+		//TESTING DELAY
+		myMove.setDelay(10);
+		//myMove.setCooldown(2);
+		
 		//schedule the move (myMove) for the Goblin (this) and is to take a duration of 1 (1)
 		scheduler.schedule(myMove, this, 1);
+		
 	}
 
 }
