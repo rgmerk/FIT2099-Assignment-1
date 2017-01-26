@@ -67,14 +67,8 @@ public abstract class Grid<T extends Location> extends LocationContainer<T> {
 			//turn 180 degrees and round to an angle between 0 and 360
 			int newAngle = (cb.angle + 180) % 360;
 			
-			
-			//check if the bearing dir is one of the 8 bearings (NORTH,NORTHEAST,SOUTHEAST,SOUTH,SOUTHWEST...) 
-			for (CompassBearing dir: values()) {
-				if (dir.angle == newAngle)
-					return dir;
-			}
-			// this should be impossible as the direction should be one of the 8 directions mentioned above 
-			throw new IllegalArgumentException();
+			//return the compass bearing of the angle
+			return compassBearingOfAngle(newAngle);
 		}
 		
 		/**
@@ -86,15 +80,9 @@ public abstract class Grid<T extends Location> extends LocationContainer<T> {
 			// round to closest multiple of 45
 			int newAngle = (((angle + this.angle)/45) * 45) % 360;
 			
-			//similar to the opposite method
-			//check if the bearing dir is one of the 8 bearings (NORTH,NORTHEAST,SOUTHEAST,SOUTH,SOUTHWEST...)
-			for (CompassBearing dir: values()) {
-				if (dir.angle == newAngle)
-					return dir;
-			}
+			//return the compass bearing of the angle
+			return compassBearingOfAngle(newAngle);
 			
-			// this should be impossible as the bearing should be one of the 8 bearings mentioned above 
-			throw new IllegalArgumentException();
 		}
 		
 		/**
@@ -104,7 +92,28 @@ public abstract class Grid<T extends Location> extends LocationContainer<T> {
 		public static CompassBearing getRandomBearing() {
 			return values()[(int)(Math.random() * values().length)];
 		}
+		
+		/**
+		 * Gets the corresponding bearing of the the angle given
+		 * 
+		 * @param angle an angle for which the bearing needs to be found. Measured in degrees hence a value between 0 and 360 is expected
+		 * @return the corresponding compass bearing of the angle
+		 * @throws IllegalArgumentException if the angle passed doesn't correspond to a bearing
+		 */
+		private static CompassBearing compassBearingOfAngle(int angle){
+			
+			//go through all the bearings values
+			for (CompassBearing dir: values()) {
+				if (dir.angle == angle) //return the bearing if angle is the same as the bearing angle
+					return dir;
+			}
+			
+			//this should be impossible since the angle should correspond to a bearing
+			throw new IllegalArgumentException();
+		}
 	}
+	
+	
 
 	protected int height;
 	protected int width;
