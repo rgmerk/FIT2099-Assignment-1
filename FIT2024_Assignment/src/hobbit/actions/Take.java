@@ -19,30 +19,42 @@ public class Take extends HobbitAffordance {
 
 	@Override
 	/**
-	 * This always returns true -- we assume anything that's got a Take affordance can be picked up
-	 * by any HobbitActor.
+	 * asel - The HobbitActor can only take an item if it's not carrying an item already
 	 * 
 	 * @author ram
+	 * @modified 26/01/2017 by asel
 	 * @param a the HobbitActor we are querying
-	 * @return true
+	 * @return true if the HobbitActor can take the item (in other words, it's not carrying another item), false otherwise
 	 */
 	public boolean canDo(HobbitActor a) {
-		return true;
+		//can only take if the actor is not carrying any items
+		return a.getItemCarried()==null;
+		//return true;
 	}
 
 	@Override
 	/**
 	 * Perform the take action by setting the item carried by the Hobbit Actor to the target
-	 * 
+	 * <p>
 	 * The Hobbit Actor a's item carried would be the target of this Affordance (Take)
+	 * <p>
+	 * This method would add a Leave action to the HobbitActor and remove the take affordance from the target -Asel
 	 * 
 	 * @author ram
+	 * @modified 26/01/2017 by asel
 	 * @param a the HobbitActor that is taking the target
 	 */
 	public void act(HobbitActor a) {
 		if (target instanceof HobbitEntityInterface) {
 			a.setItemCarried((HobbitEntityInterface)target);
-			HobbitAction.getEntitymanager().remove(target);//remove the target from the entity manager since it's now held by the Hobbit Asctor
+			HobbitAction.getEntitymanager().remove(target);//remove the target from the entity manager since it's now held by the HobbitActor
+			
+			//remove the take affordance
+			target.removeAffordance(this);
+			
+			//add a leave action for the HobbitActor so that they could leave the weapon
+			a.addAction(new Leave(messageRenderer));
+			
 		}
 	}
 
