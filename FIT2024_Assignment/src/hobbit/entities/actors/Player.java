@@ -7,6 +7,7 @@
 package hobbit.entities.actors;
 
 
+import hobbit.GUInterface;
 import hobbit.HobbitActor;
 import hobbit.HobbitEntityInterface;
 import hobbit.HobbitLocation;
@@ -50,7 +51,8 @@ public class Player extends HobbitActor {
 	public void act() {
 	
 		describeScene();
-		scheduler.schedule(TextInterface.getUserDecision(this), this, 1);
+		//scheduler.schedule(TextInterface.getUserDecision(this), this, 1);
+		scheduler.schedule(GUInterface.getUserDecision(this), this, 1);
 		
 	}
 	/**
