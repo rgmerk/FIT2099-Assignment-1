@@ -1,7 +1,11 @@
 /**
- * Driver class for the Hobbit package.  Contains nothing but a main().
+ * Driver class for the Hobbit package with Text Interface.  Contains nothing but a main().
  * 
  * @author ram
+ */
+/*
+ * Change log
+ * 2017/02/02	The TextInterface handles the responsibly of displaying the grid not the HobbitGrid or HobbitWorld classes (asel)
  */
 package hobbit;
 
@@ -11,7 +15,8 @@ public class Application {
 	public static void main(String args[]) {
 		
 		MiddleEarth world = new MiddleEarth();
-		TextInterface ui = new TextInterface(world);
+		//TextInterface ui = new TextInterface(world);
+		GUInterface ui= new GUInterface(world);
 		Scheduler theScheduler = new Scheduler(1, world);
 		HobbitActor.setScheduler(theScheduler);
 		
@@ -21,12 +26,13 @@ public class Application {
 		// set up the world
 		world.initializeWorld(ui);
 	
-		
 		// kick off the scheduler
 		while(true) {
-			world.displayGrid();
+			ui.render();
 			theScheduler.tick();
 		}
+		
+		
 	}
 	
 	
