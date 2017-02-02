@@ -5,7 +5,8 @@
  */
 /*
  * Change log
- * 2017-01-21: Extensions to the Javadoc and added comments (asel)
+ * 2017-02-02:  Render method was removed from Middle Earth
+ * 				Displaying the Grid is now handled by the TextInterface rather than by the Grid or MiddleWorld classes (asel)
  */
 package hobbit;
 
@@ -173,17 +174,9 @@ public class MiddleEarth extends World {
 
 	}
 
-	/**
-	 * Display the grid (The Hobbit locations)
-	 * 
-	 * This is a wrapper for Grid.render().
-	 * 
-	 * @author ram
+	/*
+	 * Render method was removed from here
 	 */
-	public void displayGrid() {
-		myGrid.render(entityManager);
-	}
-
 	
 	/**
 	 * Determine whether a given actor can move in a given direction.
