@@ -4,27 +4,41 @@
  * At some stage we might want to replace this UI with a GUI.
  * 
  * @author ram
+ * @author Asel
  */
 /*
  * Change log
- * 2017-01-21: Extensions to the Javadoc and added comments (asel)
+ * 2017-02-02: Displaying the map/grid is now a responsibility of the TextInterface and not of Grid or MiddleWorld (asel)
  */
 package hobbit;
 
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Scanner;
 
+import edu.monash.fit2024.simulator.matter.EntityManager;
 import edu.monash.fit2024.simulator.userInterface.MapRenderer;
 import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
 import edu.monash.fit2024.simulator.userInterface.SimulationController;
 
 public class TextInterface implements MessageRenderer, MapRenderer, SimulationController {
+	
+	/** Hobbit grid of the world*/
 	private HobbitGrid grid;
+	
+	/** The number of items to be displayed per location including the location label and colon ':'*/
+	private static int locationWidth = 8;
 
 	/**
-	 * Constructor.
+	 * Constructor for the Text Interface
+	 * <p>
+	 * This text interface can be used to display messages, grid and obtain user input in the Text Console
+	 * 
+	 * @author 	ram
+	 * @param 	world The world being considered by the Text Interface
+	 * @pre 	world should not be null
 	 */
 	public TextInterface(MiddleEarth world) {
 		grid = world.getGrid();
@@ -50,12 +64,13 @@ public class TextInterface implements MessageRenderer, MapRenderer, SimulationCo
 
 	@Override
 	/**
-	 * Render the grid.  Part of the MapRenderer interface.
+	 * Render the grid and display it in the Text Interface
 	 * 
 	 * @author ram
+	 * @author Asel
 	 */
 	public void render() {
-		grid.render(MiddleEarth.getEntitymanager());
+		displayTextGrid(grid);	
 	}
 
 	@Override
@@ -70,6 +85,70 @@ public class TextInterface implements MessageRenderer, MapRenderer, SimulationCo
 
 	}
 
+	/**
+	 * Displays the Hobbit Grid using a System.out.println()
+	 * <p>
+	 * This method prints the entire Hobbit Grid as a text output. 
+	 * Each location will be separated out with vertical seperators '|' and will contain the symbols 
+	 * of the locations contents
+	 * 
+	 * @author 	Asel
+	 * @param 	hobbitGrid the HobbitGrid to be displayed
+	 * @pre 	hobbitGrid should not be null
+	 * @post 	prints the Grid (a matrix of locations with there contents) on the console as text
+	 * 
+	 */
+	private void displayTextGrid(HobbitGrid hobbitGrid){
+		
+		String buffer = "";
+		final int gridHeight = hobbitGrid.getHeight();
+		final int gridWidth  = hobbitGrid.getWidth();
+		
+		EntityManager<HobbitEntityInterface, HobbitLocation> em = MiddleEarth.getEntitymanager();
+		
+	
+		for (int row = 0; row< gridHeight; row++){ //for each row
+			for (int col = 0; col< gridWidth; col++){ //each column of a row
+				
+				//current location
+				HobbitLocation loc = grid.getLocationByCoordinates(col, row);
+				
+				StringBuffer emptyBuffer = new StringBuffer();
+				char es = loc.getEmptySymbol(); 
+				
+				for (int i = 0; i < locationWidth - 3; i++) { 	//add empty symbol character to the buffer
+					emptyBuffer.append(es);						//adding 2 less here because one space is reserved for the location symbol
+				}									  			//and one more for the colon : used to separate the location symbol and the symbol(s) of the contents of that location
+					
+				//new buffer buf with a vertical line separator | + symbol of the location + :
+				StringBuffer buf = new StringBuffer("|" + loc.getSymbol() + ":"); 
+				
+				//get the Contents of the location
+				List<HobbitEntityInterface> contents = em.contents(loc);
+				
+				
+				if (contents == null || contents.isEmpty())
+					buf.append(emptyBuffer);//add empty buffer to buf to complete the string buffer
+				else {
+					for (HobbitEntityInterface e: contents) { //add the symbols of the contents
+						buf.append(e.getSymbol());
+					}
+				}
+				buf.append(emptyBuffer); //add the empty buffer again since the symbols of the contents that were added might not actually fill the location upto locationWidth
+				
+				buf.setLength(locationWidth+1);//set the length of buf to the required locationWidth
+				
+				buf.append("| ");//add the vertical line seperator to mark the end of that location
+				
+				buffer += buf; //add the buffer (buf) created for the location to the buffer (the buffer that will eventually be printed)
+				
+			}
+			buffer += "\n"; //new row
+		}
+		
+		System.out.println(buffer); //print the grid on the screen
+	}
+	
 	/**
 	 * Display a menu and receive user input.
 	 * 
