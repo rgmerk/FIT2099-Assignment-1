@@ -10,18 +10,22 @@
 package hobbit;
 
 import edu.monash.fit2024.simulator.time.Scheduler;
+import userinterfaces.GUInterface;
+import userinterfaces.SimpleGUInterface;
+import userinterfaces.TextInterface;
 
 public class Application {
 	public static void main(String args[]) {
 		
 		MiddleEarth world = new MiddleEarth();
 		//TextInterface ui = new TextInterface(world);
+		//SimpleGUInterface ui= new SimpleGUInterface(world);
 		GUInterface ui= new GUInterface(world);
 		Scheduler theScheduler = new Scheduler(1, world);
 		HobbitActor.setScheduler(theScheduler);
 		
 		// say hello
-		TextInterface.showBanner();
+		//TextInterface.showBanner();
 		
 		// set up the world
 		world.initializeWorld(ui);
