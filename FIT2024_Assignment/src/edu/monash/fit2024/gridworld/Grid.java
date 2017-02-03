@@ -20,6 +20,8 @@ package edu.monash.fit2024.gridworld;
  * 
  * 2017-01-20: 	Added comments to methods for better understanding (asel)
  * 				All such comments end with (asel)
+ * 
+ * 2017-02-03:	Added a getter method for the angle since it's required by the GUI to show move buttons in their corresponding directions
  */
 
 import java.util.ArrayList;
@@ -42,7 +44,16 @@ public abstract class Grid<T extends Location> extends LocationContainer<T> {
 		WEST(270),
 		NORTHWEST(315);
 		
+		/**Angle of the bearing. Measure in degrees in the clockwise direction starting North(0)*/
 		private int angle;
+
+		/**
+		 * @author Asel
+		 * @return @see {@link #angle}
+		 */
+		public int getAngle() {
+			return angle;
+		}
 
 		/* (non-Javadoc)
 		 * Constructor of a CompassBearing
@@ -96,6 +107,7 @@ public abstract class Grid<T extends Location> extends LocationContainer<T> {
 		/**
 		 * Gets the corresponding bearing of the the angle given
 		 * 
+		 * @author Asel
 		 * @param angle an angle for which the bearing needs to be found. Measured in degrees hence a value between 0 and 360 is expected
 		 * @return the corresponding compass bearing of the angle
 		 * @throws IllegalArgumentException if the angle passed doesn't correspond to a bearing
