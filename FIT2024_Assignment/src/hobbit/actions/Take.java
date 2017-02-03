@@ -3,6 +3,12 @@
  * 
  * @author ram
  */
+/*
+ * Change log
+ * 2017/02/03	Actors are no longer given a leave action after taking an item
+ * 				Leave action was removed since students had to add this functionality
+ * 				canDo method changed to return true only if the actor is not carrying an item (asel)
+ */
 package hobbit.actions;
 
 import hobbit.HobbitAction;
@@ -29,7 +35,6 @@ public class Take extends HobbitAffordance {
 	public boolean canDo(HobbitActor a) {
 		//can only take if the actor is not carrying any items
 		return a.getItemCarried()==null;
-		//return true;
 	}
 
 	@Override
@@ -52,8 +57,6 @@ public class Take extends HobbitAffordance {
 			//remove the take affordance
 			target.removeAffordance(this);
 			
-			//add a leave action for the HobbitActor so that they could leave the weapon
-			a.addAction(new Leave(messageRenderer));
 			
 		}
 	}
