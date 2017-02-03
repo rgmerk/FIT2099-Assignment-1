@@ -3,6 +3,10 @@
  * 
  * @author ram
  */
+/*
+ * Change log
+ * 2017-02-03	Added a getter for whichDirection attribute (asel)
+ */
 package hobbit.actions;
 
 import hobbit.HobbitAction;
@@ -13,6 +17,7 @@ import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
 
 public class Move extends HobbitAction {
 
+	/**Direction in which the moveAction must be performed*/
 	Direction whichDirection;
 	MiddleEarth world;
 
@@ -101,6 +106,17 @@ public class Move extends HobbitAction {
 	public boolean canDo(HobbitActor a) {
 		return true;
 	}
+
+	/**
+	 * @author Asel
+	 * @return @see {@link #whichDirection}
+	 */
+	public Direction getWhichDirection() {
+		return whichDirection;
+	}
+
+	
+	
 
 
 }
