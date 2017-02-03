@@ -6,6 +6,10 @@
  * 
  * @author David.Squire@monash.edu (dsquire)
  */
+/*
+ * Change log
+ * 2017/02/03	Fixed the bug where the an actor could attack another actor in the same team (asel)
+ */
 package hobbit.actions;
 
 import hobbit.Capability;
@@ -81,7 +85,13 @@ public class Attack extends HobbitAffordance implements HobbitActionInterface {
 		if (targetIsActor) {
 			targetActor = (HobbitActor) target;
 		}
-		if (a.isHumanControlled() // a human-controlled player can attack anyone
+					
+		
+		if (targetIsActor && (a.getTeam() == targetActor.getTeam())) {
+			//don't attack HobbitActors in the same team
+			a.say("\t" + a.getShortDescription() + " says: Silly me! We're on the same team, " + target.getShortDescription() + ". No harm done");
+		}
+		else if (a.isHumanControlled() // a human-controlled player can attack anyone
 			|| (targetIsActor && (a.getTeam() != targetActor.getTeam())) // others will only attack actors on different teams
 				) { 
 			a.say(a.getShortDescription() + " is attacking " + target.getShortDescription() + "!");
@@ -124,8 +134,6 @@ public class Attack extends HobbitAffordance implements HobbitActionInterface {
 				
 			}
 		} // not game player and different teams
-		if (targetIsActor && (a.getTeam() == targetActor.getTeam())) {
-			a.say("\t" + a.getShortDescription() + " says: Silly me! We're on the same team, " + target.getShortDescription() + ". No harm done");
-		}
+		
 	}
 }
