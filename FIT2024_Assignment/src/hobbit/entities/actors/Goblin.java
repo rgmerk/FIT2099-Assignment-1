@@ -60,8 +60,8 @@ public class Goblin extends HobbitActor {
 		Move myMove = new Move(myDirection, messageRenderer, world);
 		
 		
-		//TESTING DELAY
-		myMove.setDelay(10);
+		//TESTING Delay and cool down
+		//myMove.setDelay(10);
 		//myMove.setCooldown(2);
 		
 		//schedule the move (myMove) for the Goblin (this) and is to take a duration of 1 (1)
