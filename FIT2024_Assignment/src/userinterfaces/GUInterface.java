@@ -13,6 +13,7 @@
  * 				for the panels (gridPanel and actionButtonPanel) (asel)
  * 				Added a message buffer string that allows all say messages of within a tick to be displayed at once (asel)
  * 				Added a separate panel for move commands that corresponds to the compass bearing
+ * 2017/02/04	Fixed the issue with the message renderer. It now prints all the messages from the message renderer (asel)
  * 				
  */
 package userinterfaces;
@@ -80,13 +81,13 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 	private static List<JButton> allCommandButtons = new ArrayList<>();
 	
 	/**String that contains all the messages from the message renderer within a tick. Formatted using HTML tags*/
-	private String messageBuffer = "";
+	private static String messageBuffer = "";
 	
 	/**defined order of angles required to sort the 8 directions
 	 * <p>
 	 * Defined order corresponds to NW, N, NE, W, E, SW, S, SE
 	 */
-	/* This order also corresponds to the order in which move actionButtons should appear
+	/* This order also corresponds to the order in which move actionButtons should appear in the 3 X 3 grid
 	 * The -1 entry corresponds to the empty space in the middle
 	 */
 	private static final List<Integer> definedOrder = Arrays.asList(315,0,45,270,-1,90,225,180,135);
@@ -96,12 +97,14 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 	 * Constructor for the Graphical User Interface
 	 * <p>
 	 * This GU interface can be used to display messages, grid and obtain user input in a JFrame window
+	 * <p>
+	 * This GUI displays action buttons that corresponding to Move actions and other actions separately 
 	 * 
 	 * @author 	Asel
-	 * @param 	world The world being considered by the Text Interface
-	 * @pre 	world should not be null
+	 * @param 	world The world being considered by the GUI
+	 * @pre 	<code>world</code> should not be null
 	 * @post	opens a full screen JFrame window with the map, messages and action buttons (if any)
-	 * @post	the action buttons for movement are seperate from the action buttons for non movement commands
+	 * @post	the action buttons for movement are separate from the action buttons for non movement commands
 	 */
 	public GUInterface(MiddleEarth world) {
 		grid = world.getGrid();
@@ -118,9 +121,7 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 	 * @see {@link #drawGrid()}
 	 */
 	public void render() {
-		clearMessageBuffer();//this method is called in each tick so the message buffer can be cleared
 		drawGrid();
-		
 	}
 
 	@Override
@@ -130,10 +131,6 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 	 * @author 	Asel
 	 * @param 	message the message string to be displayed on the GUI
 	 * @post	displays the <code>message</code> string on the label.
-	 * 
-	 * TODO	 	Label doesn't display all the messages. Need to be fixed
-	 * 			Specifically when an actor of the same team is attacked the other 
-	 * 			actor's "We are on the same team message" disappears too quickly
 	 */
 	public void render(String message) {
 		//HTML formatting used instead of \n, to achieve a multi line label
@@ -152,19 +149,19 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 	 * @author Asel
 	 * @see ({@link #messageBuffer}
 	 */
-	private void clearMessageBuffer(){
-		this.messageBuffer="";
+	private static void clearMessageBuffer(){
+		messageBuffer="";
 	}
 	
 	/**
 	 * Sets up the main layout to display grid and action panels
 	 * 
 	 * @author 	Asel
-	 * @post 	gridPanel takes up half the screen and the actionPanel takes up the rest
+	 * @post 	<code>gridPanel</code> takes up half the screen and the <code>actionPanel</code> takes up the rest
 	 */
  	private void drawLayout(){		
  		this.setLayout(new GridLayout(1,2));//Layout with 2 columns. One for the gridPanel and the other for the actionPanel
-		this.add(gridPanel); //add the grid	
+		this.add(gridPanel); //add the grid	to main layout
 
 		actionPanel.setLayout(new GridLayout(3, 1));//Layout with 3 rows. For lblMessages, moveActionPanel and otherActionPanel
 		actionPanel.add(lblMessages);
@@ -175,11 +172,11 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 	}
 	
 	/**
-	 * Draws the map as a matrix of none editable JTextFields on the gridPanel
+	 * Draws the map as a matrix of non editable JTextFields on the gridPanel
 	 * 
 	 * @author 	Asel
 	 * @post	a grid of JTextField created
-	 * @post	each text field is none editable
+	 * @post	each text field is non editable
 	 * @post	each text field contains a location string @see	{@link #getLocationString(HobbitLocation)}
 	 */
 	private void drawGrid(){
@@ -187,6 +184,7 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 		final int gridHeight = grid.getHeight();
 		final int gridWidth  = grid.getWidth();
 		
+		//font for pretty output
 		Font locFont = new Font("SansSerif", Font.BOLD, 15);
 		
 		gridPanel.removeAll();//clear previous grid
@@ -201,10 +199,13 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 				
 				//Each location has a non editable JTextField with the Text for each Location
 				JTextField txtLoc = new JTextField(locationText);
+				
+				//for pretty looks
 				txtLoc.setFont(locFont);		
 				txtLoc.setHorizontalAlignment(JTextField.CENTER);
+				
 				txtLoc.setEditable(false); //made non editable
-				txtLoc.setToolTipText(loc.getShortDescription());
+				txtLoc.setToolTipText(loc.getShortDescription());//show the location description when mouse hovered
 				
 				//add text field to gridPanel
 				gridPanel.add(txtLoc);
@@ -223,7 +224,7 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 	 * 
 	 * @author 	Asel
 	 * @param 	loc for which the string is required
-	 * @pre 	loc should not be a blank
+	 * @pre 	<code>loc</code> should not be a blank
 	 * @return 	a string in the format Location Symbol + : + Contents of location + any empty characters
 	 * @post	the string contains the symbols of the locations contents
 	 * @post	string length is equal to location width
@@ -259,19 +260,20 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 	}
 
 	/**
-	 * Display a the action buttons and receive user input.
+	 * Display the action buttons and receive user input.
 	 * 
 	 * @param a the HobbitActor to display options for
 	 * @return the HobbitActionInterface that the player has chosen to perform.
 	 */
 	public static HobbitActionInterface getUserDecision(HobbitActor a) {
-
+		clearMessageBuffer();//this method is called in each tick so the message buffer can be cleared
+		
 		//selection set to -1 to trigger wait for user input
 		selection = -1;
 		
 		ArrayList<HobbitActionInterface> cmds = new ArrayList<HobbitActionInterface>(); //all commands (move and non move)
 		ArrayList<HobbitActionInterface> moveCmds = new ArrayList<HobbitActionInterface>(); //all move commands
-		ArrayList<HobbitActionInterface> otherCmds = new ArrayList<HobbitActionInterface>(); //all other none move commands
+		ArrayList<HobbitActionInterface> otherCmds = new ArrayList<HobbitActionInterface>(); //all other non move commands
 
 		//get the Actions the HobbitActor can do
 		for (HobbitActionInterface ac : MiddleEarth.getEntitymanager().getActionsFor(a)) {
@@ -304,10 +306,7 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 		
 		allCommandButtons.clear();
 		
-		//add move buttons to layout
 		addMoveActionButtons(moveCmds);
-		
-		//add other buttons to layout
 		addOtherActionButtons(otherCmds);
 		
 		//wait for user input before returning
@@ -324,9 +323,9 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 	/**
 	 * Sort the Move Commands in a predefined order @see {@link #definedOrder}
 	 * 
-	 * @author Asel
-	 * @param moveCmds move commands to be sorted
-	 * @pre <code>moveCmds</code> should only contain <code>HobbitActionInterface</code> objects that are instances of <code>Move</code>
+	 * @author	Asel
+	 * @param 	moveCmds move commands to be sorted
+	 * @pre 	<code>moveCmds</code> should only contain <code>HobbitActionInterface</code> objects that are instances of <code>Move</code>
 	 */
 	private static void sortMoveCommands(ArrayList<HobbitActionInterface> moveCmds){
 		
@@ -366,14 +365,14 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 	/**
 	 * Add the non movement action buttons to the <code>otherActionPanel</code>
 	 * 
-	 * @author Asel
+	 * @author 	Asel
 	 * @param 	otherCmds a list of non movement commands
 	 * @post	all commands in <code>otherCmds</code> added to <code>otherActionPanel</code> as JButtons
 	 */
 	private static void addOtherActionButtons(ArrayList<HobbitActionInterface> otherCmds){
 	
 		otherActionPanel.removeAll(); //remove other action buttons from previous layout
-		otherActionPanel.setLayout(new GridLayout(otherCmds.size(), 1));//Grid to contain none movement commands
+		otherActionPanel.setLayout(new GridLayout(otherCmds.size(), 1));//Grid to contain non movement commands
 		
 		//add other buttons
 		for (HobbitActionInterface cmd : otherCmds) {
@@ -396,13 +395,12 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 	}
 
 	/**
-	 * Add the movement action buttons to the <code>moveActionPanel</code>
-	 * <p>
-	 * The position of the move action buttons correspond to the bearings
+	 * Add the movement action buttons to the <code>moveActionPanel</code> in a 3 X 3 Grid
 	 * 
 	 * @author 	Asel
 	 * @param 	moveCmds a list of move commands
-	 * @post	all commands in <code>moveCmds</code> added to <code>moveActionPanel</code> as JButtons at their corresponding position in the grid
+	 * @pre 	<code>moveCmds</code> must be sorted in the defined order. @see {@link #sortMoveCommands(ArrayList)}
+	 * @post	All commands in <code>moveCmds</code> are displayed with action buttons with their positions corresponding to the bearings
 	 */
 	private static void addMoveActionButtons(ArrayList<HobbitActionInterface> moveCmds){
 		
@@ -417,19 +415,17 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 			
 			if (moveCmdIndex < moveCmds.size()){ //if there are move commands in moveCmd that have not been added yet
 				
-				//get the move commands to process or rather the one that must be added
 				HobbitActionInterface currMoveCommand = moveCmds.get(moveCmdIndex);
 				
-				/*
-				 * in a higher level the program is trying to add the right move command at the right place in the 3 X 3 grid
-				 * for this it uses the angle and the linear order of these angles are defined in the list definedOrder
+				/* In a higher level the program is trying to add the currMoveCommand at the right 
+				 * position in a 3X3 grid so that it would corresponds to the bearing
 				 */
 				
 				if (currMoveCommand instanceof Move){ //this should always be true
 					Move move = (Move)currMoveCommand;
-					int moveAngle = ((CompassBearing)move.getWhichDirection()).getAngle(); //get the angle of the command that we are trying to add
+					int moveAngle = ((CompassBearing)move.getWhichDirection()).getAngle(); //get the angle of the move command that we are trying to add
 										
-					if (angle == moveAngle){ //if the angles match then place the button there
+					if (angle == moveAngle){ //if the angles match then we need to place a button
 						JButton actionButton = new JButton();
 						actionButton.setText(currMoveCommand.getDescription());
 			
@@ -446,8 +442,7 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 						//increment moveCmdIndex since the move command at moveCmdIndex has already being added as an action button
 						moveCmdIndex++;
 					}
-					else{//there is no move command for the place of the 3 X 3 grid 
-						//so just add a empty label
+					else{//couldnt find a move command with the same angle. So just add a empty label
 						JLabel emptyLabel = new JLabel("");
 						moveActionPanel.add(emptyLabel);
 					}

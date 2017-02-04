@@ -9,6 +9,7 @@
  * 2017/02/03	Fixed the issue where layout didn't display all elements by moving the repaint and validate methods 
  * 				for the panels (gridPanel and actionButtonPanel) (asel)
  * 				Added a message buffer string that allows all say messages of within a tick to be displayed at once (asel)
+ * 2017/02/04	Fixed the issue with the message renderer. It now prints all the messages from the message renderer (asel)
  */
 package userinterfaces;
 
@@ -72,7 +73,7 @@ public class SimpleGUInterface extends JFrame implements MessageRenderer, MapRen
 	private static List<JButton> actionButtons = new ArrayList<>();
 	
 	/**String that contains all the messages from the message renderer within a tick. Formatted using HTML tags*/
-	private String messageBuffer = "";
+	private static String messageBuffer = "";
 
 	
 	/**
@@ -81,8 +82,8 @@ public class SimpleGUInterface extends JFrame implements MessageRenderer, MapRen
 	 * This GU interface can be used to display messages, grid and obtain user input in a JFrame window
 	 * 
 	 * @author 	Asel
-	 * @param 	world The world being considered by the Text Interface
-	 * @pre 	world should not be null
+	 * @param 	world The world being considered by the GUI
+	 * @pre 	<code>world</code> should not be null
 	 * @post	opens a full screen JFrame window with the map, messages and action buttons (if any)
 	 */
 	public SimpleGUInterface(MiddleEarth world) {
@@ -100,10 +101,7 @@ public class SimpleGUInterface extends JFrame implements MessageRenderer, MapRen
 	 * @see {@link #drawGrid()}
 	 */
 	public void render() {
-		clearMessageBuffer();//this method is called in each tick so the message buffer can be cleared
-		
 		drawGrid();
-		
 	}
 
 	@Override
@@ -113,10 +111,6 @@ public class SimpleGUInterface extends JFrame implements MessageRenderer, MapRen
 	 * @author 	Asel
 	 * @param 	message the message string to be displayed on the GUI
 	 * @post	displays the <code>message</code> string on the label.
-	 * 
-	 * TODO	 	Label doesn't display all the messages. Need to be fixed
-	 * 			Specifically when an actor of the same team is attacked the other 
-	 * 			actor's "We are on the same team message" disappears too quickly
 	 */
 	public void render(String message) {
 		//HTML formatting used instead of \n, to achieve a multi line label
@@ -135,8 +129,8 @@ public class SimpleGUInterface extends JFrame implements MessageRenderer, MapRen
 	 * @author Asel
 	 * @see ({@link #messageBuffer}
 	 */
-	private void clearMessageBuffer(){
-		this.messageBuffer="";
+	private static void clearMessageBuffer(){
+		messageBuffer="";
 	}
 	
 	/**
@@ -150,7 +144,7 @@ public class SimpleGUInterface extends JFrame implements MessageRenderer, MapRen
  		this.setLayout(new GridLayout(1,2));//Layout with 2 columns. One for the gridPanel and the other for the actionPanel
 		this.add(mapPanel); //add the grid	
 
-		actionPanel.setLayout(new GridLayout(2, 1));//Layout with 2 rows. For lblMessages actionButtonPanel
+		actionPanel.setLayout(new GridLayout(2, 1));//Layout with 2 rows. For lblMessages and the actionButtonPanel
 		actionPanel.add(lblMessages);
 		actionPanel.add(actionButtonPanel);
 		
@@ -158,11 +152,11 @@ public class SimpleGUInterface extends JFrame implements MessageRenderer, MapRen
 	}
 	
 	/**
-	 * Draws the map as a matrix of none editable JTextFields on the gridPanel
+	 * Draws the map as a matrix of non editable JTextFields on the gridPanel
 	 * 
 	 * @author 	Asel
 	 * @post	a grid of JTextField created
-	 * @post	each text field is none editable
+	 * @post	each text field is non editable
 	 * @post	each text field contains a location string @see	{@link #getLocationString(HobbitLocation)}
 	 */
 	private void drawGrid(){
@@ -190,7 +184,8 @@ public class SimpleGUInterface extends JFrame implements MessageRenderer, MapRen
 				txtLoc.setHorizontalAlignment(JTextField.CENTER);
 				
 				txtLoc.setEditable(false); //made non editable
-				txtLoc.setToolTipText(loc.getShortDescription());
+				
+				txtLoc.setToolTipText(loc.getShortDescription());//show the location description when mouse hovered
 				
 				//add text field to gridPanel
 				mapPanel.add(txtLoc);
@@ -209,10 +204,10 @@ public class SimpleGUInterface extends JFrame implements MessageRenderer, MapRen
 	 * 
 	 * @author 	Asel
 	 * @param 	loc for which the string is required
-	 * @pre 	loc should not be null
+	 * @pre 	<code>loc</code> should not be null
 	 * @return 	a string in the format Location Symbol + : + Contents of location + any empty characters
-	 * @post	the string contains the symbols of the locations contents plus any empty characters of the location
-	 * @post	string length is equal to location width
+	 * @post	the <code>string</code> contains the symbols of the locations contents plus any empty characters of the location
+	 * @post	<code>string</code> length is equal to location width
 	 */
 	private String getLocationString(HobbitLocation loc){
 		EntityManager<HobbitEntityInterface, HobbitLocation> em = MiddleEarth.getEntitymanager();
@@ -251,6 +246,8 @@ public class SimpleGUInterface extends JFrame implements MessageRenderer, MapRen
 	 * @return the HobbitActionInterface that the player has chosen to perform.
 	 */
 	 public static HobbitActionInterface getUserDecision(HobbitActor a) {
+		 
+		 clearMessageBuffer();//this method is called in each tick so the message buffer can be cleared
 
 		//selection value set to -1 in order to trigger the wait
 		selection = -1;
