@@ -79,7 +79,7 @@ public class Scheduler {
 		}
 	}
 	
-	private PriorityQueue<Event> events;
+	private PriorityQueue<Event> events = new PriorityQueue<>();
 	private int now = 0;
 	private int ticksize;
 	private World universe;
@@ -123,7 +123,7 @@ public class Scheduler {
 	public void tick() {
 		
 		universe.tick();
-		
+		//System.out.println("NUMBER OF Events : "+events.size());
 		while (!events.isEmpty() && events.peek().getTime() <= now + ticksize) {
 			//while the list of events is not empty 
 			//and the time of the event at the head of the queue is less than the time after the tick
@@ -134,6 +134,8 @@ public class Scheduler {
 			
 			//execute that event
 			e.getAction().execute(e.getActor());
+			
+			//System.out.println(e.getActor().getLongDescription());
 			
 			
 		}
@@ -156,6 +158,22 @@ public class Scheduler {
 		universe = w;
 		events = new PriorityQueue<Event>();
 		this.ticksize = ticksize;
+	}
+	
+	public void removeActorsEvents(Actor actor){
+		PriorityQueue<Event> filteredEvents = new PriorityQueue();
+		//System.out.println("YO : "+events.size());
+		//zero events???
+		while (!events.isEmpty()){
+			
+			Event e = events.poll();
+			if (e.getActor() !=actor){
+				filteredEvents.offer(e);
+				//System.out.println("FILTERED");
+			}
+		}
+		events = filteredEvents;
+		
 	}
 	
 	
