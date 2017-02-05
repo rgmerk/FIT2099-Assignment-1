@@ -66,6 +66,11 @@ public abstract class HobbitActor extends Actor<HobbitAction> implements HobbitE
 		scheduler = s;
 	}
 	
+	public void removeEvents(){
+		scheduler.removeActorsEvents(this);
+	}
+	
+
 	public Team getTeam() {
 		return team;
 	}
