@@ -4,6 +4,9 @@
  * 
  *  @author dsquire
  */
+/*
+ * 2017/02/04 Removed the Unicode symbol of the sword to a 's' (asel)
+ */
 package hobbit.entities;
 
 import hobbit.Capability;
@@ -33,8 +36,7 @@ public class Sword extends HobbitEntity {
 	 * @return a single character string " " representing a sword
 	 */
 	public String getSymbol() {
-		return " "; // let's try some UniCode :)
-		//not sure if it works
+		return "s"; 
 	}
 
 }
