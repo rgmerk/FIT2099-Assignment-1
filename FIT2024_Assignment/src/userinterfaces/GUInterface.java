@@ -181,6 +181,8 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 	 */
 	private void drawGrid(){
 		
+		assert (grid!=null)	:"grid to be draw cannot be null";
+		
 		final int gridHeight = grid.getHeight();
 		final int gridWidth  = grid.getWidth();
 		
