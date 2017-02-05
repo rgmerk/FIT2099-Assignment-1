@@ -9,6 +9,7 @@
 /*
  * Change log
  * 2017-02-02: Displaying the map/grid is now a responsibility of the TextInterface and not of Grid or MiddleWorld (asel)
+ * 2017-02-04: Removed the HobbitGrid parameter from the displayTextGrid method and renamed it to drawGrid() - (asel)
  */
 package userinterfaces;
 
@@ -76,7 +77,7 @@ public class TextInterface implements MessageRenderer, MapRenderer, SimulationCo
 	 * @author Asel
 	 */
 	public void render() {
-		displayTextGrid(grid);	
+		drawGrid();	
 	}
 
 	@Override
@@ -99,16 +100,16 @@ public class TextInterface implements MessageRenderer, MapRenderer, SimulationCo
 	 * of the locations contents
 	 * 
 	 * @author 	Asel
-	 * @param 	hobbitGrid the HobbitGrid to be displayed
-	 * @pre 	hobbitGrid should not be null
 	 * @post 	prints the Grid (a matrix of locations with there contents) on the console as text
 	 * 
 	 */
-	private void displayTextGrid(HobbitGrid hobbitGrid){
+	private void drawGrid(){
+		
+		assert (grid!=null)	:"grid to be draw cannot be null";
 		
 		String buffer = "";
-		final int gridHeight = hobbitGrid.getHeight();
-		final int gridWidth  = hobbitGrid.getWidth();
+		final int gridHeight = grid.getHeight();
+		final int gridWidth  = grid.getWidth();
 		
 		EntityManager<HobbitEntityInterface, HobbitLocation> em = MiddleEarth.getEntitymanager();
 		
