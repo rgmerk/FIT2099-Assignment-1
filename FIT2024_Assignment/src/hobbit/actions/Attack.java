@@ -17,6 +17,7 @@ import hobbit.HobbitActionInterface;
 import hobbit.HobbitActor;
 import hobbit.HobbitAffordance;
 import hobbit.HobbitEntityInterface;
+import edu.monash.fit2024.simulator.time.Scheduler;
 import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
 
 public class Attack extends HobbitAffordance implements HobbitActionInterface {
@@ -117,6 +118,8 @@ public class Attack extends HobbitAffordance implements HobbitActionInterface {
 			} // if carrying something
 			if (a.isDead()) {//the actor who attacked is dead after the attack
 			
+				//a.removeEvents();
+				
 				a.setLongDescription(a.getLongDescription() + ", that died of exhaustion while attacking someone");
 				
 				//remove the attack affordance of the dead actor so it can no longer be attacked
@@ -125,12 +128,17 @@ public class Attack extends HobbitAffordance implements HobbitActionInterface {
 				
 			}
 			if (this.getTarget().getHitpoints() <= 0) {  // can't use isDead(), as we don't know that the target is an actor
-				target.setLongDescription(target.getLongDescription() + ", that was killed in a fight");
 				
-			
+				//if (target instanceof HobbitActor){
+					//((HobbitActor)target).removeEvents();
+				//}
+				
+				target.setLongDescription(target.getLongDescription() + ", that was killed in a fight");
+							
 				//remove the attack affordance of the dead actor so it can no longer be attacked
 				targetActor.removeAffordance(this);
 
+				System.out.println("WE ARE HERE");
 				
 			}
 		} // not game player and different teams
