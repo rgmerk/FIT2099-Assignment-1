@@ -35,8 +35,8 @@ import edu.monash.fit2024.simulator.space.LocationMaker;
 public abstract class Grid<T extends Location> extends LocationContainer<T> {
 	
 	public static enum CompassBearing implements Direction {
-		NORTH(0),//NORTH (0) means the direction NORTH has a compass bearing angle of 0 
-		NORTHEAST(45),//NORTHEAST(45) means the direction NORTHEAST has a compass bearing angle of 45. Other directions are read in the same fashion
+		NORTH(0),
+		NORTHEAST(45),
 		EAST(90),
 		SOUTHEAST(135),
 		SOUTH(180),
@@ -44,7 +44,7 @@ public abstract class Grid<T extends Location> extends LocationContainer<T> {
 		WEST(270),
 		NORTHWEST(315);
 		
-		/**Angle of the bearing. Measure in degrees in the clockwise direction starting North(0)*/
+		/**Angle of the bearing. Measured in degrees in the clockwise direction starting North(0)*/
 		private int angle;
 
 		/**
@@ -67,11 +67,12 @@ public abstract class Grid<T extends Location> extends LocationContainer<T> {
 		}
 		
 		/**
-		 * <p>This method will return the antipode (the opposite bearing) of a compass bearing</p>
-		 * <p>Ex: Antipode of NORTH is SOUTH</p>
+		 * This method will return the antipode (the opposite bearing) of a compass bearing
+		 * <p>
+		 * Ex: Antipode of NORTH is SOUTH
 		 * 
-		 * @param cb : the compass bearing for which the opposite bearing (antipode) needs to be found
-		 * @return the opposite bearing (antipode) of the given compass bearing 'cb'
+		 * @param cb the compass bearing for which the opposite bearing (antipode) needs to be found
+		 * @return the opposite bearing (antipode) of the given compass bearing <code>cb</code>
 		 */
 		public static CompassBearing opposite(CompassBearing cb) {
 			
@@ -83,8 +84,8 @@ public abstract class Grid<T extends Location> extends LocationContainer<T> {
 		}
 		
 		/**
-		 * This method will return the Compass bearing after performing an 'angle' turn clockwise
-		 * @param angle : the size of the angle in degrees that needs to be turned clockwise
+		 * This method will return the Compass bearing after turning <code>angle</code> amount clockwise
+		 * @param angle the size of the angle in degrees that needs to be turned clockwise
 		 * @return the compass bearing after turning 'angle' degrees clockwise and rounding up to the nearing 45 degrees.
 		 */
 		public CompassBearing turn(int angle) {
@@ -107,17 +108,16 @@ public abstract class Grid<T extends Location> extends LocationContainer<T> {
 		/**
 		 * Gets the corresponding bearing of the the angle given
 		 * 
-		 * @author Asel
-		 * @param angle an angle for which the bearing needs to be found. Measured in degrees hence a value between 0 and 360 is expected
-		 * @return the corresponding compass bearing of the angle
-		 * @throws IllegalArgumentException if the angle passed doesn't correspond to a bearing
+		 * @author 	Asel
+		 * @param 	angle for which the bearing needs to be found. Measured in degrees.
+		 * @return 	the corresponding compass bearing of the angle
+		 * @throws 	IllegalArgumentException if the angle passed doesn't correspond to a bearing
 		 */
 		private static CompassBearing compassBearingOfAngle(int angle){
 			
-			//go through all the bearings values
 			for (CompassBearing dir: values()) {
-				if (dir.angle == angle) //return the bearing if angle is the same as the bearing angle
-					return dir;
+				if (dir.angle == angle) //go through all the bearings values
+					return dir;			//return the bearing if angle is the same as the bearing angle
 			}
 			
 			//this should be impossible since the angle should correspond to a bearing
@@ -125,24 +125,22 @@ public abstract class Grid<T extends Location> extends LocationContainer<T> {
 		}
 	}
 	
-	
-
+	/**Height of the Grid. Grid height of 'n' means the grid would have 'n' rows*/
 	protected int height;
+	
+	/**Width of the Grid. Grid width of 'n' means the grid would have 'n' coloumns*/
 	protected int width;
 	private LocationMaker<T> factory;
 
-	// We can't instantiate a 2D array, but we can use a factory to populate a List.
-	// Declared as a List because UML Lab has trouble identifying implementations of the
-	// generic collections.
+	/*
+	 * We can't instantiate a 2D array, but we can use a factory to populate a List.
+	 * Declared as a List because UML Lab has trouble identifying implementations of the
+	 * generic collections.
+	 */
 	protected List<List<T>> locations;
 	
 	/**
 	 * Given coordinates (x, y), return Location at that position.
-	 * 
-	 * TODO: this is the place for an assert.
-	 * 	Precondition: x < width
-	 * 	Precondition: y < height
-	 * Currently returns null if the preconditions fail.
 	 * 
 	 * @param x east/west coordinate of desired Location
 	 * @param y north/south coordinate of desired Location
@@ -155,29 +153,30 @@ public abstract class Grid<T extends Location> extends LocationContainer<T> {
 		assert (x >=0 && x < width)	:"x coordinate is not within 0 and "+width;
 		assert (y >=0 && y < height):"y coordinate is not within 0 and "+height;
 		
-		if (x < width && y < height) //the method checks the precondition again?
+		if (x < width && y < height) //the method checks the precondition again? Do we need this? (asel)
 			return locations.get(y).get(x);
 		return null;
 	}
 	
 	/**
-	 * Accessor method to return the height of the Grid. Grid height of 'n' means the grid would have 'n' rows
+	 * @return @see {@link #height}
 	 */
 	public int getHeight() {
 		return height;
 	}
 	
 	/**
-	 * Accessor method to return the width of the Grid. Grid width of 'n' means the grid would have 'n' columns
+	 * @return @see {@link #width}
 	 */
 	public int getWidth() {
 		return width;
 	}
 	
 	/**
-	 * Creates a two-way path between loc1 and loc2 in direction d.  Sets
-	 * up loc2 as the neighbour of loc1 in direction d, and loc1 as the neighbour of loc2 in
-	 * direction Direction.opposite(d).
+	 * Creates a two-way path between loc1 and loc2 in direction <code>d</code>.  
+	 * <p>
+	 * Sets up <code>loc2</code> as the neighbour of <code>loc1</code> in direction <code>d</code>, and <code>loc1</code> as 
+	 * the neighbour of <code>loc2</code> in opposite direction of <code>d</code>.
 	 * 
 	 * @author ram
 	 * @param loc1 one end of the path
