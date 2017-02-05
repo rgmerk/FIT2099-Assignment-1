@@ -11,7 +11,7 @@
  */
 /*
  * Change log
- * 2017-01-20: Extension to the Javadoc and added comments (asel)
+ * 2017-02-04 Added conditions to avoid dead actors from performing actions
  */
 package hobbit;
 
@@ -71,7 +71,7 @@ public abstract class HobbitAffordance extends Affordance implements HobbitActio
 	 * @author ram
 	 */
 	public void execute(Actor<?> actor) {
-		if (actor instanceof HobbitActor)
+		if (actor instanceof HobbitActor && !((HobbitActor) actor).isDead()) //added conditions to avoid dead actors from performing actions
 			act((HobbitActor) actor);
 
 	}
