@@ -39,11 +39,9 @@ public abstract class HobbitAction extends Action implements HobbitActionInterfa
 	 * TODO A cleaner way to make sure dead actors don't act would be to remove the event of the dead actor from the scheduled events
 	 */
 	public void execute(Actor<?> a) {
-		if (a instanceof HobbitActor){//if the Actor is a HobbitActor
-			if (!((HobbitActor) a).isDead()){//not dead
-				act((HobbitActor) a);
-			}
-		}
+		if (a instanceof HobbitActor && !((HobbitActor) a).isDead()) 
+			act((HobbitActor) a);
+
 	}
 
 	public abstract void act(HobbitActor a);
