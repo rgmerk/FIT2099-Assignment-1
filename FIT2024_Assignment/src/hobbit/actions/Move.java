@@ -44,11 +44,13 @@ public class Move extends HobbitAction {
 	 * @param a the HobbitActor who is moving
 	 */
 	public void act(HobbitActor a) {
+		
 		if (world.canMove(a, whichDirection)) {
 			world.moveEntity(a, whichDirection);
 			a.resetMoveCommands(world.find(a));//reset the new possible set of moves based on the new location of the entity
 		}
 		messageRenderer.render(a.getShortDescription() + " is moving " + whichDirection);
+		
 	}
 
 
@@ -104,7 +106,7 @@ public class Move extends HobbitAction {
 	 * @return true
 	 */
 	public boolean canDo(HobbitActor a) {
-		return true;
+		return !a.isDead();
 	}
 
 	/**
