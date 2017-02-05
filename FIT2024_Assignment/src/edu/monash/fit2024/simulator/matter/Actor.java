@@ -45,12 +45,6 @@ public abstract class Actor<T extends ActionInterface> extends Entity {
 	 *
 	 * @param a the Action to add
 	 */
-	/*
-	FYI 	
-	== is a reference comparison that checks if the two object point to the same memory location
-	isEquals checks the values of the objects
-	Source "http://stackoverflow.com/questions/7520432/what-is-the-difference-between-vs-equals-in-java"
-	*/
 	public void addAction(T a) {
 		actions.add(a);
 	}
@@ -94,18 +88,7 @@ public abstract class Actor<T extends ActionInterface> extends Entity {
 	
 	public abstract void act();
 	
-	/*
-	public void tick(){
-		if (waittime >0){
-			waittime --;
-			System.out.println("TEST COMMENT : Actor is waiting...");
-		}
-		else{
-			System.out.println("TEST COMMENT : Actor is acting...");
-			act();
-		}
-	}
-	*/
+
 	/**
 	 * Tick method for the actor. Allows the actor to act if it's not waiting
 	 * 
