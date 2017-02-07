@@ -43,11 +43,9 @@ public class Goblin extends HobbitActor {
 	 * @param a this(The Goblin itself)
 	 */
 	public void act() {
-		System.out.println("HIT POINTS : "+this.getHitpoints());
-		if (!this.isDead()){ //condition to avoid actions being scheduled after the Goblin is dead
-			
-			System.out.println("ACT : "+this.getHitpoints());
-			
+		
+		//if (!this.isDead()){ //condition to avoid actions being scheduled after the Goblin is dead
+						
 			// Did I hit something?  If so, bear right.
 			Grid.CompassBearing oldDirection = myDirection;
 			
@@ -68,11 +66,11 @@ public class Goblin extends HobbitActor {
 			
 			
 			//TESTING Delay and cool down
-			//myMove.setDelay(2);
+			//myMove.setDelay(1);//when enabled the goblin doesn't move after dying
 			//myMove.setCooldown(2);
 			
 			scheduler.schedule(myMove, this, 1);
-		}
+		//}
 	}
 
 }
