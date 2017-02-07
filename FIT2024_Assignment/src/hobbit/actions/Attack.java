@@ -129,16 +129,16 @@ public class Attack extends HobbitAffordance implements HobbitActionInterface {
 			}
 			if (this.getTarget().getHitpoints() <= 0) {  // can't use isDead(), as we don't know that the target is an actor
 				
-				//if (target instanceof HobbitActor){
-					//((HobbitActor)target).removeEvents();
-				//}
+				if (target instanceof HobbitActor){
+					System.out.println("Remove event for "+target.getShortDescription());
+					((HobbitActor)target).removeEvents();
+				}
 				
 				target.setLongDescription(target.getLongDescription() + ", that was killed in a fight");
 							
 				//remove the attack affordance of the dead actor so it can no longer be attacked
 				targetActor.removeAffordance(this);
 
-				System.out.println("WE ARE HERE");
 				
 			}
 		} // not game player and different teams
