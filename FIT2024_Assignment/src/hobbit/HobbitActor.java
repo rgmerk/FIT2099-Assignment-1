@@ -211,17 +211,37 @@ public abstract class HobbitActor extends Actor<HobbitAction> implements HobbitE
 	 * Action to be performed when the actor is alive
 	 */
 	public abstract void act();
-	
+
+	@Override
 	/**
-	 * Allow the actor to act.
+	 * Tick method for the actor. Allows the actor to act if it's not waiting
+	 * <p>
+	 * This tick method will only call act if the actor is alive
 	 * 
-	 * @param the actor's current location
-	 * @author ram
+	 * @param 	l is the current location of the actor.
+	 * @author 	Asel
 	 */
-	/*public void tick(Location l) {
-		act();
+	public void tick(Location l) {
+		int waittime = this.getWaittime();
+		if (waittime >0){//waiting since the wait time is greater than zero
+			waittime --;
+			this.setWaittime(waittime); //update the new waiting time
+		}
+		else{
+			//perform action if not waiting
+			System.out.println("--");
+			System.out.println(this.getShortDescription());
+			System.out.println("HIT POINTS : "+this.getHitpoints());
+			System.out.println("IS DEAD : "+this.isDead());
+			System.out.println("IS ALIVE : "+!this.isDead());
+			if (!this.isDead()){
+				act();
+				System.out.println("ACTED");
+			}
+			
+			
+		}
 	}
-	*/
 	
 	
 }
