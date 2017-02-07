@@ -172,7 +172,14 @@ public class Scheduler {
 				//System.out.println("FILTERED");
 			}
 		}
-		events = filteredEvents;
+		
+		while (!filteredEvents.isEmpty()){
+			
+			events.offer(filteredEvents.poll());
+			
+		}
+		
+		
 		
 	}
 	
