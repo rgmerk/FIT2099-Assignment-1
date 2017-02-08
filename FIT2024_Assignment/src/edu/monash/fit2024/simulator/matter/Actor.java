@@ -31,9 +31,12 @@ import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
 
 public abstract class Actor<T extends ActionInterface> extends Entity {
 
-
 	protected static Scheduler s;
+	
+	/**A set of actions that can be performed by the <code>Actor</code>*/
 	protected Set<T> actions;
+	
+	/**The amount of time an <code>Actor</code> has to wait before it could <code>act</code>*/
 	private int waittime;
 	
 	/**
@@ -85,7 +88,9 @@ public abstract class Actor<T extends ActionInterface> extends Entity {
 		return newActions;
 	}
 	
-	
+	/**
+	 * Allows an actor act. This method will only be called if the actor is not waiting.
+	 */
 	public abstract void act();
 	
 
@@ -106,12 +111,19 @@ public abstract class Actor<T extends ActionInterface> extends Entity {
 		}
 	}
 	
-	//setter and getter for wait time
+	/**
+	 * Setter for the wait time
+	 * @param waittime @see {@link #waittime}
+	 */
 	public void setWaittime(int waittime){
 		this.waittime = waittime;
 	}
 
-
+	
+	/**
+	 * Getter for the wait time
+	 * @return @see {@link #waittime}
+	 */
 	public int getWaittime() {
 		return waittime;
 	}
