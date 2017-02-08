@@ -14,7 +14,6 @@ import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
  * @author ram
  * @date 17 February 2013
  */
-
 /*
  * Changelog
  * 2013-02-28: added a MessageRenderer so that Actions can communicate to users. (ram)
@@ -27,31 +26,65 @@ import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
  * 2013-03-12: Added wildcard template to Actor parameter in execute() to pacify the IDE (ram)
  * 	Documented all the methods to pacify my own sense of the tidy (ram)
  * 2013-04-08: Added ActionInterface so that client code can have Affordances that implement it (ram)
- * 2017-01-24: Added delay and cooldown attributes to schedule actions with durations
+ * 2017-01-24: Added delay and cooldown attributes to schedule actions with durations (asel)
+ * 2017-02-08: Added a new priority attribute to allow events within a tick to be sorted based on the priority of the Action
  */
 
 
 public abstract class Action implements ActionInterface {
 	protected MessageRenderer messageRenderer;
 	
-	//attributes to manage delay(wait time before action) and cooldown (wait time after action) for actions
-	//the total wait time for an event would be delay + cooldown
+	/**The priority of the <code>Action</code>. Smaller the size of the integer, lower the priority.
+	 * <p>
+	 * <code>Action</code>s with higher priority will occur before any other <code>Action</code>s of lower priority. 
+	 * Equal priority <code>Action</code>s will occur in an arbitrary order.
+	 * <p>
+	 * All <code>Action</code>s will have the lowest priority of 0 by default.
+	 */
+	protected int priority = 0;
+	
+	/**The amount of wait time before executing an event.
+	 * <p>
+	 * An <code>Actor</code> cannot act during the <code>delay</code> period
+	 * <p>
+	 * The total wait time for an <code>Actor</code> is <code>delay</code> + <code>cooldown</code>
+	 * 
+	 * @see {@link #cooldown} 
+	 */
 	private int delay;
+	
+	/**The amount of time allowed to pass after the event has been executed
+	 * <p>
+	 * An <code>Actor</code> cannot act during the <code>cooldown</code> period
+	 * <p>
+	 * The total wait time for an <code>Actor</code> is <code>delay</code> + <code>cooldown</code>
+	 * 
+	 * @see {@link #delay} 
+	 */
 	private int cooldown;
 	
-	//getters and setters for cool down and delay
+	
+	/**@see {@link #priority}*/
+	public int getPriority() {
+		return priority;
+	}
+
+	/**@see {@link #delay}*/
 	public int getDelay() {
 		return delay;
 	}
 
+	/**@see {@link #delay}*/
 	public void setDelay(int delay) {
 		this.delay = delay;
 	}
 
+	/**@see {@link #cooldown}*/
 	public int getCooldown() {
 		return cooldown;
 	}
 
+	/**@see {@link #cooldown}*/
 	public void setCooldown(int cooldown) {
 		this.cooldown = cooldown;
 	}
