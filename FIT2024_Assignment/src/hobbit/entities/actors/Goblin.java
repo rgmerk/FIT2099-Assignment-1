@@ -38,39 +38,34 @@ public class Goblin extends HobbitActor {
 	/**
 	 * Tries to walk forward, turns by 45 degrees until either an exit is found or it is established that
 	 * no exit exists.
+	 * <p>
+	 * This method will only be called if the <code>Goblin</code> is alive
 	 * 
 	 * @author ram
 	 * @param a this(The Goblin itself)
 	 */
 	public void act() {
+			
+		// Did I hit something?  If so, bear right.
+		Grid.CompassBearing oldDirection = myDirection;
 		
-		//if (!this.isDead()){ //condition to avoid actions being scheduled after the Goblin is dead
-						
-			// Did I hit something?  If so, bear right.
-			Grid.CompassBearing oldDirection = myDirection;
-			
-			while (!MiddleEarth.getEntitymanager().seesExit(this, myDirection)) {//loop until there is an exist
-				myDirection = myDirection.turn(45);
-				if (myDirection == oldDirection) {
-					// I've turned completely around and can't find an exit -- I'm stuck!
-					messageRenderer.render(this.getShortDescription() + " is stuck!  Help!");
-					return;//exit the loop as the goblin is stuck
-				}
+		while (!MiddleEarth.getEntitymanager().seesExit(this, myDirection)) {//loop until there is an exist
+			myDirection = myDirection.turn(45);
+			if (myDirection == oldDirection) {
+				// I've turned completely around and can't find an exit -- I'm stuck!
+				messageRenderer.render(this.getShortDescription() + " is stuck!  Help!");
+				return;//exit the loop as the goblin is stuck
 			}
-			
-			if (myDirection != oldDirection)	// we turned
-				messageRenderer.render(this.getShortDescription() + " decides to go " + myDirection + " next.");
-			
-			// I can see an exit.
-			Move myMove = new Move(myDirection, messageRenderer, world);
-			
-			
-			//TESTING Delay and cool down
-			//myMove.setDelay(1);//when enabled the goblin doesn't move after dying
-			//myMove.setCooldown(2);
-			
-			scheduler.schedule(myMove, this, 1);
-		//}
+		}
+		
+		if (myDirection != oldDirection)	// we turned
+			messageRenderer.render(this.getShortDescription() + " decides to go " + myDirection + " next.");
+		
+		// I can see an exit.
+		Move myMove = new Move(myDirection, messageRenderer, world);
+					
+		scheduler.schedule(myMove, this, 1);
+	
 	}
 
 }
