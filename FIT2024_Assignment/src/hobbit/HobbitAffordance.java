@@ -11,7 +11,7 @@
  */
 /*
  * Change log
- * 2017-02-04 Added conditions to avoid dead actors from performing actions
+ * 2017-02-04 Added conditions in tick method to avoid dead actors from performing actions
  */
 package hobbit;
 
@@ -34,7 +34,7 @@ public abstract class HobbitAffordance extends Affordance implements HobbitActio
 	 * 
 	 * 
 	 * @author ram
-	 * @return false : by default meaning the command is not a move command
+	 * @return false by default meaning the command is not a move command
 	 */
 	public boolean isMoveCommand() {
 		return false;
@@ -49,7 +49,7 @@ public abstract class HobbitAffordance extends Affordance implements HobbitActio
 	
 	/**
 	 * Accessor for the target of this affordance.
-	 * 
+	 * <p>
 	 * Checks that the target conforms to the HobbitEntityInterface and
 	 * downcasts it to a HobbitEntityInterface and returns it if so; otherwise returns null.
 	 * 
@@ -67,28 +67,29 @@ public abstract class HobbitAffordance extends Affordance implements HobbitActio
 	/**
 	 * Wrapper for the act() method that downcasts its parameter to minimize
 	 * dangerous downcasting in subclasses.
+	 * <p>
+	 * This method does nothing if the <code>actor</code> is null, not a HobbitActor or is a dead HobbitActor
 	 * 
 	 * @author ram
 	 */
 	public void execute(Actor<?> actor) {
-		if (actor instanceof HobbitActor && !((HobbitActor) actor).isDead()) //added conditions to avoid dead actors from performing actions
+		if (actor instanceof HobbitActor && !((HobbitActor)actor).isDead())
 			act((HobbitActor) actor);
 
 	}
 	
 	/**
 	 * Compares two HobbitActionInterfaces.
-	 * 
-	 * 
+	 * <p>
 	 * The comparisons of the getDescriptions can be used to alphabetically sort the command lists for pretty output
 	 * 
-	 * @author ram
-	 * @param the HobbitActionInterface to compare to
-	 * @return 	0 if the strings returned from the getDescription methods for this and other are the same
-	 * 			negative if the string returned by the getDescription method of this is less than the string 
-	 * 				returned by the getDescription method of the other
-	 * 			positive if the string returned by the getDescription method of this is greater than the string 
-	 * 				returned by the getDescription method of the other
+	 * @author 	ram
+	 * @param 	the HobbitActionInterface to compare to
+	 * @return 	<ul>
+	 * 			<li>0 if the strings returned from the <code>getDescription</code> methods for <code>this</code> and <code>other</code> are the same</li>
+	 * 			<li>a positive integer if the strings returned from the <code>getDescription</code> methods for <code>this</code> is alphabetically before <code>other</code></li>
+	 * 			<li>a negative integer if the strings returned from the <code>getDescription</code> methods for <code>other</code> is alphabetically before <code>this</code></li>
+	 * 			</ul>
 	 */
 	public int compareTo(HobbitActionInterface other) {
 		return this.getDescription().compareTo(other.getDescription());
