@@ -21,6 +21,7 @@ public class Take extends HobbitAffordance {
 
 	public Take(HobbitEntityInterface theTarget, MessageRenderer m) {
 		super(theTarget, m);
+		priority = 1;
 	}
 
 	@Override
@@ -43,7 +44,7 @@ public class Take extends HobbitAffordance {
 	 * <p>
 	 * The Hobbit Actor a's item carried would be the target of this Affordance (Take)
 	 * <p>
-	 * This method would add a Leave action to the HobbitActor and remove the take affordance from the target -Asel
+	 * This method will only be called if the <code>HobbitActor a</code> is alive
 	 * 
 	 * @author ram
 	 * @modified 26/01/2017 by asel
@@ -56,7 +57,6 @@ public class Take extends HobbitAffordance {
 			
 			//remove the take affordance
 			target.removeAffordance(this);
-			
 			
 		}
 	}
