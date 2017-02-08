@@ -15,9 +15,17 @@ import edu.monash.fit2024.simulator.space.Location;
 import edu.monash.fit2024.simulator.space.LocationMaker;
 
 public class HobbitLocation extends Location {
+	
+	/**A character that represents the <code>HobbitLocation</code>, suitable for display*/
 	private char symbol;
-	private char emptySymbol = '.'; // symbol displayed to represent empty space
+	
+	/**A character that represents an empty space in this <code>HobbitLocation</code>, suitable for display*/
+	private char emptySymbol = '.';
+	
+	/**A longer string that describes this <code>HobbitLocation</code>*/
 	private String longDescription;
+	
+	/**A shorter string that describes this <code>HobbitLocation</code>*/
 	private String shortDescription;
 	
 	
