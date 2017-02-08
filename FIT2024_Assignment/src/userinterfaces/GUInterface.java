@@ -14,10 +14,11 @@
  * 				Added a message buffer string that allows all say messages of within a tick to be displayed at once (asel)
  * 				Added a separate panel for move commands that corresponds to the compass bearing
  * 2017/02/04	Fixed the issue with the message renderer. It now prints all the messages from the message renderer (asel)
- * 				
+ * 2017/02/08	human controlled player's locations are highlighted in yellow. The text if the GUI is mono spaced (asel)
  */
 package userinterfaces;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -27,22 +28,19 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Scanner;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
-import com.sun.javafx.scene.traversal.Direction;
 
 import edu.monash.fit2024.gridworld.Grid.CompassBearing;
 import edu.monash.fit2024.simulator.matter.EntityManager;
 import edu.monash.fit2024.simulator.userInterface.MapRenderer;
 import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
 import edu.monash.fit2024.simulator.userInterface.SimulationController;
+
 import hobbit.HobbitActionInterface;
 import hobbit.HobbitActor;
 import hobbit.HobbitEntityInterface;
@@ -138,7 +136,7 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 		lblMessages.setText("<html>"+messageBuffer+"</html>");	
 		
 		//for pretty looks
-		Font messageFont = new Font("SansSerif", Font.BOLD, 15);
+		Font messageFont = new Font(Font.MONOSPACED, Font.BOLD, 15);
 		lblMessages.setFont(messageFont);
 		lblMessages.setHorizontalAlignment(JLabel.CENTER);
 		lblMessages.setVerticalAlignment(JLabel.CENTER);
@@ -170,9 +168,12 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 		
 		this.add(actionPanel);//add action panel to main layout		
 	}
+ 	
 	
 	/**
-	 * Draws the map as a matrix of non editable JTextFields on the gridPanel
+	 * Draws the map as a matrix of non editable JTextFields on the gridPanel.
+	 * <p>
+	 * <code>HobbitLocation</code>s of human controlled actors will be highlighted with yellow.
 	 * 
 	 * @author 	Asel
 	 * @post	a grid of JTextField created
@@ -187,7 +188,7 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 		final int gridWidth  = grid.getWidth();
 		
 		//font for pretty output
-		Font locFont = new Font("SansSerif", Font.BOLD, 15);
+		Font locFont = new Font(Font.MONOSPACED, Font.BOLD, 15);
 		
 		gridPanel.removeAll();//clear previous grid
 		gridPanel.setLayout(new GridLayout(gridHeight, gridWidth));//grid layout for the locations	
@@ -205,6 +206,11 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 				//for pretty looks
 				txtLoc.setFont(locFont);		
 				txtLoc.setHorizontalAlignment(JTextField.CENTER);
+				
+				//highlight the human controlled player's location
+				if (locationHasHumanControlledActor(loc)){
+					txtLoc.setBackground(Color.YELLOW);
+				}
 				
 				txtLoc.setEditable(false); //made non editable
 				txtLoc.setToolTipText(loc.getShortDescription());//show the location description when mouse hovered
@@ -259,6 +265,32 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 		
 		return buf.toString();
 				
+	}
+	
+	/**
+	 * Returns is a given <code>HobbitLocation loc</code> has a human controlled <HobbitActor>
+	 * 
+	 * @param 	loc the <code>HobbitLocation</code> being queried
+	 * @return	true if <code>loc</code> contains a human controlled actor, false otherwise
+	 */
+	private boolean locationHasHumanControlledActor(HobbitLocation loc){
+		
+		EntityManager<HobbitEntityInterface, HobbitLocation> em = MiddleEarth.getEntitymanager();
+		
+		//get the contents of the location
+		List<HobbitEntityInterface> contents = em.contents(loc);
+		
+		if (contents!=null && !contents.isEmpty()){
+			for (HobbitEntityInterface e: contents) { //find if human controlled
+				if (e instanceof HobbitActor){
+					if (((HobbitActor)e).isHumanControlled()){;
+						return true;
+					}
+				}
+			}
+		}
+		//couldn't find any human controlled actors
+		return false;		
 	}
 
 	/**
