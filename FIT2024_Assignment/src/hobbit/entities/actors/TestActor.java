@@ -24,6 +24,8 @@ public class TestActor extends HobbitActor {
 	@Override
 	/**
 	 * Stands still and waits for other actors to try its affordances. Introduced so that Attack could be tested
+	 * <p>
+	 * This method will only be called if the <code>HobbitActor a</code> is alive
 	 * 
 	 * @author dsquire
 	 */
@@ -34,9 +36,11 @@ public class TestActor extends HobbitActor {
 	
 	/**
 	 * This method will describe 
-	 * 	- the Test Actor's location
-	 * 	- items carried (if the Test Actor is carrying any)
-	 * 	- the contents of the Test Actor's location (what the player can see) other than itself
+	 * <ul>
+	 * 	<li>the player's location</li>
+	 * 	<li>items carried (if the player is carrying any)</li>
+	 * 	<li>the contents of the players location (what the player can see) other than itself</li>
+	 * <ul>
 	 */
 	public void describeScene() {
 		//get the location of the player and describe it
