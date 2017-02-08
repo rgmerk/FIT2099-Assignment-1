@@ -48,6 +48,8 @@ public class Player extends HobbitActor {
 	@Override
 	/**
 	 * Does nothing -- the user selects what this Player does.
+	 * <p>
+	 * This method will only be called if the <code>Player</code> is alive
 	 */
 	public void act() {
 	
@@ -59,9 +61,11 @@ public class Player extends HobbitActor {
 	}
 	/**
 	 * This method will describe 
-	 * 	- the player's location
-	 * 	- items carried (if the player is carrying any)
-	 * 	- the contents of the players location (what the player can see) other than itself
+	 * <ul>
+	 * 	<li>the player's location</li>
+	 * 	<li>items carried (if the player is carrying any)</li>
+	 * 	<li>the contents of the players location (what the player can see) other than itself</li>
+	 * <ul>
 	 */
 	public void describeScene() {
 		//get the location of the player and describe it
