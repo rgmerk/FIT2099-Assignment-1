@@ -9,6 +9,7 @@
 /*
  * Change log
  * 2017/02/03	Fixed the bug where the an actor could attack another actor in the same team (asel)
+ * 2017/02/08	Attack given a priority of 1 in constructor (asel)
  */
 package hobbit.actions;
 
@@ -30,8 +31,8 @@ public class Attack extends HobbitAffordance implements HobbitActionInterface {
 	 * @param m message renderer to display messages
 	 */
 	public Attack(HobbitEntityInterface theTarget, MessageRenderer m) {
-		super(theTarget, m);
-		
+		super(theTarget, m);	
+		priority = 1;
 	}
 
 
@@ -70,11 +71,14 @@ public class Attack extends HobbitAffordance implements HobbitActionInterface {
 	@Override
 	/**
 	 * Perform the Attack command on an entity.
-	 * 
+	 * <p>
 	 * This damages the entity attacked, tires the attacker, and blunts any weapon used for the attack
+	 * <p>
+	 * This method will only be called if the <code>HobbitActor a</code> is alive
 	 * 
 	 * @author dsquire
 	 *  - adapted from the equivalent class in the old Eiffel version
+	 * @author Asel
 	 * @param the actor who is attacking
 	 */
 	public void act(HobbitActor a) {
@@ -117,9 +121,7 @@ public class Attack extends HobbitAffordance implements HobbitActionInterface {
 				a.takeDamage(2*energyForAttackWithWeapon); // actor uses energy. It's twice as tiring as using a weapon
 			} // if carrying something
 			if (a.isDead()) {//the actor who attacked is dead after the attack
-			
-				//a.removeEvents();
-				
+							
 				a.setLongDescription(a.getLongDescription() + ", that died of exhaustion while attacking someone");
 				
 				//remove the attack affordance of the dead actor so it can no longer be attacked
@@ -129,11 +131,7 @@ public class Attack extends HobbitAffordance implements HobbitActionInterface {
 			}
 			if (this.getTarget().getHitpoints() <= 0) {  // can't use isDead(), as we don't know that the target is an actor
 				
-				if (target instanceof HobbitActor){
-					System.out.println("Remove event for "+target.getShortDescription());
-					((HobbitActor)target).removeEvents();
-				}
-				
+								
 				target.setLongDescription(target.getLongDescription() + ", that was killed in a fight");
 							
 				//remove the attack affordance of the dead actor so it can no longer be attacked
