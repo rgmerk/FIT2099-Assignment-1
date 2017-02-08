@@ -14,7 +14,8 @@ package edu.monash.fit2024.simulator.time;
  * 
  * 2013-03-07: removed World parameter from tick() method and made sure the universe member variable was correctly set in the constructor instead (ram)
  * 2013-03-09: changed condition in event processing loop to process events occurring at or before the new now instead of only before (ram)
- * 2017-01-20: Comments for the tick method
+ * 2017-01-20: Comments for the tick method(asel)
+ * 2017-02-08: Changes to the compareTo method of the Event class to handle the new ordering of Events based on the priority of the Events Actions(asel)
  */
 
 import java.util.PriorityQueue;
@@ -67,22 +68,61 @@ public class Scheduler {
 		
 		/**
 		 * Compare this against another Event, e.
+		 * <p>
+		 * Events will be compared by their time (<code>when</code>) and also by 
+		 * the <code>priority</code> of their Actions
+		 * 
 		 *  
-		 * @author ram
-		 * @date 19 February 2013
-		 * @param e the event to compare this Event to
-		 * @return 0 if the events are "simultaneous", positive if the event 'this' is later than e, and negative if the event 'this' comes before e.
+		 * @author 	ram
+		 * @author 	Asel
+		 * @date 	19 February 2013
+		 * @date  	8 January 2017 (Modified)
+		 * @param 	e the event to compare this Event to
+		 * @return 	<ul>
+		 * 				<li>0 if the events are simultaneous and their <code>Actions</code> have the same <code>priority</code></li>
+		 * 				<li>a positive integer if, 
+		 * 					<ul>
+		 * 						<li>the event <code>this</code> happens before the <code>e</code> OR</li>
+		 * 						<li>the event <code>this</code> and <code>e</code> happens at the same time but
+		 * 							the <code>Action</code> of event <code>this</code> has higher <code>priority</code> than the <code>Action</code> of event <code>e</code></li>
+		 * 					</ul>
+		 * 				</li>
+		 *	 			<li>a negative integer if, 
+		 * 					<ul>
+		 * 						<li>the event <code>this</code> happens after the <code>e</code> OR</li>
+		 * 						<li>the event <code>this</code> and <code>e</code> happens at the same time but
+		 * 							the <code>Action</code> of event <code>this</code> has lower <code>priority</code> than the <code>Action</code> of event <code>e</code></li>
+		 * 					</ul>
+		 * 				</li>
+		 * 			</ul>
 		 */
 		public int compareTo(Event e) {
-			// Whichever has the smallest time value goes first.
-			return (this.when - e.when);
+			//First sort by the time of the event
+	        int timeResult = this.when - e.when;
+	        
+	        //if the comparison gave us a result i.e the events aren't simultaneous,
+	        //then it's safe to return the results as it is
+	        if (timeResult!=0){
+	        	return timeResult;
+	        }
+	        
+	        //if we are here then the events are simultaneous, hence must be sorted according to priority of the event's action
+	        int priorityResult = e.getAction().getPriority() - this.getAction().getPriority();
+	        
+	        //NOTE: if the priority result is still 0, then we let the events happen in an arbitrary order
+	        
+	        //return the result
+	        return priorityResult;
 		}
+		
+		
 	}
 	
-	private PriorityQueue<Event> events = new PriorityQueue<>();
+	private PriorityQueue<Event> events = new PriorityQueue<Event>();
 	private int now = 0;
 	private int ticksize;
 	private World universe;
+	
 	
 	/**
 	 * Schedules an action by adding an event to the queue of events
@@ -91,7 +131,7 @@ public class Scheduler {
 	 * @param duration : of the event (how long it takes for the event to complete)
 	 */
 	public void schedule(ActionInterface c, Actor<?> a, int duration) {
-				
+			
 		int delay = 0;
 		int cooldown = 0;
 		
@@ -115,29 +155,23 @@ public class Scheduler {
 		
 	}
 	
-	/** Allow time to pass.  Process any events that are scheduled to go off between now and the next time tick.
+	/** Allow time to pass.  Process any events that are scheduled to go off between now and the next time tick in the order of the priority.
 	 * 
 	 * @author ram
 	 * @date 19 February 2013
 	 */
 	public void tick() {
-		
 		universe.tick();
-		//System.out.println("NUMBER OF Events : "+events.size());
+		System.out.println("");
 		while (!events.isEmpty() && events.peek().getTime() <= now + ticksize) {
-			//while the list of events is not empty 
-			//and the time of the event at the head of the queue is less than the time after the tick
 			//the second condition ensures that an event that should happen in the future doesn't execute now
-			
+								
 			//get the event at the head of the queue
 			Event e = events.poll();
-			
+			System.out.println(e.getAction().getDescription() + " BY "+e.getActor().getShortDescription()+ " AT "+e.getTime() +" PRIORITY "+e.getAction().getPriority());
+					
 			//execute that event
-			e.getAction().execute(e.getActor());
-			
-			//System.out.println(e.getActor().getLongDescription());
-			
-			
+			e.getAction().execute(e.getActor());			
 		}
 		//update the present time after the tick has happened
 		now = now + ticksize;
@@ -159,30 +193,5 @@ public class Scheduler {
 		events = new PriorityQueue<Event>();
 		this.ticksize = ticksize;
 	}
-	
-	public void removeActorsEvents(Actor actor){
-		PriorityQueue<Event> filteredEvents = new PriorityQueue();
-		//System.out.println("YO : "+events.size());
-		//zero events???
-		while (!events.isEmpty()){
-			
-			Event e = events.poll();
-			if (e.getActor() !=actor){
-				filteredEvents.offer(e);
-				//System.out.println("FILTERED");
-			}
-		}
 		
-		while (!filteredEvents.isEmpty()){
-			
-			events.offer(filteredEvents.poll());
-			
-		}
-		
-		
-		
-	}
-	
-	
-	
 }
