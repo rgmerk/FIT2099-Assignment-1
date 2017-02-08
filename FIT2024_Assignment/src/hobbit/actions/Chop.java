@@ -6,6 +6,9 @@
  * 
  * @author ram
  */
+/*Change Log
+ * 2017/02/08	Chop given a priority of 1 in constructor (asel)
+ */
 package hobbit.actions;
 
 import hobbit.Capability;
@@ -24,6 +27,7 @@ public class Chop extends HobbitAffordance implements HobbitActionInterface {
 	 */
 	public Chop(HobbitEntityInterface theTarget, MessageRenderer m) {
 		super(theTarget, m);
+		priority = 1;
 	}
 
 	@Override
@@ -68,6 +72,8 @@ public class Chop extends HobbitAffordance implements HobbitActionInterface {
 	 * <p>This replaces the tree with a pile of wood.</p>
 	 * 
 	 * <p>Assumes the targets with the Chop Affordance (targets that can be chopped) are trees</p> 
+	 * 
+	 * <p>This method will only be called if the <code>HobbitActor a</code> is alive</p>
 	 * 
 	 * @author ram
 	 * @param the actor who is chopping
