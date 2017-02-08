@@ -10,6 +10,8 @@
 /*
  * Change log
  * 2017-01-20: Added missing Javadocs and improved comments (asel)
+ * 2017-02-08: Removed the removeEventsMethod as it's no longer required.
+ * 			   Removed the tick and act methods for HobbitActor as they are never called
  */
 package hobbit;
 
@@ -26,24 +28,38 @@ import edu.monash.fit2024.simulator.time.Scheduler;
 import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
 
 public abstract class HobbitActor extends Actor<HobbitAction> implements HobbitEntityInterface {
+	
+	/**the <code>Team</code> to which this <code>HobbitActor</code> belongs to**/
 	private Team team;
+	
+	/**The amount of <code>hitpoints</code> of this actor. If the hitpoints are zero or less this <code>Actor</code> is dead*/
 	private int hitpoints;
-	private HobbitEntityInterface itemCarried;
+	
+	/**The world this <code>HobbitActor</code> belongs to.*/
 	protected MiddleEarth world;
-	private String symbol;
-	protected boolean humanControlled = false;
-	private HashSet<Capability> capabilities;
+	
+	/**Scheduler to schedule this <code>HobbitActor</code>'s events*/
 	protected static Scheduler scheduler;
 	
-	// Constructor
+	/**The item carried by this <code>HobbitActor</code>. <code>itemCarried</code> is null if this <code>HobbitActor</code> is not carrying an item*/
+	private HobbitEntityInterface itemCarried;
+	
+	/**If or not this <code>HobbitActor</code> is human controlled. <code>HobbitActor</code>s are not human controlled by default*/
+	protected boolean humanControlled = false;
+	
+	/**A string symbol that represents this <code>HobbitActor</code>, suitable for display*/
+	private String symbol;
+	
+	/**A set of <code>Capability</code>s of this <code>HobbitActor</code>*/
+	private HashSet<Capability> capabilities;
+	
 	/**
-	 * Constructor for the Hobbit Actor which creates a Hobbit Actor
+	 * Constructor for the Hobbit Actor 
 	 * 
-	 * @param team		: the team to which the New Hobbit Actor belong to.
-	 * @param hitpoints	: The number of hitpoints to get started with. If the number of hit points 
-	 * 					  for the Actor is initialized with 0 or a negative integer the actor starts dead 
-	 * @param m			: message renderer for the actor to display messages
-	 * @param world		: the world the actor belong to
+	 * @param team @see {@link #team}
+	 * @param hitpoints @see {@link #hitpoints}
+	 * @param m	message renderer for the actor to display messages
+	 * @param world @see {@link #world}
 	 */
 	public HobbitActor(Team team, int hitpoints, MessageRenderer m, MiddleEarth world) {
 		super(m);
@@ -53,63 +69,73 @@ public abstract class HobbitActor extends Actor<HobbitAction> implements HobbitE
 		this.world = world;
 		this.symbol = "@";
 		
-		// Add affordances that all HobbitActors must have
-		// All the Hobbit Actors can be attacked hence the Attack affordance is added
-		// which allows these actors to *be attacked*
+		//HobbitActors are given the Attack affordance hence they can be attacked
 		HobbitAffordance attack = new Attack(this, m);
 		this.addAffordance(attack);
 	}
 	
-	//Accessors
-	//setters and getters for the Hobbit Actor attributes
+	/**
+	 * Setter for the scheduler
+	 * 
+	 * @param s @see {@link #scheduler}
+	 */
 	public static void setScheduler(Scheduler s) {
 		scheduler = s;
 	}
 	
-	public void removeEvents(){
-		scheduler.removeActorsEvents(this);
-	}
-	
-
+	/**
+	 * Getter for the team
+	 * 
+	 * @return @see {@link #team}
+	 */
 	public Team getTeam() {
 		return team;
 	}
 
+	/**
+	 * Getter for hitpoints
+	 * 
+	 * @return @see {@link #hitpoints}
+	 */
 	public int getHitpoints() {
 		return hitpoints;
 	}
 
-	/**
-	 * @return the item carried by the hobbit actor
+	/**Getter for the item carried
+	 * 
+	 * @return @see {@link #itemCarried}
 	 */
 	public HobbitEntityInterface getItemCarried() {
 		return itemCarried;
 	}
 
+	/**Setter for the team
+	 * 
+	 * @param team @see {@link #team}
+	 */
 	public void setTeam(Team team) {
 		this.team = team;
 	}
 
 	/**
-	 * Method insist damage by reducing a certain amount of damage from the actor's hit points
+	 * Method insists damage on this <code>HobbitActor</code> by reducing a certain amount of <code>damage</code> from this  <code>HobbitActor</code>'s <code>hitpoints</code>
 	 * 
-	 * @param the amount of damage to be done on the actor. 
-	 * 
-	 *TODO: Add an assertion to make sure the damage given is a positive value or zero since a negative value can increase the hitpoints
+	 * @param damage the amount of <code>hitpoints</code> to be reduced
 	 */
 	public void takeDamage(int damage) {
-		//assertion to ensure the damage is not negative
-		//this assertion might have to be removed if the actors can be healed, sounds like a hack
-		assert (damage < 0)	:"damage on actor must not be negative";
+		//assertion to ensure the damage is not negative. Negative damage could increase the HobbitActor's hitpoints
+		assert (damage >= 0)	:"damage on HobbitActor must not be negative";
 		
 		this.hitpoints -= damage;
 	}
 
 	/**
-	 * <p>Set the item carried by the Hobbit Actor</p>
-	 * <p>This method will replace any old items carried by the actor with the new the new target 
-	 * hence it would be wise to make sure any items that are carried are returned before this method is implemented</p>
+	 * Setter for the item carried by this <code>HobbitActor</code>
+	 * <p>
+	 * This method will replace items already held by the <code>HobbitActor</code> with the <code>target</code>
+	 * 
 	 * @param target the new item to be set as item carried
+	 * @see {@link #itemCarried}
 	 */
 	public void setItemCarried(HobbitEntityInterface target) {
 		this.itemCarried = target;
@@ -117,11 +143,11 @@ public abstract class HobbitActor extends Actor<HobbitAction> implements HobbitE
 	
 	
 	/**
-	 * Returns true if this actor is dead (which is when the actor's hit points have reached 0 or less)
-	 * , false otherwise.
+	 * Returns true if this actor is dead, false otherwise.
 	 * 
 	 * @author ram
 	 * @return true if and only if this actor is dead
+	 * @see {@link #hitpoints}
 	 */
 	public boolean isDead() {
 		//an actor is dead if their hit points are less than or equal to 0
@@ -131,7 +157,7 @@ public abstract class HobbitActor extends Actor<HobbitAction> implements HobbitE
 	/**
 	 * Getter for the symbol
 	 * 
-	 * @returns symbol :symbol or string by which the actor is represented by
+	 * @returns symbol @see {@link #symbol}
 	 */
 	public String getSymbol() {
 		return symbol;
@@ -139,15 +165,8 @@ public abstract class HobbitActor extends Actor<HobbitAction> implements HobbitE
 	
 	/**
 	 * Setter for the symbol of the Actor
-	 *<p>Single character strings are preferred over multi character strings to avoid confusion in the text interface</p>
-	 *
-	 *<p>Try avoiding "." as an empty space is represented on the text interface using the ".", hence your Actor might not be visible 
-	 * 	and be mistaken for an empty space </p>
-	 * <p>These constraints are however for the current Text interface and would not have to be followed for a GUI for example</p>
 	 * 
-	 * TODO : assertions for a single character and .?
-	 * 
-	 * @param the symbol by which the actor is represented by. 
+	 * @param s @see {@link #symbol} 
 	 *
 	 */
 	public void setSymbol(String s) {
@@ -156,23 +175,24 @@ public abstract class HobbitActor extends Actor<HobbitAction> implements HobbitE
 	}
 	
 	/**
-	 * Returns if or not the Hobbit Actor is controlled by a human
-	 * @return true if the Actor is controlled by a human, false otherwise
+	 * Returns if or not the <code>HobbitActor</code> is human controlled.
+	 * 
+	 * @return true if the <code>HobbitActor</code> is controlled by a human, false otherwise
+	 * @see {@link #humanControlled}
 	 */
 	public boolean isHumanControlled() {
 		return humanControlled;
 	}
 	
 	/**
-	 * Returns true if this actor has the given capability, false otherwise.
+	 * Returns true if this actor has the given capability <code>c</code>, false otherwise.
 	 * 
 	 * Wrapper for HashSet<Capability>.contains().
 	 * 
 	 * @author ram
-	 * @param the Capability to search for
+	 * @param c the Capability to search for
 	 */
 	public boolean hasCapability(Capability c) {
-		//return true if the given Capability c is in the list of capabilities of the actor
 		return capabilities.contains(c);
 	}
 	
@@ -194,54 +214,21 @@ public abstract class HobbitActor extends Actor<HobbitAction> implements HobbitE
 		
 		// add new movement possibilities
 		for (CompassBearing d: CompassBearing.values()) { //for each CompassBearing d in the compass bearing values NORTH,NORTHEAST,EAST,SOUTHEAST,SOUTH....
-														  //(@see CompassBearing enum class in edu.monash.fit2024.gridworld.Grid.java)
-														  //see if there is a neighbor to the current location of the actor in that direction d
+														  //(@see #CompassBearing enum class in edu.monash.fit2024.gridworld.Grid.java)
 														  
-			if (loc.getNeighbour(d) != null) //there is a neighbor in the direction d
+			if (loc.getNeighbour(d) != null) //see if there is a neighbor to the current location of the actor in that direction d
 				newActions.add(new Move(d,messageRenderer, world)); //add new move action that will allow the actor to move in that direction (d) to newActions
 		}
 		
 		// replace old action list with new
-		this.actions = newActions;		// TODO: This assumes that the only actions are the Move actions. This will clobber any others. Needs to be fixed.
-						/* Actually, that's not the case: all non-movement actions are transferred to newActions before the movements are transferred. --ram */
+		this.actions = newActions;		
+		
+		// TODO: This assumes that the only actions are the Move actions. This will clobber any others. Needs to be fixed.
+		/* Actually, that's not the case: all non-movement actions are transferred to newActions before the movements are transferred. --ram */
 	}
 
 
-	/**
-	 * Action to be performed when the actor is alive
-	 */
-	public abstract void act();
-
-	@Override
-	/**
-	 * Tick method for the actor. Allows the actor to act if it's not waiting
-	 * <p>
-	 * This tick method will only call act if the actor is alive
-	 * 
-	 * @param 	l is the current location of the actor.
-	 * @author 	Asel
-	 */
-	public void tick(Location l) {
-		int waittime = this.getWaittime();
-		if (waittime >0){//waiting since the wait time is greater than zero
-			waittime --;
-			this.setWaittime(waittime); //update the new waiting time
-		}
-		else{
-			//perform action if not waiting
-			System.out.println("--");
-			System.out.println(this.getShortDescription());
-			System.out.println("HIT POINTS : "+this.getHitpoints());
-			System.out.println("IS DEAD : "+this.isDead());
-			System.out.println("IS ALIVE : "+!this.isDead());
-			if (!this.isDead()){
-				act();
-				System.out.println("ACTED");
-			}
-			
-			
-		}
-	}
+	
 	
 	
 }
