@@ -35,23 +35,24 @@ public class Move extends HobbitAction {
 
 	/**
 	 * Perform the move action.
-	 * 
+	 * <p>
 	 * If it is possible for actor a to move in the given direction, tell the world to move them
 	 * and then reset a's move commands to take into account a possible new set of available moves.  If
 	 * it is not possible for the actor to move in that direction, this method does nothing.
+	 * <p>
+	 * This method will only be called if the <code>HobbitActor a</code> is alive
 	 * 
 	 * @author ram
 	 * @param a the HobbitActor who is moving
 	 */
 	public void act(HobbitActor a) {
-		System.out.println("MOVE CALLED FOR "+a.getShortDescription());
+		
 		if (world.canMove(a, whichDirection)) {
 			world.moveEntity(a, whichDirection);
 			a.resetMoveCommands(world.find(a));//reset the new possible set of moves based on the new location of the entity
 			messageRenderer.render(a.getShortDescription() + " is moving " + whichDirection);
 		}
-		
-		
+				
 	}
 
 
