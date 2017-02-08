@@ -1,5 +1,8 @@
 package edu.monash.fit2024.simulator.matter;
-
+/*
+ * Change Log
+ * 2017/02/08	Added an abstract getter for priority (asel)
+ */
 
 public interface ActionInterface {
 
@@ -30,5 +33,18 @@ public interface ActionInterface {
 	 * @return description of the Action
 	 */
 	public abstract String getDescription();
+	
+	/**
+	 * Returns the priority of the Action. Priority is represented by an integer where a smaller integer 
+	 * corresponds to lower priority and vice versa. 
+	 * <p>
+	 * Actions with higher priority are executed before all actions with lower priority. 
+	 * Actions with the same priority will be executed in an arbitrary order.
+	 * <p>
+	 * The scheduler use the priority of Actions to order Events within a tick.
+	 * 
+	 * @return the {@link edu.monash.fit2024.simulator.matter.Action#priority}
+	 */
+	public abstract int getPriority();
 
 }
