@@ -83,12 +83,14 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 	
 	/**defined order of angles required to sort the 8 directions
 	 * <p>
-	 * Defined order corresponds to NW, N, NE, W, E, SW, S, SE
+	 * Defined order corresponds to NW, N, NE, W, CENTER, E, SW, S, SE
 	 */
 	/* This order also corresponds to the order in which move actionButtons should appear in the 3 X 3 grid
 	 * The -1 entry corresponds to the empty space in the middle
 	 */
 	private static final List<Integer> definedOrder = Arrays.asList(315,0,45,270,-1,90,225,180,135);
+	
+	private static final int CONTROL_PANE_WIDTH = 600;
 
 	
 	/**
@@ -165,6 +167,7 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 		actionPanel.add(lblMessages);
 		actionPanel.add(moveActionPanel);
 		actionPanel.add(otherActionPanel);
+		actionPanel.setSize(Integer.MAX_VALUE,CONTROL_PANE_WIDTH);
 		
 		this.add(actionPanel);//add action panel to main layout		
 	}
@@ -188,7 +191,8 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 		final int gridWidth  = grid.getWidth();
 		
 		//font for pretty output
-		Font locFont = new Font(Font.MONOSPACED, Font.BOLD, 15);
+		Font locFont = new Font(Font.MONOSPACED, Font.PLAIN, 15);
+		Font playerFont = new Font(Font.MONOSPACED, Font.BOLD, 15);
 		
 		gridPanel.removeAll();//clear previous grid
 		gridPanel.setLayout(new GridLayout(gridHeight, gridWidth));//grid layout for the locations	
@@ -209,8 +213,11 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 				
 				//highlight the human controlled player's location
 				if (locationHasHumanControlledActor(loc)){
-					txtLoc.setBackground(Color.YELLOW);
+					txtLoc.setFont(playerFont);
 				}
+				
+				txtLoc.setBackground(getColorOfLoc(loc));
+				
 				
 				txtLoc.setEditable(false); //made non editable
 				txtLoc.setToolTipText(loc.getShortDescription());//show the location description when mouse hovered
@@ -494,6 +501,35 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 		//refresh panel with the changes
 		moveActionPanel.revalidate();;
 		moveActionPanel.repaint();
+	}
+	
+	private Color getColorOfLoc(HobbitLocation loc) {
+		
+		final char FOREST 	= 'F';
+		final char RIVER 	= 'R';
+		final char SHIRE 	= 'S';
+		final char EARTH 	= '.';
+		final char BAGEND 	= 'b';
+		
+		switch (loc.getSymbol()) {
+		case FOREST:
+			return Color.decode("#44aa00");
+
+		case RIVER:
+			return Color.decode("#2ad4ff");
+			
+		case SHIRE:
+			return Color.decode("#8dd35f");
+			
+		case EARTH:
+			return Color.decode("#fff6d5");
+			
+		case BAGEND:
+			return Color.decode("#338000");
+			
+		default:
+			return Color.decode("#ececec");
+		}
 	}
 			
 }
