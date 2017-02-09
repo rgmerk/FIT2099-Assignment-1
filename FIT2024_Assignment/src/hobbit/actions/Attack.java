@@ -92,14 +92,14 @@ public class Attack extends HobbitAffordance implements HobbitActionInterface {
 		}
 					
 		
-		if (targetIsActor && (a.getTeam() == targetActor.getTeam())) {
-			//don't attack HobbitActors in the same team
+		if (targetIsActor && (a.getTeam() == targetActor.getTeam())) { //don't attack HobbitActors in the same team
 			a.say("\t" + a.getShortDescription() + " says: Silly me! We're on the same team, " + target.getShortDescription() + ". No harm done");
 		}
 		else if (a.isHumanControlled() // a human-controlled player can attack anyone
-			|| (targetIsActor && (a.getTeam() != targetActor.getTeam())) // others will only attack actors on different teams
-				) { 
+			|| (targetIsActor && (a.getTeam() != targetActor.getTeam()))) {  // others will only attack actors on different teams
+				
 			a.say(a.getShortDescription() + " is attacking " + target.getShortDescription() + "!");
+			
 			HobbitEntityInterface itemCarried = a.getItemCarried();
 			if (itemCarried != null) {//if the actor is carrying an item 
 				if (itemCarried.hasCapability(Capability.WEAPON)) {
@@ -107,19 +107,24 @@ public class Attack extends HobbitAffordance implements HobbitActionInterface {
 					itemCarried.takeDamage(1); // weapon gets blunt
 					a.takeDamage(energyForAttackWithWeapon); // actor uses energy to attack
 				}
-				else {
+				else {//an attack with a none weapon
 					if (targetIsActor) {
 						targetActor.say("\t" + targetActor.getShortDescription()
 								+ " is amused by " + a.getShortDescription()
 								+ "'s attempted attack with "
 								+ itemCarried.getShortDescription());
 					}
-				} // if is carrying a weapon
-			} // if carrying something
+				} 
+			}
 			else { // attack with bare hands
 				target.takeDamage((a.getHitpoints()/20) + 1); // a bare-handed attack doesn't do much damage.
 				a.takeDamage(2*energyForAttackWithWeapon); // actor uses energy. It's twice as tiring as using a weapon
-			} // if carrying something
+			}
+			
+			
+			
+			//After the attack
+			
 			if (a.isDead()) {//the actor who attacked is dead after the attack
 							
 				a.setLongDescription(a.getLongDescription() + ", that died of exhaustion while attacking someone");
