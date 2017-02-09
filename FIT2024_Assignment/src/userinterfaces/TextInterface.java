@@ -69,24 +69,26 @@ public class TextInterface implements MessageRenderer, MapRenderer, SimulationCo
 	}
 	
 
-	@Override
+	
 	/**
 	 * Render the grid and display it in the Text Interface
 	 * 
 	 * @author ram
 	 * @author Asel
 	 */
+	@Override
 	public void render() {
 		drawGrid();	
 	}
 
-	@Override
+	
 	/**
 	 * Display a message.  Part of the MessageRenderer interface.
 	 * 
 	 * @author ram
 	 * @param message the String to display
 	 */
+	@Override
 	public void render(String message) {
 		System.out.println(message);
 
