@@ -8,6 +8,7 @@
  */
 /*Change Log
  * 2017/02/08	Chop given a priority of 1 in constructor (asel)
+ * 2017/02/09	Chopping would blunt the CHOPPER (asel)
  */
 package hobbit.actions;
 
@@ -67,7 +68,7 @@ public class Chop extends HobbitAffordance implements HobbitActionInterface {
 
 	@Override
 	/**
-	 * <p>Perform the Chop command on a tree.</p>
+	 * <p>Perform the Chop command on a tree and blunts the item used to Chop</p>
 	 * 
 	 * <p>This replaces the tree with a pile of wood.</p>
 	 * 
@@ -82,6 +83,9 @@ public class Chop extends HobbitAffordance implements HobbitActionInterface {
 		// tree becomes a pile of wood
 		// remove chop affordance and change the way it appears
 		target.removeAffordance(this);
+		
+		//blunt the CHOPPER
+		a.getItemCarried().takeDamage(1);
 		
 		//change the descriptions to a pile of wood and the symbols
 		target.setLongDescription("A pile of wood that was once " + target.getShortDescription());
