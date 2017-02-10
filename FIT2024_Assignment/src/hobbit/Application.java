@@ -1,26 +1,27 @@
 /**
- * Driver class for the Hobbit package with Text Interface.  Contains nothing but a main().
+ * Driver class for the Hobbit package with <code>GridController</code>.  Contains nothing but a main().
  * 
  * @author ram
  */
 /*
  * Change log
  * 2017/02/02	The TextInterface handles the responsibly of displaying the grid not the HobbitGrid or HobbitWorld classes (asel)
+ * 2017/02/10	GridController controls the interactions with the user and will determine which UI it should use to do this. 
+ * 			    Therefore there is tight coupling with the user interfaces and the driver.
  */
 package hobbit;
 
 import edu.monash.fit2024.simulator.time.Scheduler;
-import userinterfaces.GUInterface;
-import userinterfaces.SimpleGUInterface;
-import userinterfaces.TextInterface;
+import hobbit.hobbitinterfaces.HobbitGridController;
 
 public class Application {
 	public static void main(String args[]) {
 		
 		MiddleEarth world = new MiddleEarth();
-		//TextInterface ui = new TextInterface(world);
-		//SimpleGUInterface ui= new SimpleGUInterface(world);
-		GUInterface ui= new GUInterface(world);
+		
+		//Grid controller controls the data and commands between the UI and the model
+		HobbitGridController ui = new HobbitGridController(world);
+		
 		Scheduler theScheduler = new Scheduler(1, world);
 		HobbitActor.setScheduler(theScheduler);
 		
