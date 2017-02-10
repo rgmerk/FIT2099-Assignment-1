@@ -12,9 +12,10 @@ import hobbit.HobbitEntityInterface;
 import hobbit.HobbitLocation;
 import hobbit.MiddleEarth;
 import hobbit.Team;
-import userinterfaces.GUInterface;
-import userinterfaces.SimpleGUInterface;
-import userinterfaces.TextInterface;
+import hobbit.hobbitinterfaces.HobbitGridController;
+import hobbit.userinterfaces.GUInterface;
+import hobbit.userinterfaces.SimpleGUInterface;
+import hobbit.userinterfaces.TextInterface;
 
 import java.util.List;
 
@@ -56,7 +57,7 @@ public class Player extends HobbitActor {
 		describeScene();
 		//scheduler.schedule(TextInterface.getUserDecision(this), this, 1);
 		//scheduler.schedule(SimpleGUInterface.getUserDecision(this), this, 1);
-		scheduler.schedule(GUInterface.getUserDecision(this), this, 1);
+		scheduler.schedule(HobbitGridController.getUserDecision(this), this, 1);
 		
 	}
 	/**
