@@ -17,10 +17,7 @@ package edu.monash.fit2024.gridworld;
  * 2013-03-07: Made abstract, since the render() method will be client specific. (ram)
  * 	    Added EntityManager parameter so that clients can render items if they like. (ram)
  * 2013-04-10: Gave CompassBearing the ability to map back and forth from degrees (ram)
- * 
  * 2017-01-20: 	Added comments to methods for better understanding (asel)
- * 				All such comments end with (asel)
- * 
  * 2017-02-03:	Added a getter method for the angle since it's required by the GUI to show move buttons in their corresponding directions
  */
 
