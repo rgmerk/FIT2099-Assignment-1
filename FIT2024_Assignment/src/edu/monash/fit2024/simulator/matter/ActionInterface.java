@@ -4,7 +4,9 @@ package edu.monash.fit2024.simulator.matter;
  * 2017/02/08	Added an abstract getter for priority (asel)
  */
 
-public interface ActionInterface {
+import hobbit.HobbitActionInterface;
+
+public interface ActionInterface extends Comparable<ActionInterface> {
 
 	/**
 	 * <p>Returns the length of time the Action will take.  This can be longer or shorter than
@@ -46,5 +48,13 @@ public interface ActionInterface {
 	 * @return the {@link edu.monash.fit2024.simulator.matter.Action#priority}
 	 */
 	public abstract int getPriority();
+	
+	
+	/**
+	 * compareTo method to order HobbitActionInterface objects in alphabetical order
+	 */
+	public default int compareTo(ActionInterface other) {
+		return this.getDescription().compareTo(other.getDescription());
+	}
 
 }
