@@ -168,7 +168,7 @@ public class Scheduler {
 								
 			//get the event at the head of the queue
 			Event e = events.poll();
-			System.out.println(e.getAction().getDescription() + " BY "+e.getActor().getShortDescription()+ " AT "+e.getTime() +" PRIORITY "+e.getAction().getPriority());
+			//System.out.println(e.getAction().getDescription() + " BY "+e.getActor().getShortDescription()+ " AT "+e.getTime() +" PRIORITY "+e.getAction().getPriority());
 					
 			//execute that event
 			e.getAction().execute(e.getActor());			
