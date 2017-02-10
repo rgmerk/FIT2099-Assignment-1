@@ -100,6 +100,14 @@ public class MiddleEarth extends World {
 		entityManager.setLocation(bilbo, loc);
 		bilbo.resetMoveCommands(loc);
 		
+		/*
+		// Asel
+		Player asel = new Player(Team.GOOD, 100, iface, this);
+		asel.setShortDescription("Asel The Legend");
+		entityManager.setLocation(asel, loc);
+		asel.resetMoveCommands(loc);
+		*/
+		
 		// The River Sherbourne
 		for (int col = 3; col < 8; col++) {
 			loc = myGrid.getLocationByCoordinates(col, 8);
