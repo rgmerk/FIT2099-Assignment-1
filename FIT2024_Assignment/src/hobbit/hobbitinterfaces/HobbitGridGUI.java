@@ -1,0 +1,519 @@
+package hobbit.hobbitinterfaces;
+
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+import edu.monash.fit2024.gridworld.GridRenderer;
+import edu.monash.fit2024.gridworld.Grid.CompassBearing;
+import edu.monash.fit2024.simulator.matter.ActionInterface;
+import edu.monash.fit2024.simulator.matter.EntityManager;
+import hobbit.HobbitActionInterface;
+import hobbit.HobbitActor;
+import hobbit.HobbitEntityInterface;
+import hobbit.HobbitGrid;
+import hobbit.HobbitLocation;
+import hobbit.MiddleEarth;
+import hobbit.actions.Move;
+
+/**
+ * This is the graphical based user interface for the simulation. Is responsible for outputting a graphical map and messages on a JFrame
+ * window and also obtain user selection of commands from the same JFrame window
+ * <p>
+ * Its operations are controlled by the <code>HobbitGridController</code> hence tightly coupled
+ * 
+ * @author Asel
+ */
+public class HobbitGridGUI extends JFrame implements GridRenderer {
+
+	/**The grid of the world*/
+	private static HobbitGrid grid;
+	
+	/**Panel that contains the map formed as a matrix of JTextfields*/
+	private JPanel gridPanel = new JPanel();
+	
+	/**Panel that contains the label {@link #lblMessages}, {@link #moveActionPanel}  and {@link #otherActionPanel}*/
+	private JPanel actionPanel = new JPanel();
+	
+	/**Label that displays messages. Is contained in {@link #actionPanel}*/
+	private JLabel lblMessages = new JLabel();
+	
+	/**Panel that contains action buttons corresponding to move commands. Is contained in {@link #actionPanel}*/
+	private static JPanel moveActionPanel = new JPanel();
+	
+	/**Panel that contains action buttons corresponding to non movement commands. Is contained in {@link #actionPanel}*/
+	private static JPanel otherActionPanel = new JPanel();
+	
+	/**The index of the command selected*/
+	private static volatile int selection = -1;
+	
+	/**Array list that stores all the JButtons corresponding order of the commands. 
+	 * <p>
+	 * JButtons of move commands come before the JButtons of non movement commands
+	 */
+	private static List<JButton> allCommandButtons = new ArrayList<>();
+	
+	/**String that contains all the messages from the message renderer within a tick. Formatted using HTML tags*/
+	private static String messageBuffer = "";
+	
+	/**defined order of angles required to sort the 8 directions
+	 * <p>
+	 * Defined order corresponds to NW, N, NE, W, CENTER, E, SW, S, SE
+	 */
+	/* This order also corresponds to the order in which move actionButtons should appear in the 3 X 3 grid
+	 * The -1 entry corresponds to the empty space in the middle
+	 */
+	private static final List<Integer> definedOrder = Arrays.asList(315,0,45,270,-1,90,225,180,135);
+	
+	/**
+	 * Constructor for the <code>HobbitGridGUI</code>
+	 * 
+	 * @pre 	grid should not be null
+	 * @param 	grid the grid of the world
+	 */
+	public HobbitGridGUI(HobbitGrid grid) {
+		HobbitGridGUI.grid = grid;
+		
+		drawLayout();
+		
+		//setting a title and opening the window in full screen
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        this.setTitle("Hobbit World");
+        this.setVisible(true);
+	}
+	
+	@Override
+	public void displayMap() {
+		final int gridHeight = grid.getHeight();
+		final int gridWidth  = grid.getWidth();
+		
+		//font for pretty output
+		Font locFont = new Font(Font.MONOSPACED, Font.PLAIN, 15);
+		
+		gridPanel.removeAll();//clear previous grid
+		gridPanel.setLayout(new GridLayout(gridHeight, gridWidth));//grid layout for the locations	
+		
+		for (int row = 0; row <gridHeight; row++){//for each row
+			
+			for (int col = 0; col <gridWidth; col++){//each column of row
+				
+				HobbitLocation loc = grid.getLocationByCoordinates(col, row);
+				String locationText = getLocationString(loc); 
+				
+				//Each location has a non editable JTextField with location string of each text
+				JTextField txtLoc = new JTextField(locationText);
+				
+				//for pretty looks
+				txtLoc.setFont(locFont);		
+				txtLoc.setHorizontalAlignment(JTextField.CENTER);
+							
+				
+				//highlight the human controlled player's location with yellow
+				if (locationHasHumanControlledActor(loc)){
+					txtLoc.setBackground(Color.YELLOW);
+				}
+				else { //other locations are given a color based on their location symbol
+					txtLoc.setBackground(getColorOfLoc(loc));
+				}
+				
+				txtLoc.setEditable(false); //made non editable
+				txtLoc.setToolTipText(loc.getShortDescription());//show the location description when mouse hovered
+				
+				//add text field to gridPanel
+				gridPanel.add(txtLoc);
+				
+			}
+		}
+		
+		//refresh the panel with the changes
+		gridPanel.revalidate();;
+		gridPanel.repaint();
+
+	}
+
+	@Override
+	public void displayMessage(String message) {
+		//HTML formatting used instead of \n, to achieve a multi line label
+		messageBuffer = messageBuffer + message+"<br>";
+		lblMessages.setText("<html>"+messageBuffer+"</html>");	
+		
+		//for pretty looks
+		Font messageFont = new Font(Font.MONOSPACED, Font.BOLD, 15);
+		lblMessages.setFont(messageFont);
+		lblMessages.setHorizontalAlignment(JLabel.CENTER);
+		lblMessages.setVerticalAlignment(JLabel.CENTER);
+
+	}
+
+	@Override
+	public ActionInterface getSelection(ArrayList<ActionInterface> cmds) {
+		clearMessageBuffer();//this method is called in each tick so the message buffer can be cleared
+		
+		
+		//assertion for the precondition
+		assert cmds.size()>0:"command list for the actor is empty";
+				
+				
+		//selection set to -1 to trigger the wait for user input
+		selection = -1;
+		
+		ArrayList<HobbitActionInterface> moveCmds = new ArrayList<HobbitActionInterface>(); //all move commands
+		ArrayList<HobbitActionInterface> otherCmds = new ArrayList<HobbitActionInterface>(); //all other non move commands
+
+		//Separate the move and other commands
+		for (ActionInterface ac : cmds) {
+			
+			if (((HobbitActionInterface) ac).isMoveCommand()){ //move commands
+				moveCmds.add((HobbitActionInterface)ac);
+			}
+			else{ //non move commands
+				otherCmds.add((HobbitActionInterface)ac);
+			}
+			
+		}
+		
+		//sort the move commands in a defined order
+		sortMoveCommands(moveCmds);
+		
+		//sort other commands for prettier output
+		Collections.sort(otherCmds);
+		
+		ArrayList<HobbitActionInterface> allCmds = new ArrayList<HobbitActionInterface>(); //all commands
+		
+		//add move commands to list of all commands first
+		for (HobbitActionInterface ac:moveCmds){
+			allCmds.add(ac);
+		}
+		
+		//next add the other commands
+		for (HobbitActionInterface ac:otherCmds){
+			allCmds.add(ac);
+		}
+		
+		allCommandButtons.clear();
+		
+		addMoveActionButtons(moveCmds);
+		addOtherActionButtons(otherCmds);
+		
+		//wait for user input before returning
+		while(selection<0){
+		    try {
+		    Thread.sleep(200);
+		    } 
+		    catch(InterruptedException e) {}
+		}
+		 
+		return allCmds.get(selection);
+	}
+	
+	/**
+	 * Returns a string consisting of the symbol of the <code>HobbitLocation loc</code>, a colon ':' followed by 
+	 * any symbols of the contents of the <code>HobbitLocation loc</code> and/or empty spaces of the <code>HobbitLocation loc</code>.
+	 * <p>
+	 * All string returned by this method are of a fixed length and doesn't contain any line breaks.
+	 * 
+	 * @author 	Asel
+	 * @param 	loc for which the string is required
+	 * @pre 	<code>loc</code> should not be null
+	 * @pre		all symbols and empty spaces should not be line break characters
+	 * @return 	a string in the format location symbol of <code>loc</code> + : + symbols of contents of <code>loc</code> + any empty characters of <code>loc</code>
+	 * @post	all strings returned are of a fixed size
+	 */
+	private String getLocationString(HobbitLocation loc) {
+		
+		final EntityManager<HobbitEntityInterface, HobbitLocation> em = MiddleEarth.getEntitymanager();
+		
+		//all string would be of locationWidth length
+		final int locationWidth = 8;
+		
+		StringBuffer emptyBuffer = new StringBuffer();
+		char es = loc.getEmptySymbol(); 
+		
+		for (int i = 0; i < locationWidth - 2; i++) { 	//add two less as one character is reserved for the location symbol and the other for the colon (":")
+			emptyBuffer.append(es);						
+		}									  			
+			
+		//new buffer buf with a symbol of the location + :
+		StringBuffer buf = new StringBuffer(loc.getSymbol() + ":"); 
+		
+		//get the Contents of the location
+		List<HobbitEntityInterface> contents = em.contents(loc);
+		
+		
+		if (contents == null || contents.isEmpty())
+			buf.append(emptyBuffer);//add empty buffer to buf to complete the string buffer
+		else {
+			for (HobbitEntityInterface e: contents) { //add the symbols of the contents
+				buf.append(e.getSymbol());
+			}
+		}
+		buf.append(emptyBuffer); //add the empty buffer again since the symbols of the contents that were added might not actually filled the location upto locationWidth
+		
+		//set a fixed length
+		buf.setLength(locationWidth);
+		
+		return buf.toString();		
+	}
+	
+	
+	/**
+	 * Returns is a given <code>HobbitLocation loc</code> has a human controlled <HobbitActor>
+	 * 
+	 * @param 	loc the <code>HobbitLocation</code> being queried
+	 * @return	true if <code>loc</code> contains a human controlled actor, false otherwise
+	 */
+	private boolean locationHasHumanControlledActor(HobbitLocation loc){
+		
+		EntityManager<HobbitEntityInterface, HobbitLocation> em = MiddleEarth.getEntitymanager();
+		
+		//get the contents of the location
+		List<HobbitEntityInterface> contents = em.contents(loc);
+		
+		if (contents!=null && !contents.isEmpty()){
+			for (HobbitEntityInterface e: contents) { //find if human controlled
+				if (e instanceof HobbitActor){
+					if (((HobbitActor)e).isHumanControlled()){;
+						return true;
+					}
+				}
+			}
+		}
+		//couldn't find any human controlled actors
+		return false;		
+	}
+	
+	
+	/**
+	 * Sort the Move Commands in a predefined order @see {@link #definedOrder}
+	 * 
+	 * @author	Asel
+	 * @param 	moveCmds move commands to be sorted
+	 * @pre 	<code>moveCmds</code> should only contain <code>HobbitActionInterface</code> objects that are instances of <code>Move</code>
+	 */
+	private static void sortMoveCommands(ArrayList<HobbitActionInterface> moveCmds){
+		
+		Comparator<HobbitActionInterface> comparator = new Comparator<HobbitActionInterface>(){
+
+		    @Override
+		    public int compare(final HobbitActionInterface moveAction1, final HobbitActionInterface moveAction2){
+		    	int move1Index = 0;
+		    	int move2Index = 0;
+		    	
+		    	if (moveAction1 instanceof Move && moveAction2 instanceof Move){
+		    		
+		    		//casting to Move.
+		    		Move move1 = (Move)moveAction1;
+		    		Move move2 = (Move)moveAction2;
+		    		
+			    	if (move1.getWhichDirection() instanceof CompassBearing && move2.getWhichDirection() instanceof CompassBearing){
+			    		//cast to get the angle of the compass bearing
+			    		int move1BearingAngle = ((CompassBearing)move1.getWhichDirection()).getAngle();
+			    		int move2BearingAngle = ((CompassBearing)move2.getWhichDirection()).getAngle();
+			    		
+			    		//indexes in the predefined order
+			    		move1Index = definedOrder.indexOf(move1BearingAngle);
+			    		move2Index = definedOrder.indexOf(move2BearingAngle);
+			    	}
+		    	}
+
+		    	//sorting based on the index in the defined order
+		        return move1Index - move2Index;
+		    }
+		};
+
+		moveCmds.sort(comparator);
+		
+	}
+
+	/**
+	 * Add the non movement action buttons to the <code>otherActionPanel</code>
+	 * 
+	 * @author 	Asel
+	 * @param 	otherCmds a list of non movement commands
+	 * @pre		<code>otherCmds</code> sorted using Collections.sort()
+	 * @post	all commands in <code>otherCmds</code> added to <code>otherActionPanel</code> as JButtons
+	 * @post	<code>allCommandButtons</code> updated with the new JButtons added.
+	 */
+	private static void addOtherActionButtons(ArrayList<HobbitActionInterface> otherCmds){
+		
+		otherActionPanel.removeAll(); //remove other action buttons from previous layout
+		otherActionPanel.setLayout(new GridLayout(otherCmds.size(), 1));//Grid to contain non movement commands
+		
+		//add other buttons
+		for (HobbitActionInterface cmd : otherCmds) {
+			JButton actionButton = new JButton();
+			actionButton.setText(cmd.getDescription());
+			otherActionPanel.add(actionButton);
+			allCommandButtons.add(actionButton);
+			
+			actionButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					selection = allCommandButtons.indexOf(actionButton);				
+				}
+			});
+		}
+
+		//refresh panel with the changes
+		otherActionPanel.revalidate();;
+		otherActionPanel.repaint();
+	}
+
+	/**
+	 * Add the movement action buttons to the <code>moveActionPanel</code> in a 3 X 3 Grid
+	 * 
+	 * @author 	Asel
+	 * @param 	moveCmds a list of move commands
+	 * @pre 	<code>moveCmds</code> must be sorted in the defined order. @see {@link #sortMoveCommands(ArrayList)}
+	 * @post	All commands in <code>moveCmds</code> are displayed with action buttons with their positions corresponding to the bearings
+	 * @post	<code>allCommandButtons</code> updated with the new JButtons added.
+	 */
+	private static void addMoveActionButtons(ArrayList<HobbitActionInterface> moveCmds){
+		
+		moveActionPanel.removeAll(); //remove move action buttons from previous layout
+		moveActionPanel.setLayout(new GridLayout(3,3)); //3X3 grid for all 8 directions plus the empty space in the middle
+		
+		//the index of the move command in the list that is currently being processed
+		int moveCmdIndex = 0;
+
+		//this code is a bit tricky so I'll try my best to explain using the power of comments
+		for (int angle : definedOrder){ //we looping through each and every angle in the defined order
+			
+			if (moveCmdIndex < moveCmds.size()){ //if there are move commands in moveCmd that have not been added yet
+				
+				HobbitActionInterface currMoveCommand = moveCmds.get(moveCmdIndex);
+				
+				/* In a higher level the program is trying to add the currMoveCommand at the right 
+				 * position in a 3X3 grid so that it would corresponds to the bearing
+				 */
+				
+				if (currMoveCommand instanceof Move){ //this should always be true
+					Move move = (Move)currMoveCommand;
+					int moveAngle = ((CompassBearing)move.getWhichDirection()).getAngle(); //get the angle of the move command that we are trying to add
+										
+					if (angle == moveAngle){ //if the angles match then we need to place a button
+						JButton actionButton = new JButton();
+						actionButton.setText(currMoveCommand.getDescription());
+			
+						moveActionPanel.add(actionButton);
+						allCommandButtons.add(actionButton);
+						
+						actionButton.addActionListener(new ActionListener() {
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								selection = allCommandButtons.indexOf(actionButton);				
+							}
+						});
+						
+						//increment moveCmdIndex since the move command at moveCmdIndex has already being added as an action button
+						moveCmdIndex++;
+					}
+					else{//couldnt find a move command with the same angle. So just add a empty label
+						JLabel emptyLabel = new JLabel("");
+						moveActionPanel.add(emptyLabel);
+					}
+				}
+			}
+			else{ //all move commands have been added to the panel
+				//so we'll add empty labels to complete the 3 X 3 grid layout
+				JLabel emptyLabel = new JLabel("");
+				moveActionPanel.add(emptyLabel);
+			}
+		}
+	
+		
+
+		//refresh panel with the changes
+		moveActionPanel.revalidate();;
+		moveActionPanel.repaint();
+	}
+	
+	/**
+	 * This method returns a color for a <code>HobbitLocation loc</code>
+	 * <p>
+	 * This method always returns
+	 * <p>
+	 * TODO: 	Change the characters to match the new location symbols of the world
+	 * 			Support for color blindness
+	 * 
+	 * @param 	loc the location being queried
+	 * @return 	<ul>
+	 * 				<li>Green for Mirkwood Forest</li>
+	 * 				<li>Light green for The Shire</li>
+	 * 				<li>Dark green for the Bag End</li>
+	 * 				<li>Light blue for the River Sherbourne</li>
+	 * 				<li>Light brown for Middle Earth</li>
+	 * 				<li>Gray for locations not specified above</li>
+	 * 			</ul>
+	 */
+	private Color getColorOfLoc(HobbitLocation loc) {
+		
+		final char FOREST 	= 'F';
+		final char RIVER 	= 'R';
+		final char SHIRE 	= 'S';
+		final char EARTH 	= '.';
+		final char BAGEND 	= 'b';
+		
+		switch (loc.getSymbol()) {
+		case FOREST:
+			return Color.decode("#44aa00");
+
+		case RIVER:
+			return Color.decode("#2ad4ff");
+			
+		case SHIRE:
+			return Color.decode("#8dd35f");
+			
+		case EARTH:
+			return Color.decode("#fff6d5");
+			
+		case BAGEND:
+			return Color.decode("#338000");
+			
+		default:
+			return Color.decode("#ececec");
+		}
+	}
+
+	/**
+	 * Sets up the main layout to display grid and action panels
+	 * 
+	 * @author 	Asel
+	 * @post 	<code>gridPanel</code> takes up half the screen and the <code>actionPanel</code> takes up the rest
+	 * TODO : JScrollPanes please! (asel)
+	 */
+	private void drawLayout(){		
+ 		this.setLayout(new GridLayout(1,2));//Layout with 2 columns. One for the gridPanel and the other for the actionPanel
+		this.add(gridPanel); //add the grid	to main layout
+
+		actionPanel.setLayout(new GridLayout(3, 1));//Layout with 3 rows. For lblMessages, moveActionPanel and otherActionPanel
+		actionPanel.add(lblMessages);
+		actionPanel.add(moveActionPanel);
+		actionPanel.add(otherActionPanel);
+				
+		this.add(actionPanel);//add action panel to main layout		
+	}
+
+	/**
+	 * Clear the message buffer after tick
+	 * @author Asel
+	 * @see ({@link #messageBuffer}
+	 */
+	private static void clearMessageBuffer(){
+		messageBuffer="";
+	}
+}
