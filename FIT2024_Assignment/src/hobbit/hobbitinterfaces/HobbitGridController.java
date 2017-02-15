@@ -43,7 +43,8 @@ public class HobbitGridController implements GridController {
 		
 		//change the user interface to be used here in the constructor
 		//this.ui = new HobbitGridTextInterface(this.grid); //use a Text Interface to interact
-		this.ui = new HobbitGridGUI(this.grid); //Use a GUI to interact
+		//this.ui = new HobbitGridGUI(this.grid); //Use a GUI to interact
+		this.ui = new HobbitGridGUI2(this.grid); //Use a GUI to interact
 	}
 
 	@Override
