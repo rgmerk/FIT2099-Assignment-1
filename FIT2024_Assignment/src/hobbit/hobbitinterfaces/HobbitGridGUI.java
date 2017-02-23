@@ -1,28 +1,41 @@
 package hobbit.hobbitinterfaces;
 
-import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Scanner;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 
+import edu.monash.fit2024.gridworld.Grid;
 import edu.monash.fit2024.gridworld.GridRenderer;
 import edu.monash.fit2024.gridworld.Grid.CompassBearing;
 import edu.monash.fit2024.simulator.matter.ActionInterface;
+import edu.monash.fit2024.simulator.matter.Actor;
 import edu.monash.fit2024.simulator.matter.EntityManager;
 import hobbit.HobbitActionInterface;
 import hobbit.HobbitActor;
+import hobbit.HobbitEntity;
 import hobbit.HobbitEntityInterface;
 import hobbit.HobbitGrid;
 import hobbit.HobbitLocation;
@@ -30,23 +43,25 @@ import hobbit.MiddleEarth;
 import hobbit.actions.Move;
 
 /**
- * This is the graphical based user interface for the simulation. Is responsible for outputting a graphical map and messages on a JFrame
- * window and also obtain user selection of commands from the same JFrame window
+ * This is a graphical based user interface for the simulation which offers better graphics than
+ * <code>HobbitGridBasicGUI</code>. Is responsible for outputting a graphical map and messages on a JFrame
+ * window and also obtain user selection of commands from the same JFrame window.
  * <p>
- * Its operations are controlled by the <code>HobbitGridController</code> hence tightly coupled
+ * Its operations are controlled by the <code>HobbitGridController</code>
  * 
  * @author Asel
+ * @see    {@link HobbitGridBasicGUI}
  */
 public class HobbitGridGUI extends JFrame implements GridRenderer {
-
+	
 	/**The grid of the world*/
 	private static HobbitGrid grid;
 	
-	/**Panel that contains the map formed as a matrix of JTextfields*/
-	private JPanel gridPanel = new JPanel();
+	/**JPanel on which the <code>HobbitGrid</code> is painted on*/
+	private JPanel mapPanel = new JPanel();
 	
-	/**Panel that contains the label {@link #lblMessages}, {@link #moveActionPanel}  and {@link #otherActionPanel}*/
-	private JPanel actionPanel = new JPanel();
+	/**JPanel that contains the <code>lblMessages</code> label and other panels for action buttons (<code>moveActionPanel</code> and <code>otherActionPanel</code>)*/
+	private JPanel controlPanel = new JPanel();
 	
 	/**Label that displays messages. Is contained in {@link #actionPanel}*/
 	private JLabel lblMessages = new JLabel();
@@ -78,15 +93,28 @@ public class HobbitGridGUI extends JFrame implements GridRenderer {
 	 */
 	private static final List<Integer> definedOrder = Arrays.asList(315,0,45,270,-1,90,225,180,135);
 	
+	/**List to store Images of textures. Loaded only once for better performance*/
+	private List<BufferedImage> textures;
+	
+	/**List to store Images of Entities. Loaded only once for better performance*/
+	private List<BufferedImage>	entities;
+	
+	
 	/**
-	 * Constructor for the <code>HobbitGridGUI</code>
-	 * 
+	 * Constructor for the <code>HobbitGridGUI</code>. This will load the image assets into their lists
+	 * (<code>textures</code> and <code>entities</code>),draw the basic layout on the window and open it as a maximized window.
+	 *  
 	 * @pre 	grid should not be null
 	 * @param 	grid the grid of the world
+	 * @see 	{@link #textures}
+	 * @see 	{@link #entities}
 	 */
 	public HobbitGridGUI(HobbitGrid grid) {
-		HobbitGridGUI.grid = grid;
 		
+		loadTextures();		
+		loadEntities();
+		
+		HobbitGridGUI.grid = grid;
 		drawLayout();
 		
 		//setting a title and opening the window in full screen
@@ -96,54 +124,81 @@ public class HobbitGridGUI extends JFrame implements GridRenderer {
         this.setVisible(true);
 	}
 	
+	
 	@Override
 	public void displayMap() {
 		final int gridHeight = grid.getHeight();
 		final int gridWidth  = grid.getWidth();
 		
-		//font for pretty output
-		Font locFont = new Font(Font.MONOSPACED, Font.PLAIN, 15);
+		//the height and width of a location tile
+		final int locHeight = 100;
+		final int locWidth  = 100;
 		
-		gridPanel.removeAll();//clear previous grid
-		gridPanel.setLayout(new GridLayout(gridHeight, gridWidth));//grid layout for the locations	
+
+		JPanel map = new JPanel();
+		map.setLayout(new GridLayout(gridHeight, gridWidth));
+		map.setPreferredSize(new Dimension(locHeight*gridHeight, locWidth*gridWidth));
+	
 		
-		for (int row = 0; row <gridHeight; row++){//for each row
-			
-			for (int col = 0; col <gridWidth; col++){//each column of row
+		for (int row = 0; row< gridHeight; row++){ //for each row
+			for (int col = 0; col< gridWidth; col++){ //each column of a row
 				
-				HobbitLocation loc = grid.getLocationByCoordinates(col, row);
-				String locationText = getLocationString(loc); 
+				HobbitLocation loc = (HobbitLocation) grid.getLocationByCoordinates(col, row);
+								
+				//paint the texture
+				BufferedImage imgLoc = getLocationTexture(loc);
+				ImagePanel locTile = new ImagePanel(resizeImage(imgLoc, locHeight, locWidth));
+				locTile.setToolTipText(loc.getLongDescription());
 				
-				//Each location has a non editable JTextField with location string of each text
-				JTextField txtLoc = new JTextField(locationText);
 				
-				//for pretty looks
-				txtLoc.setFont(locFont);		
-				txtLoc.setHorizontalAlignment(JTextField.CENTER);
+				EntityManager<HobbitEntityInterface, HobbitLocation> em = MiddleEarth.getEntitymanager();
+				
+				//get the Contents of the location
+				List<HobbitEntityInterface> contents = em.contents(loc);
+				
+				if (!(contents == null || contents.isEmpty())) {//there is content
+					int numItems = contents.size(); //the number of items
+					
+					int gridSize = (int) Math.ceil(Math.sqrt(numItems)); //we need a gridSize X gridSize grid to show all the items
+					
+					locTile.setLayout(new GridLayout(gridSize, gridSize));
+					
+					//the height of the item image so that all the items could fit in the location tile locTile
+					int itemHeight = (int) (locHeight / gridSize); 
+					int itemWidth  = (int) (locWidth / gridSize); 
+					
+					//add the images of the contents to the location tile
+					for (HobbitEntityInterface a : contents) {
+						
+						BufferedImage imgItem = getEntityPicture(a);
+						
+						ImageIcon iconItem = new ImageIcon(resizeImage(imgItem, itemHeight, itemWidth));
+						JLabel lblItem = new JLabel();
+						lblItem.setIcon(iconItem);
+						
+						locTile.add(lblItem);
+					}
+				}
 							
-				
-				//highlight the human controlled player's location with yellow
-				if (locationHasHumanControlledActor(loc)){
-					txtLoc.setBackground(Color.YELLOW);
-				}
-				else { //other locations are given a color based on their location symbol
-					txtLoc.setBackground(getColorOfLoc(loc));
-				}
-				
-				txtLoc.setEditable(false); //made non editable
-				txtLoc.setToolTipText(loc.getShortDescription());//show the location description when mouse hovered
-				
-				//add text field to gridPanel
-				gridPanel.add(txtLoc);
+				map.add(locTile);
 				
 			}
+			
 		}
 		
+		JScrollPane mapScrollPane = new JScrollPane(map);
+		
 		//refresh the panel with the changes
-		gridPanel.revalidate();;
-		gridPanel.repaint();
-
+		mapPanel.removeAll();
+		mapPanel.setLayout(new GridLayout(1, 1));
+		mapPanel.add(mapScrollPane);
+		
+		mapPanel.revalidate();
+		mapPanel.repaint();
+		
 	}
+	
+	
 
 	@Override
 	public void displayMessage(String message) {
@@ -152,12 +207,13 @@ public class HobbitGridGUI extends JFrame implements GridRenderer {
 		lblMessages.setText("<html>"+messageBuffer+"</html>");	
 		
 		//for pretty looks
-		Font messageFont = new Font(Font.MONOSPACED, Font.BOLD, 15);
+		Font messageFont = new Font(Font.MONOSPACED, Font.BOLD, 18);
 		lblMessages.setFont(messageFont);
 		lblMessages.setHorizontalAlignment(JLabel.CENTER);
 		lblMessages.setVerticalAlignment(JLabel.CENTER);
 
 	}
+
 
 	@Override
 	public ActionInterface getSelection(ArrayList<ActionInterface> cmds) {
@@ -219,83 +275,6 @@ public class HobbitGridGUI extends JFrame implements GridRenderer {
 		 
 		return allCmds.get(selection);
 	}
-	
-	/**
-	 * Returns a string consisting of the symbol of the <code>HobbitLocation loc</code>, a colon ':' followed by 
-	 * any symbols of the contents of the <code>HobbitLocation loc</code> and/or empty spaces of the <code>HobbitLocation loc</code>.
-	 * <p>
-	 * All string returned by this method are of a fixed length and doesn't contain any line breaks.
-	 * 
-	 * @author 	Asel
-	 * @param 	loc for which the string is required
-	 * @pre 	<code>loc</code> should not be null
-	 * @pre		all symbols and empty spaces should not be line break characters
-	 * @return 	a string in the format location symbol of <code>loc</code> + : + symbols of contents of <code>loc</code> + any empty characters of <code>loc</code>
-	 * @post	all strings returned are of a fixed size
-	 */
-	private String getLocationString(HobbitLocation loc) {
-		
-		final EntityManager<HobbitEntityInterface, HobbitLocation> em = MiddleEarth.getEntitymanager();
-		
-		//all string would be of locationWidth length
-		final int locationWidth = 8;
-		
-		StringBuffer emptyBuffer = new StringBuffer();
-		char es = loc.getEmptySymbol(); 
-		
-		for (int i = 0; i < locationWidth - 2; i++) { 	//add two less as one character is reserved for the location symbol and the other for the colon (":")
-			emptyBuffer.append(es);						
-		}									  			
-			
-		//new buffer buf with a symbol of the location + :
-		StringBuffer buf = new StringBuffer(loc.getSymbol() + ":"); 
-		
-		//get the Contents of the location
-		List<HobbitEntityInterface> contents = em.contents(loc);
-		
-		
-		if (contents == null || contents.isEmpty())
-			buf.append(emptyBuffer);//add empty buffer to buf to complete the string buffer
-		else {
-			for (HobbitEntityInterface e: contents) { //add the symbols of the contents
-				buf.append(e.getSymbol());
-			}
-		}
-		buf.append(emptyBuffer); //add the empty buffer again since the symbols of the contents that were added might not actually filled the location upto locationWidth
-		
-		//set a fixed length
-		buf.setLength(locationWidth);
-		
-		return buf.toString();		
-	}
-	
-	
-	/**
-	 * Returns is a given <code>HobbitLocation loc</code> has a human controlled <HobbitActor>
-	 * 
-	 * @param 	loc the <code>HobbitLocation</code> being queried
-	 * @return	true if <code>loc</code> contains a human controlled actor, false otherwise
-	 */
-	private boolean locationHasHumanControlledActor(HobbitLocation loc){
-		
-		EntityManager<HobbitEntityInterface, HobbitLocation> em = MiddleEarth.getEntitymanager();
-		
-		//get the contents of the location
-		List<HobbitEntityInterface> contents = em.contents(loc);
-		
-		if (contents!=null && !contents.isEmpty()){
-			for (HobbitEntityInterface e: contents) { //find if human controlled
-				if (e instanceof HobbitActor){
-					if (((HobbitActor)e).isHumanControlled()){;
-						return true;
-					}
-				}
-			}
-		}
-		//couldn't find any human controlled actors
-		return false;		
-	}
-	
 	
 	/**
 	 * Sort the Move Commands in a predefined order @see {@link #definedOrder}
@@ -443,69 +422,22 @@ public class HobbitGridGUI extends JFrame implements GridRenderer {
 	}
 	
 	/**
-	 * This method returns a color for a <code>HobbitLocation loc</code>
-	 * <p>
-	 * This method always returns
-	 * <p>
-	 * TODO: 	Change the characters to match the new location symbols of the world
-	 * 			Support for color blindness
-	 * 
-	 * @param 	loc the location being queried
-	 * @return 	<ul>
-	 * 				<li>Green for Mirkwood Forest</li>
-	 * 				<li>Light green for The Shire</li>
-	 * 				<li>Dark green for the Bag End</li>
-	 * 				<li>Light blue for the River Sherbourne</li>
-	 * 				<li>Light brown for Middle Earth</li>
-	 * 				<li>Gray for locations not specified above</li>
-	 * 			</ul>
-	 */
-	private Color getColorOfLoc(HobbitLocation loc) {
-		
-		final char FOREST 	= 'F';
-		final char RIVER 	= 'R';
-		final char SHIRE 	= 'S';
-		final char EARTH 	= '.';
-		final char BAGEND 	= 'b';
-		
-		switch (loc.getSymbol()) {
-		case FOREST:
-			return Color.decode("#44aa00");
-
-		case RIVER:
-			return Color.decode("#2ad4ff");
-			
-		case SHIRE:
-			return Color.decode("#8dd35f");
-			
-		case EARTH:
-			return Color.decode("#fff6d5");
-			
-		case BAGEND:
-			return Color.decode("#338000");
-			
-		default:
-			return Color.decode("#ececec");
-		}
-	}
-
-	/**
 	 * Sets up the main layout to display grid and action panels
 	 * 
 	 * @author 	Asel
 	 * @post 	<code>gridPanel</code> takes up half the screen and the <code>actionPanel</code> takes up the rest
-	 * TODO : JScrollPanes please! (asel)
 	 */
 	private void drawLayout(){		
  		this.setLayout(new GridLayout(1,2));//Layout with 2 columns. One for the gridPanel and the other for the actionPanel
-		this.add(gridPanel); //add the grid	to main layout
-
-		actionPanel.setLayout(new GridLayout(3, 1));//Layout with 3 rows. For lblMessages, moveActionPanel and otherActionPanel
-		actionPanel.add(lblMessages);
-		actionPanel.add(moveActionPanel);
-		actionPanel.add(otherActionPanel);
+		this.add(mapPanel);
+		
+		
+		controlPanel.setLayout(new GridLayout(3, 1));//Layout with 3 rows. For lblMessages, moveActionPanel and otherActionPanel
+		controlPanel.add(lblMessages);
+		controlPanel.add(moveActionPanel);
+		controlPanel.add(otherActionPanel);
 				
-		this.add(actionPanel);//add action panel to main layout		
+		this.add(controlPanel);//add control panel to main layout		
 	}
 
 	/**
@@ -515,5 +447,296 @@ public class HobbitGridGUI extends JFrame implements GridRenderer {
 	 */
 	private static void clearMessageBuffer(){
 		messageBuffer="";
+	}
+	
+	/**
+	 * Method that resizes a given <code>BufferedImage</code> to another <code>BufferedImage</code> of given dimensions
+	 * <p>
+	 * This method protects the transparencies, i.e. the transparent background of PNG are not filled with black. This method doesn't attempt to scale images to maintain the aspect ratios.
+	 * 
+	 * @author Asel
+	 *  
+	 * @param 	image to be resize
+	 * @param 	height of the resized image
+	 * @param 	width of the resized image
+	 * 
+	 * @pre		<code>height</code> and width <code>width</code> are positive integers
+	 * @return 	a resized <code>BufferedImage</code> of height <code>height</code> and width <code>width</code>
+	 */
+	private BufferedImage resizeImage(BufferedImage image,int height,int width) {
+		
+		//new buffered image. TYPE_INIT_ARGB used to protect the transparencies
+	    BufferedImage resizedImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+	    Graphics2D graphics2D = resizedImg.createGraphics();
+
+	    //The graphic object graphic2D used to draw a new resized image to buffer
+	    graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+	    graphics2D.drawImage(image, 0, 0, width, height, null);
+	    graphics2D.dispose();
+		
+	   return resizedImg;
+	}
+	
+	
+	/**
+	 * <code>ImagePanel</code> class that extends a <code>JPanel</code> with a background image
+	 * 
+	 * @author Asel
+	 *
+	 */
+	private class ImagePanel extends JPanel{
+
+		/**Background image of the <code>ImagePanel</code>*/
+	    private BufferedImage image;
+
+	    /**
+	     * Constructor for an ImagePanel.
+	     * 
+	     * @param 	image the <code>BufferedImage</code> that should be set as the background of this <code>ImagePanel</code>
+	     * @post 	<code>ImagePanel</code> has the <code>image</code> as its background
+	     * @see 	{@link #image}
+	     */
+	    public ImagePanel(BufferedImage image) {
+	       this.image = image;
+	    }
+
+	    @Override
+	    protected void paintComponent(Graphics g) {
+	        super.paintComponent(g);
+	        g.drawImage(image, 0, 0, this);           
+	    }
+
+	}
+	
+	/**
+	 * This method performs an Image IO read to load the texture bitmaps into the array of <code>BufferedImages</code> <code>textures</code>.
+	 * The textures should loaded at the respective indices as follows,
+	 * <ul>
+	 * 	<li>Dirt texture at index 0</li>
+	 * 	<li>Grass texture at index 1</li>
+	 * 	<li>Dark Grass texture at index 2</li>
+	 * 	<li>Water texture at index 3</li>
+	 * </ul>
+	 * 
+	 * @author 	Asel
+	 * @post	<code>entities</code> is of size 4 with the texture bitmaps loaded as <code>BufferedImages</code> in the stated order.
+	 */
+	private void loadTextures() {
+		textures = new ArrayList<BufferedImage>();
+		String folderPath = "hobbitGUIResources/textures/";
+		
+		BufferedImage imgDirt 		= null;
+		BufferedImage imgGrass 		= null;
+		BufferedImage imgDarkGrass 	= null;
+		BufferedImage imgWater 		= null;
+		
+		try {
+			imgDirt 		= ImageIO.read(getClass().getResource(folderPath+"dirt.png"));
+			imgGrass 		= ImageIO.read(getClass().getResource(folderPath+"grass.png"));
+			imgDarkGrass 	= ImageIO.read(getClass().getResource(folderPath+"darkgrass.png"));
+			imgWater 		= ImageIO.read(getClass().getResource(folderPath+"water.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		textures.add(imgDirt);
+		textures.add(imgGrass);
+		textures.add(imgDarkGrass);
+		textures.add(imgWater);
+		
+	}
+
+	/**
+	 * Method that return a texture buffered image for a given <code>HobbitLocation</code>.This method uses the 
+	 * symbol of the <code>HobbitLocation</code> to query for the texture.
+	 * <p>
+	 * This method returns,
+	 * <ul>
+	 * 		<li>Dirt texture for The Shire</li>
+	 * 		<li>Grass texture for Bag End and Middle Earth</li>
+	 * 		<li>Dark Grass texture for Mirkwood Forest</li>
+	 * 		<li>Water texture for The River Sherbourne</li>
+	 * 		<li>Grass texture for all other locations</li>
+	 * </ul>
+	 * 
+	 * @author 	Asel
+	 * @param 	loc the <code>HobbitLocation</code> being queried
+	 * @return	the texture <code>BufferedImage</code> for the corresponding to the <code>HobbitLocation</code>
+	 * @see		{@link hobbit.HobbitLocation#getSymbol()}
+	 */
+	private BufferedImage getLocationTexture(HobbitLocation loc) {
+		final List<Character> dirtLocations 		= Arrays.asList('S');
+		final List<Character> grassLocations 		= Arrays.asList('b','.');
+		final List<Character> darkGrassLocations 	= Arrays.asList('F');
+		final List<Character> waterLocations		= Arrays.asList('R');
+		
+		
+		char locSymbol = loc.getSymbol();
+		
+		if (dirtLocations.contains(locSymbol)) {
+			return textures.get(0);
+		}
+		else if (grassLocations.contains(locSymbol)) {
+			return textures.get(1);
+		}
+		else if (darkGrassLocations.contains(locSymbol)) {
+			return textures.get(2);
+		}
+		else if (waterLocations.contains(locSymbol)) {
+			return textures.get(3);
+		}
+		else {
+			return textures.get(0);
+		}
+		
+	}
+ 	
+	/**
+	 * Method that return a buffered image for a given <code>HobbitEntityInterface</code>.This method uses the 
+	 * symbol of the <code>HobbitEntity</code> to query for the Image of the entity.
+	 * <p>
+	 * This method will return,
+	 * <ul>
+	 * 		<li>
+	 * 		The respective images of <code>HobbitEntityInterface</code>s for
+	 * 			<ul>
+	 * 				<li>Axe</li>
+	 *				<li>Sword</li>
+	 * 				<li>Tree</li>
+	 * 				<li>Wood</li>
+	 * 				<li>Suit</li>
+	 * 				<li>Ring</li>
+	 * 				<li>Treasure</li>
+	 * 				<li>Goblin</li>
+	 * 				<li>Dorko</li>
+	 * 				<li>Biblo</li>
+	 * 			</ul>
+	 * 		</li>
+	 * 			<li>An unknown image (an image with a question mark in a yellow circle), otherwise</li>
+	 * 	</ul>
+	 * 
+	 * @author 	Asel
+	 * @param 	a the <code>HobbitEntityInterface</code> being queried
+	 * @return	the <code>BufferedImage</code> for the corresponding to the Hobbit Entity
+	 * @see		{@link hobbit.HobbitActor#getSymbol()}
+	 */
+	private BufferedImage getEntityPicture(HobbitEntityInterface a) {
+				
+				
+		final String Axe 		= "Æ";
+		final String Sword 		= "s";
+		final String Tree	 	= "T";
+		final String Wood 		= "w";
+		final String Suit 		= "c";
+		final String Ring 		= "o";
+		final String Treasure	= "×";
+		final String Goblin		= "g";
+		final String Dorko		= "d";
+		final String Biblo		= "@";
+			
+		
+		String hobbitSymbol = a.getSymbol();
+		
+		if (hobbitSymbol.matches(Axe)) {
+			return entities.get(0);
+		}
+		else if (hobbitSymbol.matches(Sword)) {
+			return entities.get(1);
+		}
+		else if (hobbitSymbol.matches(Tree)) {
+			return entities.get(2);
+		}
+		else if (hobbitSymbol.matches(Wood)) {
+			return entities.get(3);
+		}
+		else if (hobbitSymbol.matches(Suit)) {
+			return entities.get(4);
+		}
+		else if (hobbitSymbol.matches(Ring)) {
+			return entities.get(5);
+		}
+		else if (hobbitSymbol.matches(Treasure)) {
+			return entities.get(6);
+		}
+		else if (hobbitSymbol.matches(Goblin)) {
+			return entities.get(7);
+		}
+		else if (hobbitSymbol.matches(Dorko)) {
+			return entities.get(8);
+		}
+		else if (hobbitSymbol.matches(Biblo)) {
+			return entities.get(9);
+		}
+		else {
+			return entities.get(10);
+		}
+		
+		
+		
+	}
+
+	/**
+	 * This method performs an Image IO read to load the bitmaps of the entities into the array of <code>BufferedImages</code> 
+	 * <code>entities</code>. The images of the entities should loaded at the respective indices as follows,
+	 * <ul>
+	 * <li>Image of the Axe at index 0</li>
+	 * <li>Image of the Sword at index 1</li>
+	 * <li>Image of the Tree at index 2</li>
+	 * <li>Image of the Wood at index 3</li>
+	 * <li>Image of the Suit at index 4</li>
+	 * <li>Image of the Ring at index 5</li>
+	 * <li>Image of the Treasure at index 6</li>
+	 * <li>Image of the Goblin at index 7</li>
+	 * <li>Image of the Dorko at index 8</li>
+	 * <li>Image of the Biblo at index 9</li>
+	 * </ul>
+	 * @author 	Asel
+	 * @post	<code>entities</code> is of size 11 with the bitmaps loaded as <code>BufferedImages</code> in the stated order.
+	 */
+	private void loadEntities() {
+		
+		entities = new ArrayList<BufferedImage>();
+		String folderPath = "hobbitGUIResources/entities/";
+		
+		BufferedImage imgAxe 		= null;
+		BufferedImage imgSword 		= null;
+		BufferedImage imgTree	 	= null;
+		BufferedImage imgWood 		= null;
+		BufferedImage imgSuit 		= null;
+		BufferedImage imgRing 		= null;
+		BufferedImage imgTreasure	= null;
+		BufferedImage imgGoblin		= null;
+		BufferedImage imgDorko		= null;
+		BufferedImage imgBiblo		= null;
+		BufferedImage imgUnknown	= null;
+		
+		try {
+			imgAxe 		= ImageIO.read(getClass().getResource(folderPath+"axe.png"));
+			imgSword 	= ImageIO.read(getClass().getResource(folderPath+"sword.png"));
+			imgTree	 	= ImageIO.read(getClass().getResource(folderPath+"tree.png"));
+			imgWood 	= ImageIO.read(getClass().getResource(folderPath+"logs.png"));
+			imgSuit 	= ImageIO.read(getClass().getResource(folderPath+"suit.png"));
+			imgRing 	= ImageIO.read(getClass().getResource(folderPath+"ring.png"));
+			imgTreasure	= ImageIO.read(getClass().getResource(folderPath+"treasure.png"));
+			imgGoblin	= ImageIO.read(getClass().getResource(folderPath+"goblin.png"));
+			imgDorko	= ImageIO.read(getClass().getResource(folderPath+"dorko.png"));
+			imgBiblo	= ImageIO.read(getClass().getResource(folderPath+"biblo.png"));
+			imgUnknown	= ImageIO.read(getClass().getResource(folderPath+"unknown.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		entities.add(imgAxe);
+		entities.add(imgSword);
+		entities.add(imgTree);
+		entities.add(imgWood);
+		entities.add(imgSuit);
+		entities.add(imgRing);
+		entities.add(imgTreasure);
+		entities.add(imgGoblin);
+		entities.add(imgDorko);
+		entities.add(imgBiblo);
+		entities.add(imgUnknown);		
+		
 	}
 }
