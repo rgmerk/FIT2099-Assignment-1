@@ -12,23 +12,23 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * <p>Bidirectional multimap.  Maps keys (K) onto values (V).  The keys must be unique but the 
+ * Bidirectional multimap.  Maps keys (K) onto values (V).  The keys must be unique but the 
  * values need not be.  Both the Apache BidiMap and the Guava Bimap require unique keys and
- * values.</p>
- * 
- * <p>Internally, this is done by maintaining two HashMaps: one mapping K onto V, the other
+ * values. 
+ * <p>
+ * Internally, this is done by maintaining two HashMaps: one mapping K onto V, the other
  * mapping V onto Lists of K.  This means that insertion and deletion code needs to be aware that
- * an extra step may be needed to maintain consistency between the two private maps.</p>
+ * an extra step may be needed to maintain consistency between the two private maps.
+ * <p>
+ * Implements the Map<K,V> interface, largely by acting as a wrapper for the forward
+ * version of the map.
  * 
- * <p>Implements the Map<K,V> interface, largely by acting as a wrapper for the forward
- * version of the map.</p>
- * 
- * @author Robyn
+ * @author 	Robyn
  *
- * @param <K> key type
- * @param <V> value type
+ * @param 	<K> key type
+ * @param 	<V> value type
  * 
- * @date 1 March 2013
+ * @date 	1 March 2013
  */
 
 // TODO: add some exception handling for the love of heaven!
@@ -38,7 +38,7 @@ public class BiMultiMap<K,V> implements Map<K,V> {
 	private Map<V, List<K>> vToK;
 	
 	/**
-	 * <p>Default constructor.  Instantiates an empty BiMultiMap.</p>
+	 * Default constructor.  Instantiates an empty <code>BiMultiMap</code>.
 	 * 
 	 */
 	public BiMultiMap() {
@@ -47,11 +47,11 @@ public class BiMultiMap<K,V> implements Map<K,V> {
 	}
 	
 	/**
-	 * <p>Adds a new K -> V association to the BiMultiMap.</p>
-	 * 
-	 * <p>If newKey already exists in the BiMultiMap, mapping (say) onto oldVal,
+	 * Adds a new K -> V association to the <code>BiMultiMap</code>.
+	 * <p>
+	 * If newKey already exists in the <code>BiMultiMap</code>, mapping (say) onto oldVal,
 	 * then the reverse mapping oldVal -> newKey is removed and replaced by the 
-	 * reverse mapping newVal -> newKey.</p>
+	 * reverse mapping newVal -> newKey.
 	 * 
 	 * @param newKey key of the new association
 	 * @param newVal value of the new association
@@ -84,9 +84,10 @@ public class BiMultiMap<K,V> implements Map<K,V> {
 	}
 	
 	/**
-	 * <p>Returns the key that maps onto a particular value.</p>
-	 * @param target the value to look up
-	 * @return the key that maps onto target, if such a mapping exists, otherwise null
+	 * Returns the key that maps onto a particular value.
+	 * <p>
+	 * @param 	target the value to look up
+	 * @return 	the key that maps onto target, if such a mapping exists, otherwise null
 	 */
 	public ArrayList<K> reverseLookup(V target) {
 		if (vToK.containsKey(target)) {

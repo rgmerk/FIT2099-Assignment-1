@@ -1,8 +1,22 @@
 package edu.monash.fit2024.simulator.time;
+
+import java.util.PriorityQueue;
+
+import edu.monash.fit2024.simulator.matter.Action;
+import edu.monash.fit2024.simulator.matter.ActionInterface;
+import edu.monash.fit2024.simulator.matter.Actor;
+import edu.monash.fit2024.simulator.space.World;
+
 /** 
- * This class handles time in the simulation by maintaining a priority queue of events, prioritized by time.
- * 
- * Event is an inner class that contains a Action, an Actor, and an integer denoting the scheduled event time.
+ * This class handles time in the simulation by maintaining a priority queue of <code>Events</code>, prioritized by time and then
+ * by priority for <code>Events</code> scheduled to happen in the same tick.
+ * <p>
+ * <code>Event</code> is an inner class that contains  
+ * <ul>
+ * 	<li>an <code>Action</code></li>
+ * 	<li>an <code>Actor</code></li>
+ * 	<li>an <code>Integer</code> that denotes the scheduled event time.</li>
+ * </ul>
  * 
  * @author ram
  */
@@ -16,36 +30,41 @@ package edu.monash.fit2024.simulator.time;
  * 2013-03-09: changed condition in event processing loop to process events occurring at or before the new now instead of only before (ram)
  * 2017-01-20: Comments for the tick method(asel)
  * 2017-02-08: Changes to the compareTo method of the Event class to handle the new ordering of Events based on the priority of the Events Actions(asel)
+ * 2017-02-19: Added the duration to Actors events before adding them to the queue.
  */
-
-import java.util.PriorityQueue;
-
-import edu.monash.fit2024.simulator.matter.Action;
-import edu.monash.fit2024.simulator.matter.ActionInterface;
-import edu.monash.fit2024.simulator.matter.Actor;
-import edu.monash.fit2024.simulator.space.World;
-import hobbit.HobbitActor;
 
 public class Scheduler {
 	
 	/**
-	 * An Event is the execution of a Action, by an Actor, at a point in time.  
+	 * An <code>Event</code> is the execution of a <code>Action</code>, by an <code>Actor</code>, at a point in time.  
 	 * 
-	 * The Actor may be null in the case of simulations that allow the world to change automatically. 
+	 * The <code>Actor</code> may be null in the case of simulations that allow the world to change automatically. 
 	 * 
 	 * @author ram
 	 *
 	 */	
 	private class Event implements Comparable<Event> {
+		
+		/**The <code>Action</code> to be performed for this <code>Event</code>*/
 		private ActionInterface what;
+		
+		/**The <code>Actor</code> of the <code>Action</code> for this <code>Event</code>.
+		 * <p>
+		 * The <code>Actor</code> may be null in the case of simulations that allow the world to change automatically. 
+		 */
 		private Actor<?> who;
+		
+		/**
+		 * When this <code>Event</code> should occur
+		 */
 		private int when;
 		
 		/**
-		 * Constructor for an Event object
-		 * @param what : what Action to be performed as the event
-		 * @param who : the actor of the event. The Actor may be null in the case of simulations that allow the world to change automatically.
-		 * @param when : when the event should occur
+		 * Constructor for an <code>Event</code> object.
+		 * 
+		 * @param what what Action to be performed as the event
+		 * @param who the actor of the event. The Actor may be null in the case of simulations that allow the world to change automatically.
+		 * @param when when the event should occur
 		 */
 		public Event(ActionInterface what, Actor<?> who, int when) {
 			this.what = what;
@@ -70,7 +89,7 @@ public class Scheduler {
 		 * Compare this against another Event, e.
 		 * <p>
 		 * Events will be compared by their time (<code>when</code>) and also by 
-		 * the <code>priority</code> of their Actions
+		 * the <code>priority</code> of their <code>Actions</code> (<code>what</code>)
 		 * 
 		 *  
 		 * @author 	ram
@@ -82,19 +101,21 @@ public class Scheduler {
 		 * 				<li>0 if the events are simultaneous and their <code>Actions</code> have the same <code>priority</code></li>
 		 * 				<li>a positive integer if, 
 		 * 					<ul>
-		 * 						<li>the event <code>this</code> happens before the <code>e</code> OR</li>
-		 * 						<li>the event <code>this</code> and <code>e</code> happens at the same time but
-		 * 							the <code>Action</code> of event <code>this</code> has higher <code>priority</code> than the <code>Action</code> of event <code>e</code></li>
+		 * 						<li>the <code>Event this</code> happens before <code>e</code> OR</li>
+		 * 						<li>the <code>Event this</code> and <code>e</code> happens at the same time but
+		 * 							the <code>Action</code> of <code>Event this</code> has higher <code>priority</code> than the <code>Action</code> of <code>Event e</code></li>
 		 * 					</ul>
 		 * 				</li>
 		 *	 			<li>a negative integer if, 
 		 * 					<ul>
-		 * 						<li>the event <code>this</code> happens after the <code>e</code> OR</li>
-		 * 						<li>the event <code>this</code> and <code>e</code> happens at the same time but
-		 * 							the <code>Action</code> of event <code>this</code> has lower <code>priority</code> than the <code>Action</code> of event <code>e</code></li>
+		 * 						<li>the <code>Event this</code> happens after the <code>e</code> OR</li>
+		 * 						<li>the <code>Event this</code> and <code>e</code> happens at the same time but
+		 * 							the <code>Action</code> of event <code>this</code> has lower <code>priority</code> than the <code>Action</code> of <code>Event e</code></li>
 		 * 					</ul>
 		 * 				</li>
 		 * 			</ul>
+		 * @see 	{@link #what}
+		 * @see 	{@link #when}
 		 */
 		public int compareTo(Event e) {
 			//First sort by the time of the event
@@ -118,17 +139,42 @@ public class Scheduler {
 		
 	}
 	
+	/**
+	 * Priority Queue of <code>Events</code> sorted by time and priority of <code>Actions</code>.
+	 * <p>
+	 * All <code>Events</code> are sorted by their scheduled time (<code>when</code>) with <code>Events</code>
+	 * scheduled earlier (smaller <code>when</code>) happening before <code>Events</code> scheduled later (larger <code>when</code>).
+	 * <p>
+	 * <code>Events</code> scheduled to happen at the same time are sorted by the <code>priority</code> of their <code>Actions</code>
+	 * hence <code>Events</code> whose <code>Actions (what)</code> have higher <code>priority</code> are completed before others.
+	 * <p>
+	 * <code>Events</code> scheduled to happen at the same time with same <code>priority</code> in their <code>Actions</code> complete in
+	 * arbitrary order.
+	 *   
+	 * @see {@link Event#compareTo(Event)}
+	 */
 	private PriorityQueue<Event> events = new PriorityQueue<Event>();
+	
+	/**Stores the current time of the <code>World</code>. Zero(0) to start with*/
 	private int now = 0;
+	
+	/**The amount of time that should elapse between polls of this <code>Scheduler</code>.
+	 * Smallest should be 1.
+	 */
 	private int ticksize;
+	
+	/**The <code>World</code> for which this <code>Scheduler</code> passes time, i.e. the <code>World</code> to be ticked*/
 	private World universe;
 	
 	
 	/**
-	 * Schedules an action by adding an event to the queue of events
-	 * @param c : the action 
-	 * @param a : the actor of the action or event. The Actor may be null in the case of simulations that allow the world to change automatically.
-	 * @param duration : of the event (how long it takes for the event to complete)
+	 * Schedules an <code>Action</code> by adding an <code>Event</code> to the queue of events (<code>events</code>).
+	 * 
+	 * @param 	c the <code>Action</code> to be scheduled
+	 * @param 	a the actor of the <code>Action</code> or <code>Event</code>. The <code>Actor</code> may be null in the case of simulations that allow the world to change automatically.
+	 * @param 	duration of the <code>Event</code> (how long it takes for the event to complete)
+	 * 
+	 * @see 	{@link #events}
 	 */
 	public void schedule(ActionInterface c, Actor<?> a, int duration) {
 			
@@ -143,7 +189,7 @@ public class Scheduler {
 				a.setWaittime(waittime);//set actor's wait time
 				
 				//add event to queue of events. Note for the actor the event will be scheduled to happen after the delay from now
-				events.offer(new Event(c, a, now + delay));
+				events.offer(new Event(c, a, now + duration + delay));
 			}
 		}
 		else{//Non actors or null
@@ -155,38 +201,44 @@ public class Scheduler {
 		
 	}
 	
-	/** Allow time to pass.  Process any events that are scheduled to go off between now and the next time tick in the order of the priority.
+	/** 
+	 * Allow time to pass.  
+	 * Process any <code>Events</code> that are scheduled to go off between <code>now</code> and the 
+	 * next time tick (<code>now + ticksize</code>) in the order of the priority.
 	 * 
-	 * @author ram
-	 * @date 19 February 2013
+	 * @author 	ram 
+	 * @date 	19 February 2013
 	 */
 	public void tick() {
+		
+		//calls the tick in other Entities so that they could schedule actions and so on
 		universe.tick();
-		System.out.println("");
+		
 		while (!events.isEmpty() && events.peek().getTime() <= now + ticksize) {
 			//the second condition ensures that an event that should happen in the future doesn't execute now
 								
 			//get the event at the head of the queue
 			Event e = events.poll();
-			//System.out.println(e.getAction().getDescription() + " BY "+e.getActor().getShortDescription()+ " AT "+e.getTime() +" PRIORITY "+e.getAction().getPriority());
-					
+			
 			//execute that event
 			e.getAction().execute(e.getActor());			
 		}
 		//update the present time after the tick has happened
 		now = now + ticksize;
 		
-//		universe.tick();
 	}
 	
 	/**
-	 * Sets the size of the tick (amount of time that should elapse between polls of the scheduler) and
-	 * instantiates the event queue.
+	 * Sets the <code>tickSize</code> and instantiates the <code>events</code> queue.
 	 * 
-	 * @author ram
-	 * @date 19 February 2013
-	 * @param ticksize - the amount of time to be elapsed for each tick 
-	 * @param w - the world to be ticked
+	 * @author 	ram
+	 * @date 	19 February 2013
+	 * @param 	ticksize the amount of time to be elapsed for each tick 
+	 * @param 	w the <code>World</code> to be ticked
+	 * 
+	 * @see {@link #ticksize}
+	 * @see {@link #events}
+	 * @see {@link #world}
 	 */
 	public Scheduler(int ticksize, World w) {
 		universe = w;

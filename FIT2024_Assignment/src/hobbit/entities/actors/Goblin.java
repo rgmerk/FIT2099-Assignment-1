@@ -1,16 +1,3 @@
-/**
- * A simple bad guy.  
- * 
- * Goblins select a direction and move in it until they walk into something, then they turn around.  They
- * notify the user when they turn around, or if they get stuck in a position with no exits.
- * 
- * @author ram
- * 
- */
-/*
- * Change log
- * 2017/02/04	Condition to avoid actions being scheduled after the Goblin is dead in act method (asel)
- */
 package hobbit.entities.actors;
 
 import hobbit.HobbitActor;
@@ -20,30 +7,52 @@ import hobbit.actions.Move;
 import edu.monash.fit2024.gridworld.Grid;
 import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
 
+/**
+ * A simple bad guy.  
+ * <p>
+ * <code>Goblins</code> select a direction and move in it until they walk into something, then they turn around.  They
+ * notify the user when they turn around, or if they get stuck in a position with no exits.
+ * 
+ * @author ram 
+ */
+
 public class Goblin extends HobbitActor {
 
+	/**
+	 * <code>CompassBearing</code> to keep track of this <code>Goblin</code>'s direction
+	 */
 	private Grid.CompassBearing myDirection;
 
 	/**
-	 * Contructor for the Goblin
-	 * @param m :message renderer to display messages
-	 * @param world :the world to which the Goblin belongs to
+	 * Constructor for the <code>Goblin</code> class. This constructor will,
+	 * <ul>
+	 * 	<li>Initialize the message renderer for the <code>Goblin</code></li>
+	 * 	<li>Initialize the world for this <code>Goblin</code></li>
+	 * 	<li>Set this <code>Goblin</code>'s <code>Team</code> to <code>EVIL</code></li>
+	 * 	<li>Set this <code>Goblin</code>'s hit points to 50</li>
+	 * 	<li>Initialize the direction of this <code>Goblin</code> to a random <code>CompassBearing</code></li>
+	 * </ul>
+	 * 
+	 * @param 	m <code>MessageRenderer</code> to display messages.
+	 * @param 	world the <code>MiddleEarth</code> world to which this <code>Goblin</code> belongs to
+	 * @see 	{@link edu.monash.fit2024.gridworld.Grid.CompassBearing}
 	 */
 	public Goblin(MessageRenderer m, MiddleEarth world) {
-		super(Team.EVIL, 50, m, world);//Goblins belong to the EVIL team
-		myDirection = Grid.CompassBearing.getRandomBearing();//given a random bearing to start with
+		super(Team.EVIL, 50, m, world);
+		myDirection = Grid.CompassBearing.getRandomBearing();
 	}
 
-	@Override
 	/**
-	 * Tries to walk forward, turns by 45 degrees until either an exit is found or it is established that
-	 * no exit exists.
+	 * Method that allows this <code>Goblin</code> to walk forward, turns by 45 degrees until 
+	 * either an exit is found or it is established that no exit exists.
 	 * <p>
-	 * This method will only be called if the <code>Goblin</code> is alive
+	 * This method is responsible for scheduling this <code>Goblin</code>'s <code>Move</code> commands.
+	 * This method will only be called if this <code>Goblin</code> is alive and is not waiting.
 	 * 
-	 * @author ram
-	 * @param a this(The Goblin itself)
+	 * @author 	ram
+	 * 
 	 */
+	@Override
 	public void act() {
 			
 		// Did I hit something?  If so, bear right.

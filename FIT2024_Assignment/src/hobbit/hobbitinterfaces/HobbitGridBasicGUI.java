@@ -1,22 +1,4 @@
-/**
- * A GUI for displaying messages and the simulation grid, and for obtaining user input.
- * <p>
- * This GUI displays the move commands and the other commands separately
- * <p>
- * This GUI is only suitable for a world with 8 way movements (NW,N,NE,W,E,SW,S,SE)
- * 
- * @author Asel
- */
-/*
- * Change log
- * 2017/02/03	Fixed the issue where layout didn't display all elements by moving the repaint and validate methods 
- * 				for the panels (gridPanel and actionButtonPanel) (asel)
- * 				Added a message buffer string that allows all say messages of within a tick to be displayed at once (asel)
- * 				Added a separate panel for move commands that corresponds to the compass bearing
- * 2017/02/04	Fixed the issue with the message renderer. It now prints all the messages from the message renderer (asel)
- * 2017/02/08	human controlled player's locations are highlighted in yellow. The text if the GUI is mono spaced (asel)
- */
-package hobbit.userinterfaces;
+package hobbit.hobbitinterfaces;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -35,12 +17,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import edu.monash.fit2024.gridworld.GridRenderer;
 import edu.monash.fit2024.gridworld.Grid.CompassBearing;
+import edu.monash.fit2024.simulator.matter.ActionInterface;
 import edu.monash.fit2024.simulator.matter.EntityManager;
-import edu.monash.fit2024.simulator.userInterface.MapRenderer;
-import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
-import edu.monash.fit2024.simulator.userInterface.SimulationController;
-
 import hobbit.HobbitActionInterface;
 import hobbit.HobbitActor;
 import hobbit.HobbitEntityInterface;
@@ -50,16 +30,17 @@ import hobbit.MiddleEarth;
 import hobbit.actions.Move;
 
 /**
- * IMPORTANT
- * This UI is no longer required and is not compatible with the controller. Needs to be deleted! - Asel
+ * This is a basic graphical based user interface for the simulation. Is responsible for outputting a graphical map and messages on a JFrame
+ * window and also obtain user selection of commands from the same JFrame window.
+ * <p>
+ * The graphics of this UI are pretty basic. Its operations are controlled by the <code>HobbitGridController</code>
+ * 
+ * @author Asel
  */
-public class GUInterface extends JFrame implements MessageRenderer, MapRenderer, SimulationController{
+public class HobbitGridBasicGUI extends JFrame implements GridRenderer {
 
-	/**Hobbit grid of the world*/
-	private HobbitGrid grid;
-	
-	/**The number of items to be displayed per location including the location label and colon ':'*/
-	private static int locationWidth = 8;
+	/**The grid of the world*/
+	private static HobbitGrid grid;
 	
 	/**Panel that contains the map formed as a matrix of JTextfields*/
 	private JPanel gridPanel = new JPanel();
@@ -67,7 +48,7 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 	/**Panel that contains the label {@link #lblMessages}, {@link #moveActionPanel}  and {@link #otherActionPanel}*/
 	private JPanel actionPanel = new JPanel();
 	
-	/**Label that displays messages from the message renderer. Is contained in {@link #actionPanel}*/
+	/**Label that displays messages. Is contained in {@link #actionPanel}*/
 	private JLabel lblMessages = new JLabel();
 	
 	/**Panel that contains action buttons corresponding to move commands. Is contained in {@link #actionPanel}*/
@@ -79,7 +60,10 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 	/**The index of the command selected*/
 	private static volatile int selection = -1;
 	
-	/**Array list that stores all the action buttons corresponding order of the commands*/
+	/**Array list that stores all the JButtons corresponding order of the commands. 
+	 * <p>
+	 * JButtons of move commands come before the JButtons of non movement commands
+	 */
 	private static List<JButton> allCommandButtons = new ArrayList<>();
 	
 	/**String that contains all the messages from the message renderer within a tick. Formatted using HTML tags*/
@@ -94,109 +78,33 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 	 */
 	private static final List<Integer> definedOrder = Arrays.asList(315,0,45,270,-1,90,225,180,135);
 	
-	private static final int CONTROL_PANE_WIDTH = 600;
-
-	
 	/**
-	 * Constructor for the Graphical User Interface
-	 * <p>
-	 * This GU interface can be used to display messages, grid and obtain user input in a JFrame window
-	 * <p>
-	 * This GUI displays action buttons that corresponding to Move actions and other actions separately 
+	 * Constructor for the <code>HobbitGridGUI</code>. This will draw the basic layout on the
+	 * window and open it as a maximized window.
 	 * 
-	 * @author 	Asel
-	 * @param 	world The world being considered by the GUI
-	 * @pre 	<code>world</code> should not be null
-	 * @post	opens a full screen JFrame window with the map, messages and action buttons (if any)
-	 * @post	the action buttons for movement are separate from the action buttons for non movement commands
+	 * @param 	grid the grid of the world
+	 * @pre 	<code>grid</code> should not be null
+	 * 
 	 */
-	public GUInterface(MiddleEarth world) {
-		grid = world.getGrid();
+	public HobbitGridBasicGUI(HobbitGrid grid) {
+		HobbitGridBasicGUI.grid = grid;
+		
 		drawLayout();
+		
+		//setting a title and opening the window in full screen
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setTitle("Hobbit World");
         this.setVisible(true);
 	}
-		
+	
 	@Override
-	/**
-	 * @author Asel
-	 * @see {@link #drawGrid()}
-	 */
-	public void render() {
-		drawGrid();
-	}
-
-	@Override
-	/**
-	 * Display the messages of the message renderer in the lblMessages
-	 * 
-	 * @author 	Asel
-	 * @param 	message the message string to be displayed on the GUI
-	 * @post	displays the <code>message</code> string on the label.
-	 */
-	public void render(String message) {
-		//HTML formatting used instead of \n, to achieve a multi line label
-		messageBuffer = messageBuffer + message+"<br>";
-		lblMessages.setText("<html>"+messageBuffer+"</html>");	
-		
-		//for pretty looks
-		Font messageFont = new Font(Font.MONOSPACED, Font.BOLD, 15);
-		lblMessages.setFont(messageFont);
-		lblMessages.setHorizontalAlignment(JLabel.CENTER);
-		lblMessages.setVerticalAlignment(JLabel.CENTER);
-	}
-	
-	/**
-	 * Clear the message buffer after tick
-	 * @author Asel
-	 * @see ({@link #messageBuffer}
-	 */
-	private static void clearMessageBuffer(){
-		messageBuffer="";
-	}
-	
-	/**
-	 * Sets up the main layout to display grid and action panels
-	 * 
-	 * @author 	Asel
-	 * @post 	<code>gridPanel</code> takes up half the screen and the <code>actionPanel</code> takes up the rest
-	 */
- 	private void drawLayout(){		
- 		this.setLayout(new GridLayout(1,2));//Layout with 2 columns. One for the gridPanel and the other for the actionPanel
-		this.add(gridPanel); //add the grid	to main layout
-
-		actionPanel.setLayout(new GridLayout(3, 1));//Layout with 3 rows. For lblMessages, moveActionPanel and otherActionPanel
-		actionPanel.add(lblMessages);
-		actionPanel.add(moveActionPanel);
-		actionPanel.add(otherActionPanel);
-		actionPanel.setSize(Integer.MAX_VALUE,CONTROL_PANE_WIDTH);
-		
-		this.add(actionPanel);//add action panel to main layout		
-	}
- 	
-	
-	/**
-	 * Draws the map as a matrix of non editable JTextFields on the gridPanel.
-	 * <p>
-	 * <code>HobbitLocation</code>s of human controlled actors will be highlighted with yellow.
-	 * 
-	 * @author 	Asel
-	 * @post	a grid of JTextField created
-	 * @post	each text field is non editable
-	 * @post	each text field contains a location string @see	{@link #getLocationString(HobbitLocation)}
-	 */
-	private void drawGrid(){
-		
-		assert (grid!=null)	:"grid to be draw cannot be null";
-		
+	public void displayMap() {
 		final int gridHeight = grid.getHeight();
 		final int gridWidth  = grid.getWidth();
 		
 		//font for pretty output
 		Font locFont = new Font(Font.MONOSPACED, Font.PLAIN, 15);
-		Font playerFont = new Font(Font.MONOSPACED, Font.BOLD, 15);
 		
 		gridPanel.removeAll();//clear previous grid
 		gridPanel.setLayout(new GridLayout(gridHeight, gridWidth));//grid layout for the locations	
@@ -208,20 +116,21 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 				HobbitLocation loc = grid.getLocationByCoordinates(col, row);
 				String locationText = getLocationString(loc); 
 				
-				//Each location has a non editable JTextField with the Text for each Location
+				//Each location has a non editable JTextField with location string of each text
 				JTextField txtLoc = new JTextField(locationText);
 				
 				//for pretty looks
 				txtLoc.setFont(locFont);		
 				txtLoc.setHorizontalAlignment(JTextField.CENTER);
+							
 				
-				//highlight the human controlled player's location
+				//highlight the human controlled player's location with yellow
 				if (locationHasHumanControlledActor(loc)){
-					txtLoc.setFont(playerFont);
+					txtLoc.setBackground(Color.YELLOW);
 				}
-				
-				txtLoc.setBackground(getColorOfLoc(loc));
-				
+				else { //other locations are given a color based on their location symbol
+					txtLoc.setBackground(getColorOfLoc(loc));
+				}
 				
 				txtLoc.setEditable(false); //made non editable
 				txtLoc.setToolTipText(loc.getShortDescription());//show the location description when mouse hovered
@@ -235,34 +144,116 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 		//refresh the panel with the changes
 		gridPanel.revalidate();;
 		gridPanel.repaint();
+
+	}
+
+	@Override
+	public void displayMessage(String message) {
+		//HTML formatting used instead of \n, to achieve a multi line label
+		messageBuffer = messageBuffer + message+"<br>";
+		lblMessages.setText("<html>"+messageBuffer+"</html>");	
 		
+		//for pretty looks
+		Font messageFont = new Font(Font.MONOSPACED, Font.BOLD, 15);
+		lblMessages.setFont(messageFont);
+		lblMessages.setHorizontalAlignment(JLabel.CENTER);
+		lblMessages.setVerticalAlignment(JLabel.CENTER);
+
+	}
+
+	@Override
+	public ActionInterface getSelection(ArrayList<ActionInterface> cmds) {
+		clearMessageBuffer();//this method is called in each tick so the message buffer can be cleared
+		
+		
+		//assertion for the precondition
+		assert cmds.size()>0:"command list for the actor is empty";
+				
+				
+		//selection set to -1 to trigger the wait for user input
+		selection = -1;
+		
+		ArrayList<HobbitActionInterface> moveCmds = new ArrayList<HobbitActionInterface>(); //all move commands
+		ArrayList<HobbitActionInterface> otherCmds = new ArrayList<HobbitActionInterface>(); //all other non move commands
+
+		//Separate the move and other commands
+		for (ActionInterface ac : cmds) {
+			
+			if (((HobbitActionInterface) ac).isMoveCommand()){ //move commands
+				moveCmds.add((HobbitActionInterface)ac);
+			}
+			else{ //non move commands
+				otherCmds.add((HobbitActionInterface)ac);
+			}
+			
+		}
+		
+		//sort the move commands in a defined order
+		sortMoveCommands(moveCmds);
+		
+		//sort other commands for prettier output
+		Collections.sort(otherCmds);
+		
+		ArrayList<HobbitActionInterface> allCmds = new ArrayList<HobbitActionInterface>(); //all commands
+		
+		//add move commands to list of all commands first
+		for (HobbitActionInterface ac:moveCmds){
+			allCmds.add(ac);
+		}
+		
+		//next add the other commands
+		for (HobbitActionInterface ac:otherCmds){
+			allCmds.add(ac);
+		}
+		
+		allCommandButtons.clear();
+		
+		addMoveActionButtons(moveCmds);
+		addOtherActionButtons(otherCmds);
+		
+		//wait for user input before returning
+		while(selection<0){
+		    try {
+		    Thread.sleep(200);
+		    } 
+		    catch(InterruptedException e) {}
+		}
+		 
+		return allCmds.get(selection);
 	}
 	
 	/**
-	 * Returns text to be displayed in each JTextField of the grid
+	 * Returns a string consisting of the symbol of the <code>HobbitLocation loc</code>, a colon ':' followed by 
+	 * any symbols of the contents of the <code>HobbitLocation loc</code> and/or empty spaces of the <code>HobbitLocation loc</code>.
+	 * <p>
+	 * All string returned by this method are of a fixed length and doesn't contain any line breaks.
 	 * 
-	 * @author 	Asel
+	 * @author 	Asel (most code adopted from previous version of TextInterface)
 	 * @param 	loc for which the string is required
-	 * @pre 	<code>loc</code> should not be a blank
-	 * @return 	a string in the format Location Symbol + : + Contents of location + any empty characters
-	 * @post	the string contains the symbols of the locations contents
-	 * @post	string length is equal to location width
+	 * @pre		all symbols and empty spaces should not be line break characters
+	 * @return 	a string in the format location symbol of <code>loc</code> + : + symbols of contents of <code>loc</code> + any empty characters of <code>loc</code>
+	 * @post	all strings returned are of a fixed size
 	 */
-	private String getLocationString(HobbitLocation loc){
-		EntityManager<HobbitEntityInterface, HobbitLocation> em = MiddleEarth.getEntitymanager();
+	private String getLocationString(HobbitLocation loc) {
+		
+		final EntityManager<HobbitEntityInterface, HobbitLocation> em = MiddleEarth.getEntitymanager();
+		
+		//all string would be of locationWidth length
+		final int locationWidth = 8;
 		
 		StringBuffer emptyBuffer = new StringBuffer();
 		char es = loc.getEmptySymbol(); 
 		
-		for (int i = 0; i < locationWidth - 3; i++) { 	//add empty symbol character to the buffer
-			emptyBuffer.append(es);						//adding 2 less here because one space is reserved for the location symbol
-		}									  			//and one more for the colon : used to separate the location symbol and the symbol(s) of the contents of that location
+		for (int i = 0; i < locationWidth - 2; i++) { 	//add two less as one character is reserved for the location symbol and the other for the colon (":")
+			emptyBuffer.append(es);						
+		}									  			
 			
-		//new buffer buf with symbol of the location + :
+		//new buffer buf with a symbol of the location + :
 		StringBuffer buf = new StringBuffer(loc.getSymbol() + ":"); 
 		
 		//get the Contents of the location
 		List<HobbitEntityInterface> contents = em.contents(loc);
+		
 		
 		if (contents == null || contents.isEmpty())
 			buf.append(emptyBuffer);//add empty buffer to buf to complete the string buffer
@@ -271,15 +262,19 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 				buf.append(e.getSymbol());
 			}
 		}
-		buf.append(emptyBuffer); //add the empty buffer again since the symbols of the contents that were added might not actually fill the location upto locationWidth
-		buf.setLength(locationWidth);//set the length of buf to the required locationWidth
+		buf.append(emptyBuffer); //add the empty buffer again since the symbols of the contents that were added might not actually filled the location upto locationWidth
 		
-		return buf.toString();
-				
+		//set a fixed length
+		buf.setLength(locationWidth);
+		
+		return buf.toString();		
 	}
+	
 	
 	/**
 	 * Returns is a given <code>HobbitLocation loc</code> has a human controlled <HobbitActor>
+	 * <p>
+	 * Useful to highlight the human controlled player's locations.
 	 * 
 	 * @param 	loc the <code>HobbitLocation</code> being queried
 	 * @return	true if <code>loc</code> contains a human controlled actor, false otherwise
@@ -303,67 +298,7 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 		//couldn't find any human controlled actors
 		return false;		
 	}
-
-	/**
-	 * Display the action buttons and receive user input.
-	 * 
-	 * @param a the HobbitActor to display options for
-	 * @return the HobbitActionInterface that the player has chosen to perform.
-	 */
-	public static HobbitActionInterface getUserDecision(HobbitActor a) {
-		clearMessageBuffer();//this method is called in each tick so the message buffer can be cleared
-		
-		//selection set to -1 to trigger wait for user input
-		selection = -1;
-		
-		ArrayList<HobbitActionInterface> cmds = new ArrayList<HobbitActionInterface>(); //all commands (move and non move)
-		ArrayList<HobbitActionInterface> moveCmds = new ArrayList<HobbitActionInterface>(); //all move commands
-		ArrayList<HobbitActionInterface> otherCmds = new ArrayList<HobbitActionInterface>(); //all other non move commands
-
-		//get the Actions the HobbitActor can do
-		for (HobbitActionInterface ac : MiddleEarth.getEntitymanager().getActionsFor(a)) {
-			if (ac.canDo(a)){
-				if (ac.isMoveCommand()){
-					moveCmds.add(ac);
-				}
-				else{
-					otherCmds.add(ac);
-				}
-			}
-		}
-		
-		//sort the move commands in a defined order
-		sortMoveCommands(moveCmds);
-		
-		//sort other commands for prettier output
-		Collections.sort(otherCmds);
-		
-		//add move commands to list of all commands first
-		for (HobbitActionInterface ac:moveCmds){
-			cmds.add(ac);
-		}
-		
-		//next add the other commands
-		for (HobbitActionInterface ac:otherCmds){
-			cmds.add(ac);
-		}
-		
-		
-		allCommandButtons.clear();
-		
-		addMoveActionButtons(moveCmds);
-		addOtherActionButtons(otherCmds);
-		
-		//wait for user input before returning
-		while(selection<0){
-		    try {
-		    Thread.sleep(200);
-		    } 
-		    catch(InterruptedException e) {}
-		}
-		 
-		return cmds.get(selection);
-	}
+	
 	
 	/**
 	 * Sort the Move Commands in a predefined order @see {@link #definedOrder}
@@ -406,16 +341,18 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 		moveCmds.sort(comparator);
 		
 	}
-	
+
 	/**
 	 * Add the non movement action buttons to the <code>otherActionPanel</code>
 	 * 
 	 * @author 	Asel
 	 * @param 	otherCmds a list of non movement commands
+	 * @pre		<code>otherCmds</code> sorted using Collections.sort()
 	 * @post	all commands in <code>otherCmds</code> added to <code>otherActionPanel</code> as JButtons
+	 * @post	<code>allCommandButtons</code> updated with the new JButtons added.
 	 */
 	private static void addOtherActionButtons(ArrayList<HobbitActionInterface> otherCmds){
-	
+		
 		otherActionPanel.removeAll(); //remove other action buttons from previous layout
 		otherActionPanel.setLayout(new GridLayout(otherCmds.size(), 1));//Grid to contain non movement commands
 		
@@ -446,6 +383,7 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 	 * @param 	moveCmds a list of move commands
 	 * @pre 	<code>moveCmds</code> must be sorted in the defined order. @see {@link #sortMoveCommands(ArrayList)}
 	 * @post	All commands in <code>moveCmds</code> are displayed with action buttons with their positions corresponding to the bearings
+	 * @post	<code>allCommandButtons</code> updated with the new JButtons added.
 	 */
 	private static void addMoveActionButtons(ArrayList<HobbitActionInterface> moveCmds){
 		
@@ -553,5 +491,32 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 			return Color.decode("#ececec");
 		}
 	}
-			
+
+	/**
+	 * Sets up the main layout to display grid and action panels
+	 * 
+	 * @author 	Asel
+	 * @post 	<code>gridPanel</code> takes up half the screen and the <code>actionPanel</code> takes up the rest
+	 * TODO : JScrollPanes please! (asel)
+	 */
+	private void drawLayout(){		
+ 		this.setLayout(new GridLayout(1,2));//Layout with 2 columns. One for the gridPanel and the other for the actionPanel
+		this.add(gridPanel); //add the grid	to main layout
+
+		actionPanel.setLayout(new GridLayout(3, 1));//Layout with 3 rows. For lblMessages, moveActionPanel and otherActionPanel
+		actionPanel.add(lblMessages);
+		actionPanel.add(moveActionPanel);
+		actionPanel.add(otherActionPanel);
+				
+		this.add(actionPanel);//add action panel to main layout		
+	}
+
+	/**
+	 * Clear the message buffer after tick
+	 * @author Asel
+	 * @see ({@link #messageBuffer}
+	 */
+	private static void clearMessageBuffer(){
+		messageBuffer="";
+	}
 }

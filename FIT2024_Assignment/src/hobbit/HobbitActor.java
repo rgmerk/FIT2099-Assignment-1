@@ -20,7 +20,7 @@ import hobbit.actions.Move;
 
 import java.util.HashSet;
 
-import edu.monash.fit2024.gridworld.Grid;
+
 import edu.monash.fit2024.gridworld.Grid.CompassBearing;
 import edu.monash.fit2024.simulator.matter.Actor;
 import edu.monash.fit2024.simulator.space.Location;
@@ -50,16 +50,29 @@ public abstract class HobbitActor extends Actor<HobbitAction> implements HobbitE
 	/**A string symbol that represents this <code>HobbitActor</code>, suitable for display*/
 	private String symbol;
 	
-	/**A set of <code>Capability</code>s of this <code>HobbitActor</code>*/
+	/**A set of <code>Capabilities</code> of this <code>HobbitActor</code>*/
 	private HashSet<Capability> capabilities;
 	
 	/**
-	 * Constructor for the Hobbit Actor 
+	 * Constructor for the <code>HobbitActor</code>.
+	 * <p>
+	 * The constructor initializes the <code>actions</code> list of this <code>HobbitActor</code>.
+	 * <p>
+	 * By default,
+	 * <ul>
+	 * 	<li>All <code>HobbitActors</code> can be attacked.</li>
+	 * 	<li>Have their symbol set to '@'</li>
+	 * </ul>
 	 * 
-	 * @param team @see {@link #team}
-	 * @param hitpoints @see {@link #hitpoints}
-	 * @param m	message renderer for the actor to display messages
-	 * @param world @see {@link #world}
+	 * @param 	team to which this <code>HobbitActor</code> belongs to
+	 * @param 	hitpoints initial hitpoints of this <code>HobbitActor</code> to start with
+	 * @param 	m	message renderer for this <code>HobbitActor</code> to display messages
+	 * @param 	world the <code>World</code> to which <code>HobbitActor</code> belongs to
+	 * 
+	 * @see 	{@link #team}
+	 * @see 	{@link #hitpoints}
+	 * @see 	{@link #world}
+	 * @see 	{@link hobbit.actions.Attack}
 	 */
 	public HobbitActor(Team team, int hitpoints, MessageRenderer m, MiddleEarth world) {
 		super(m);
@@ -75,67 +88,90 @@ public abstract class HobbitActor extends Actor<HobbitAction> implements HobbitE
 	}
 	
 	/**
-	 * Setter for the scheduler
+	 * Sets the <code>scheduler</code> of this <code>HobbitActor</code> to a new <code>Scheduler s</code>
 	 * 
-	 * @param s @see {@link #scheduler}
+	 * @param	s the new <code>Scheduler</code> of this <code>HobbitActor</code> 
+	 * @see 	{@link #scheduler}
 	 */
 	public static void setScheduler(Scheduler s) {
 		scheduler = s;
 	}
 	
 	/**
-	 * Getter for the team
+	 * Returns the team to which this <code>HobbitActor</code> belongs to.
+	 * <p>
+	 * Useful in comparing the teams different <code>HobbitActor</code> belong to.
 	 * 
-	 * @return @see {@link #team}
+	 * @return 	the team of this <code>HobbitActor</code>
+	 * @see 	{@link #team}
 	 */
 	public Team getTeam() {
 		return team;
 	}
 
 	/**
-	 * Getter for hitpoints
+	 * Returns the hit points of this <code>HobbitActor</code>.
 	 * 
-	 * @return @see {@link #hitpoints}
+	 * @return 	the hit points of this <code>HobbitActor</code> 
+	 * @see 	{@link #hitpoints}
+	 * @see 	{@link #isDead()}
 	 */
+	@Override
 	public int getHitpoints() {
 		return hitpoints;
 	}
 
-	/**Getter for the item carried
+	/**
+	 * Returns the item carried by this <code>HobbitActor</code>. 
+	 * <p>
+	 * This method only returns the reference of the item carried 
+	 * and does not remove the item held from this <code>HobbitActor</code>.
+	 * <p>
+	 * If this <code>HobbitActor</code> is not carrying an item this method would return null.
 	 * 
-	 * @return @see {@link #itemCarried}
+	 * @return 	the item carried by this <code>HobbitActor</code> or null if no item is held by this <code>HobbitActor</code>
+	 * @see 	{@link #itemCarried}
 	 */
 	public HobbitEntityInterface getItemCarried() {
 		return itemCarried;
 	}
 
-	/**Setter for the team
-	 * 
-	 * @param team @see {@link #team}
+	/**
+	 * Sets the team of this <code>HobbitActor</code> to a new team <code>team</code>.
+	 * <p>
+	 * Useful when the <code>HobbitActor</code>'s team needs to change dynamically during the simulation.
+	 * For example, a bite from an evil actor makes a good actor bad.
+	 *
+	 * @param 	team the new team of this <code>HobbitActor</code>
+	 * @see 	{@link #team}
 	 */
 	public void setTeam(Team team) {
 		this.team = team;
 	}
 
 	/**
-	 * Method insists damage on this <code>HobbitActor</code> by reducing a certain amount of <code>damage</code> from this  <code>HobbitActor</code>'s <code>hitpoints</code>
+	 * Method insists damage on this <code>HobbitActor</code> by reducing a 
+	 * certain amount of <code>damage</code> from this <code>HobbitActor</code>'s <code>hitpoints</code>
 	 * 
-	 * @param damage the amount of <code>hitpoints</code> to be reduced
+	 * @param 	damage the amount of <code>hitpoints</code> to be reduced
+	 * @pre 	<code>damage</code> should not be negative
 	 */
+	@Override
 	public void takeDamage(int damage) {
-		//assertion to ensure the damage is not negative. Negative damage could increase the HobbitActor's hitpoints
+		//Precondition 1: Ensure the damage is not negative. Negative damage could increase the HobbitActor's hitpoints
 		assert (damage >= 0)	:"damage on HobbitActor must not be negative";
-		
 		this.hitpoints -= damage;
 	}
 
 	/**
-	 * Setter for the item carried by this <code>HobbitActor</code>
+	 * Assigns this <code>HobbitActor</code>'s <code>itemCarried</code> to 
+	 * a new item <code>target</code>
 	 * <p>
-	 * This method will replace items already held by the <code>HobbitActor</code> with the <code>target</code>
+	 * This method will replace items already held by the <code>HobbitActor</code> with the <code>target</code>.
+	 * A null <code>target</code> would signify that this <code>HobbitActor</code> is not carrying an item anymore.
 	 * 
-	 * @param target the new item to be set as item carried
-	 * @see {@link #itemCarried}
+	 * @param 	target the new item to be set as item carried
+	 * @see 	{@link #itemCarried}
 	 */
 	public void setItemCarried(HobbitEntityInterface target) {
 		this.itemCarried = target;
@@ -143,65 +179,58 @@ public abstract class HobbitActor extends Actor<HobbitAction> implements HobbitE
 	
 	
 	/**
-	 * Returns true if this actor is dead, false otherwise.
-	 * 
-	 * @author ram
-	 * @return true if and only if this actor is dead
-	 * @see {@link #hitpoints}
+	 * Returns true if this <code>HobbitActor</code> is dead, false otherwise.
+	 * <p>
+	 * A <code>HobbitActor</code> is dead when it's <code>hitpoints</code> are less than or equal to zero (0)
+	 *
+	 * @author 	ram
+	 * @return 	true if and only if this <code>HobbitActor</code> is dead, false otherwise
+	 * @see 	{@link #hitpoints}
 	 */
 	public boolean isDead() {
-		//an actor is dead if their hit points are less than or equal to 0
 		return hitpoints <= 0;
 	}
 	
-	/**
-	 * Getter for the symbol
-	 * 
-	 * @returns symbol @see {@link #symbol}
-	 */
+
+	@Override
 	public String getSymbol() {
 		return symbol;
 	}
 	
-	/**
-	 * Setter for the symbol of the Actor
-	 * 
-	 * @param s @see {@link #symbol} 
-	 *
-	 */
+
+	@Override
 	public void setSymbol(String s) {
-		assert (!s.matches(".") && (s.length()==1)):"Symbol should be a single charater and not a '.'";
 		symbol = s;
 	}
 	
 	/**
-	 * Returns if or not the <code>HobbitActor</code> is human controlled.
+	 * Returns if or not this <code>HobbitActor</code> is human controlled.
+	 * <p>
+	 * Human controlled <code>HobbitActors</code>' <code>HobbitActions</code> are selected by the user as commands from the Views.
 	 * 
-	 * @return true if the <code>HobbitActor</code> is controlled by a human, false otherwise
-	 * @see {@link #humanControlled}
+	 * @return 	true if the <code>HobbitActor</code> is controlled by a human, false otherwise
+	 * @see 	{@link #humanControlled}
 	 */
 	public boolean isHumanControlled() {
 		return humanControlled;
 	}
 	
-	/**
-	 * Returns true if this actor has the given capability <code>c</code>, false otherwise.
-	 * 
-	 * Wrapper for HashSet<Capability>.contains().
-	 * 
-	 * @author ram
-	 * @param c the Capability to search for
-	 */
+
+	@Override
 	public boolean hasCapability(Capability c) {
 		return capabilities.contains(c);
 	}
 	
 	/**
-	 * Polls the current location to find potential exits, and replaces all the instances of 
-	 * Move in this actor's command set with moves to the new exits.
-	 * 
-	 * @author ram
-	 * @param loc : the actor's location
+	 * This method will poll this <code>HobbitActor</code>'s current <code>Location loc</code>
+	 * to find potential exits, and replaces all the instances of <code>Move</code>
+	 * in this <code>HobbitActor</code>'s command set with <code>Moves</code> to the new exits.
+	 * <p>
+	 * This method doesn't affect other non-movement actions in this <code>HobbitActor</code>'s command set.
+	 *  
+	 * @author 	ram
+	 * @param 	loc this <code>HobbitActor</code>'s location
+	 * @pre		<code>loc</code> is the actual location of this <code>HobbitActor</code>
 	 */
 	public void resetMoveCommands(Location loc) {
 		HashSet<HobbitAction> newActions = new HashSet<HobbitAction>();
@@ -213,14 +242,12 @@ public abstract class HobbitActor extends Actor<HobbitAction> implements HobbitE
 		}
 		
 		// add new movement possibilities
-		for (CompassBearing d: CompassBearing.values()) { //for each CompassBearing d in the compass bearing values NORTH,NORTHEAST,EAST,SOUTHEAST,SOUTH....
-														  //(@see #CompassBearing enum class in edu.monash.fit2024.gridworld.Grid.java)
-														  
-			if (loc.getNeighbour(d) != null) //see if there is a neighbor to the current location of the actor in that direction d
-				newActions.add(new Move(d,messageRenderer, world)); //add new move action that will allow the actor to move in that direction (d) to newActions
+		for (CompassBearing d: CompassBearing.values()) { 														  
+			if (loc.getNeighbour(d) != null) //if there is an exit from the current location in direction d, add that as a Move command
+				newActions.add(new Move(d,messageRenderer, world)); 
 		}
 		
-		// replace old action list with new
+		// replace command list of this HobbitActor
 		this.actions = newActions;		
 		
 		// TODO: This assumes that the only actions are the Move actions. This will clobber any others. Needs to be fixed.

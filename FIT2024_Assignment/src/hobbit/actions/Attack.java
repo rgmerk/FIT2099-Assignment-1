@@ -1,3 +1,11 @@
+package hobbit.actions;
+
+import hobbit.Capability;
+import hobbit.HobbitActionInterface;
+import hobbit.HobbitActor;
+import hobbit.HobbitAffordance;
+import hobbit.HobbitEntityInterface;
+import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
 
 /**
  * Command to attack entities.
@@ -11,22 +19,13 @@
  * 2017/02/03	Fixed the bug where the an actor could attack another actor in the same team (asel)
  * 2017/02/08	Attack given a priority of 1 in constructor (asel)
  */
-package hobbit.actions;
-
-import hobbit.Capability;
-import hobbit.HobbitActionInterface;
-import hobbit.HobbitActor;
-import hobbit.HobbitAffordance;
-import hobbit.HobbitEntityInterface;
-import edu.monash.fit2024.simulator.time.Scheduler;
-import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
-
 public class Attack extends HobbitAffordance implements HobbitActionInterface {
 
 	
 	/**
-	 *
-	 * Constructor for the Attack class
+	 * Constructor for the <code>Attack</code> class. Will initialize the <code>messageRenderer</code> and
+	 * give <code>Attack</code> a priority of 1 (lowest priority is 0).
+	 * 
 	 * @param theTarget the target being attacked
 	 * @param m message renderer to display messages
 	 */
@@ -36,51 +35,65 @@ public class Attack extends HobbitAffordance implements HobbitActionInterface {
 	}
 
 
-	@Override
 	/**
-	 * @return The duration of the Attack action. Currently hard coded to return 1
+	 * Returns the time is takes to perform this <code>Attack</code> action.
+	 * 
+	 * @return The duration of the Attack action. Currently hard coded to return 1.
 	 */
+	@Override
 	public int getDuration() {
 		return 1;
 	}
 
-	@Override
+	
 	/**
-	 * A String describing what this action will do, suitable for display in a user interface
+	 * A String describing what this <code>Attack</code> action will do, suitable for display on a user interface
 	 * 
-	 * @return String comprising "attack " and the short description of the target of this Affordance
+	 * @return String comprising "attack " and the short description of the target of this <code>Affordance</code>
 	 */
+	@Override
 	public String getDescription() {
 		return "attack " + this.target.getShortDescription();
 	}
 
 
-	@Override
 	/**
-	 * Determine whether a particular actor can attack the target.
+	 * Determine whether a particular <code>HobbitActor a</code> can attack the target.
 	 * 
-	 * @author dsquire
-	 * @param a the actor being queried
-	 * @return true: any actor can always try an attack, it just won't do much good unless the actor has a suitable weapon
+	 * @author 	dsquire
+	 * @param 	a the <code>HobbitActor</code> being queried
+	 * @return 	true any <code>HobbitActor</code> can always try an attack, it just won't do much 
+	 * 			good unless this <code>HobbitActor a</code> has a suitable weapon.
 	 */
+	@Override
 	public boolean canDo(HobbitActor a) {
-		
 		return true;
 	}
 
-	@Override
+	
 	/**
-	 * Perform the Attack command on an entity.
+	 * Perform the <code>Attack</code> command on an entity.
 	 * <p>
-	 * This damages the entity attacked, tires the attacker, and blunts any weapon used for the attack
+	 * This method does not perform any damage (an attack) if,
+	 * <ul>
+	 * 	<li>The target of the <code>Attack</code> and the <code>HobbitActor a</code> are in the same <code>Team</code></li>
+	 * 	<li>The <code>HobbitActor a</code> is holding an item without the <code>WEAPON Affordance</code></li>
+	 * </ul>
 	 * <p>
-	 * This method will only be called if the <code>HobbitActor a</code> is alive
+	 * else it would damage the entity attacked, tires the attacker, and blunts any weapon used for the attack.
 	 * 
-	 * @author dsquire
-	 *  - adapted from the equivalent class in the old Eiffel version
-	 * @author Asel
-	 * @param the actor who is attacking
+	 * TODO : check if the weapon has enough hitpoints and the attacker has enough energy before an attack.
+	 * 
+	 * @author 	dsquire -  adapted from the equivalent class in the old Eiffel version
+	 * @author 	Asel - bug fixes.
+	 * @param 	a the <code>HobbitActor</code> who is attacking
+	 * @pre 	this method should only be called if the <code>HobbitActor a</code> is alive
+	 * @pre		an <code>Attack</code> must not be performed on a dead <code>HobbitActor</code>
+	 * @post	if a <code>HobbitActor</code>dies in an <code>Attack</code> their <code>Attack</code> affordance would be removed
+	 * @see		hobbit.HobbitActor#isDead()
+	 * @see 	hobbit.Team
 	 */
+	@Override
 	public void act(HobbitActor a) {
 		HobbitEntityInterface target = this.getTarget();
 		boolean targetIsActor = target instanceof HobbitActor;
@@ -135,8 +148,6 @@ public class Attack extends HobbitAffordance implements HobbitActionInterface {
 				
 			}
 			if (this.getTarget().getHitpoints() <= 0) {  // can't use isDead(), as we don't know that the target is an actor
-				
-								
 				target.setLongDescription(target.getLongDescription() + ", that was killed in a fight");
 							
 				//remove the attack affordance of the dead actor so it can no longer be attacked

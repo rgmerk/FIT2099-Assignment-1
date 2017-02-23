@@ -1,13 +1,3 @@
-/**
- * Class representing the Hobbit world.
- * 
- * @author ram
- */
-/*
- * Change log
- * 2017-02-02:  Render method was removed from Middle Earth
- * 				Displaying the Grid is now handled by the TextInterface rather than by the Grid or MiddleWorld classes (asel)
- */
 package hobbit;
 
 import hobbit.actions.Take;
@@ -19,11 +9,31 @@ import edu.monash.fit2024.simulator.space.Location;
 import edu.monash.fit2024.simulator.space.World;
 import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
 
+/**
+ * Class representing the Hobbit world.
+ * 
+ * @author ram
+ */
+/*
+ * Change log
+ * 2017-02-02:  Render method was removed from Middle Earth
+ * 				Displaying the Grid is now handled by the TextInterface rather 
+ * 				than by the Grid or MiddleWorld classes (asel)
+ */
 public class MiddleEarth extends World {
+	
+	/**
+	 * <code>HobbitGrid</code> of this <code>MiddleEarth</code>
+	 */
 	private HobbitGrid myGrid;
 	
+	/**The entity manager of the world which keeps track of <code>HobbitEntities</code> and their <code>HobbitLocations</code>*/
 	private static final EntityManager<HobbitEntityInterface, HobbitLocation> entityManager = new EntityManager<HobbitEntityInterface, HobbitLocation>();
 	
+	/**
+	 * Constructor of <code>MiddleEarth</code>. This will initialize the <code>HobbitLocationMaker</code>
+	 * and the grid.
+	 */
 	public MiddleEarth() {
 		HobbitLocation.HobbitLocationMaker factory = HobbitLocation.getMaker();
 		myGrid = new HobbitGrid(factory);
@@ -31,7 +41,8 @@ public class MiddleEarth extends World {
 		
 	}
 
-	/** Accessor for the height of the grid.
+	/** 
+	 * Returns the height of the <code>Grid</code>. Useful to the Views when rendering the map.
 	 * 
 	 * @author ram
 	 * @return the height of the grid
@@ -40,11 +51,11 @@ public class MiddleEarth extends World {
 		return space.getHeight();
 	}
 	
-	/**
-	 * Accessor for the width of the grid
+	/** 
+	 * Returns the width of the <code>Grid</code>. Useful to the Views when rendering the map.
 	 * 
 	 * @author ram
-	 * @return the width of the grid
+	 * @return the height of the grid
 	 */
 	public int width() {
 		return space.getWidth();
@@ -54,8 +65,8 @@ public class MiddleEarth extends World {
 	 * Set up the world, setting descriptions for locations and placing items and actors
 	 * on the grid.
 	 * 
-	 * @author ram
-	 * @param iface a MessageRenderer to be passed onto newly-created entities
+	 * @author 	ram
+	 * @param 	iface a MessageRenderer to be passed onto newly-created entities
 	 */
 	public void initializeWorld(MessageRenderer iface) {
 		HobbitLocation loc;
@@ -100,13 +111,6 @@ public class MiddleEarth extends World {
 		entityManager.setLocation(bilbo, loc);
 		bilbo.resetMoveCommands(loc);
 		
-		/*
-		// Asel
-		Player asel = new Player(Team.GOOD, 100, iface, this);
-		asel.setShortDescription("Asel The Legend");
-		entityManager.setLocation(asel, loc);
-		asel.resetMoveCommands(loc);
-		*/
 		
 		// The River Sherbourne
 		for (int col = 3; col < 8; col++) {
@@ -187,12 +191,13 @@ public class MiddleEarth extends World {
 	 */
 	
 	/**
-	 * Determine whether a given actor can move in a given direction.
+	 * Determine whether a given <code>HobbitActor a</code> can move in a given direction
+	 * <code>whichDirection</code>.
 	 * 
-	 * @author ram
-	 * @param a the actor
-	 * @param whichDirection the direction if which they want to move
-	 * @return true if the actor can see an exit in that direction, false otherwise.
+	 * @author 	ram
+	 * @param 	a the <code>HobbitActor</code> being queried.
+	 * @param 	whichDirection the <code>Direction</code> if which they want to move
+	 * @return 	true if the actor can see an exit in <code>whichDirection</code>, false otherwise.
 	 */
 	public boolean canMove(HobbitActor a, Direction whichDirection) {
 		HobbitLocation where = (HobbitLocation)entityManager.whereIs(a); // requires a cast for no reason I can discern
@@ -228,25 +233,34 @@ public class MiddleEarth extends World {
 	}
 
 	/**
-	 * Wrapper for entityManager.whereIs().
+	 * Returns the <code>Location</code> of a <code>HobbitEntity</code> in this grid, null if not found.
+	 * Wrapper for <code>entityManager.whereIs()</code>.
 	 * 
-	 * @author ram
-	 * @param e the entity to find
-	 * @return the Location of that entity, or null if it's not in the grid
+	 * @author 	ram
+	 * @param 	e the entity to find
+	 * @return 	the <code>Location</code> of that entity, or null if it's not in this grid
 	 */
 	public Location find(HobbitEntityInterface e) {
-		return entityManager.whereIs(e);
+		return entityManager.whereIs(e); //cast and return a hobbitLocation?
 	}
 
-	@SuppressWarnings("unchecked")
 	/**
 	 * This is only here for compliance with the abstract base class's interface and is not supposed to be
 	 * called.
 	 */
+
+	@SuppressWarnings("unchecked")
 	public EntityManager<HobbitEntityInterface, HobbitLocation> getEntityManager() {
 		return MiddleEarth.getEntitymanager();
 	}
 
+	/**
+	 * Returns the <code>EntityManager</code> which keeps track of the <code>HobbitEntities</code> and
+	 * <code>HobbitLocations</code> in this <code>MiddleEarth</code>.
+	 * 
+	 * @return 	the <code>EntityManager</code> of this <code>MiddleEarth</code>
+	 * @see 	{@link #entityManager}
+	 */
 	public static EntityManager<HobbitEntityInterface, HobbitLocation> getEntitymanager() {
 		return entityManager;
 	}

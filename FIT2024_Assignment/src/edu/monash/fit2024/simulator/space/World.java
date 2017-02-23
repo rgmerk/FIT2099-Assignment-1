@@ -1,4 +1,8 @@
 package edu.monash.fit2024.simulator.space;
+import java.util.Observable;
+
+import edu.monash.fit2024.simulator.matter.EntityInterface;
+import edu.monash.fit2024.simulator.matter.EntityManager;
 
 /**
  * World: base class for simulated worlds.
@@ -35,10 +39,7 @@ package edu.monash.fit2024.simulator.space;
  * 
  */
 
-import java.util.Observable;
 
-import edu.monash.fit2024.simulator.matter.EntityInterface;
-import edu.monash.fit2024.simulator.matter.EntityManager;
 
 public abstract class World extends Observable {
 	/**
@@ -64,16 +65,24 @@ public abstract class World extends Observable {
 		notifyObservers();
 	}
 	
+	/**
+	 * Get the <code>EntityManager</code> of this <code>World</code> which stores the assoications between the 
+	 * <code>Locations</code> and <code>Entities</code> in this <code>World</code>.
+	 * 
+	 * @param <E> <code>Entity</code> subclass
+	 * @param <L> <code>Location</code> subclass
+	 * @return The <code>EntityManager</code> of this <code>World</code>
+	 */
 	protected abstract <E extends EntityInterface, L extends Location> EntityManager<E, L> getEntityManager();
 
 
 	/**
-	 * Ask all Entities in the world if they need to do something.
+	 * Ask all <code>Entities</code> in this <code>World</code> if they need to do something.
 	 * 
-	 * Actors have a chance to select an action command; non-Actor entities can passively change over time.
+	 * <code>Actors</code> have a chance to select an action command; non-Actor entities can passively change over time.
 	 * 
-	 * @author ram
-	 * @date 19 February 2013
+	 * @author 	ram
+	 * @date 	19 February 2013
 	 */
 	public void tick() {
 		getEntityManager().tick();

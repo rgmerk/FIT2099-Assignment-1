@@ -1,13 +1,11 @@
-/**
- * Capabilities that various entities may have.  This is useful in canDo() methods.
- * 
- * @author ram
- */
-/*
- * Change log
- * 2017-01-20: Added comments (asel)
- */
 package hobbit;
+/**
+ * Capabilities that various entities may have.  This is useful in <code>canDo()</code> methods of 
+ * <code>HobbitActionInterface</code> implementations.
+ *  
+ * @author 	ram
+ * @see 	{@link HobbitActionInterface}
+ */
 
 public enum Capability {
 	CHOPPER,//CHOPPER capability allows an entity to Chop another entity which has the Chop Affordance

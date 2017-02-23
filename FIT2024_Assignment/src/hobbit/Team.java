@@ -1,12 +1,9 @@
-/**
- * Enumerator class for different types of Teams for the Hobbit Actors
- */
-/*
- * Change log
- * 2017-01-21: Extensions to the Javadoc
- */
 package hobbit;
 
+/**
+ * Enumerator class for different types of <code>Teams</code> for the <code>HobbitActors</code>.
+ * Teams are either good, bad or neutral.
+ */
 public enum Team {
 	GOOD,
 	EVIL,

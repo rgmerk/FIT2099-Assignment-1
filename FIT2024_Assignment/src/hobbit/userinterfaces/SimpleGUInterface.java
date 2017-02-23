@@ -46,6 +46,10 @@ import hobbit.HobbitLocation;
 import hobbit.MiddleEarth;
 import hobbit.actions.Move;
 
+/**
+ * IMPORTANT
+ * This UI is no longer required and is not compatible with the controller. Needs to be deleted! - Asel
+ */
 public class SimpleGUInterface extends JFrame implements MessageRenderer, MapRenderer, SimulationController{
 
 	/**Hobbit grid of the world*/

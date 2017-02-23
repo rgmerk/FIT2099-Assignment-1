@@ -13,7 +13,7 @@ import hobbit.MiddleEarth;
 /**
  * Concrete implementation of the <code>GridController</code>.
  * <p>
- * This controller class works independent of the GridRenderer implementation
+ * This controller calls the UI methods to render map, messages and obtain user input.
  * 
  * @author 	Asel
  * @see 	{@link edu.monash.fit2024.gridworld.GridController}
@@ -34,6 +34,8 @@ public class HobbitGridController implements GridController {
 	 * Constructor of this <code>HobbitGridController</code>
 	 * <p>
 	 * The constructor will initialize the <code>grid</code> and the user interface to be used by the controller.
+	 * <p>
+	 * If a different User Interface (also know as a View) is to be used it must be changed in this constructor.
 	 * 
 	 * @param 	world the world to be considered by the controller
 	 * @pre 	the world should not be null
@@ -43,8 +45,8 @@ public class HobbitGridController implements GridController {
 		
 		//change the user interface to be used here in the constructor
 		//this.ui = new HobbitGridTextInterface(this.grid); //use a Text Interface to interact
-		//this.ui = new HobbitGridGUI(this.grid); //Use a GUI to interact
-		this.ui = new HobbitGridGUI2(this.grid); //Use a GUI to interact
+		//this.ui = new HobbitGridBasicGUI(this.grid); //Use a Basic GUI to interact
+		this.ui = new HobbitGridGUI(this.grid); //Use a GUI with better graphics to interact
 	}
 
 	@Override
@@ -81,10 +83,12 @@ public class HobbitGridController implements GridController {
 		
 		//Get the UI to display the commands to the user and get a selection
 		//TO DO: Ensure the cmd list is not empty to avoid an infinite wait
+		assert (cmds.size()>0): "No commands for Hobbit Actor";
+		
 		ActionInterface selectedAction = ui.getSelection(cmds);
 		
 		//cast and return selection
-		return (HobbitActionInterface)selectedAction;//return selected action
+		return (HobbitActionInterface)selectedAction;
 	}
 	
 }

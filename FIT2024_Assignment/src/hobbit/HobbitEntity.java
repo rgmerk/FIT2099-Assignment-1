@@ -1,13 +1,3 @@
-/**
- * Class that represents inanimate objects in the Hobbit world.
- * Objects that cannot move for example trees
- * 
- * @author ram
- */
-/*
- * Change log
- * 2017-01-20: Extension to the Javadoc and added comments(asel)
- */
 package hobbit;
 
 import java.util.HashSet;
@@ -15,28 +5,42 @@ import java.util.HashSet;
 import edu.monash.fit2024.simulator.matter.Entity;
 import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
 
+/**
+ * Class that represents inanimate objects in the Hobbit world. Objects that cannot move for example trees.
+ * 
+ * @author 	ram
+ * @see 	{@link edu.monash.fit2024.simulator.matter.Entity}
+ * @see 	{@link HobbitEntityInterface}
+ */
+
 public class HobbitEntity extends Entity implements HobbitEntityInterface {
 	
 	/**A string symbol that represents this <code>HobbitEntity</code>, suitable for display*/
 	private String symbol;
 	
-	/**A set of <code>Capability</code>s of this <code>HobbitEntity</code>*/
+	/**A set of <code>Capabilities</code> of this <code>HobbitEntity</code>*/
 	protected HashSet<Capability> capabilities;
 	
-	/**The amount of <code>hitpoints</code> of this Hobbit Entity.*/
+	/**The amount of <code>hitpoints</code> of this <code>HobbitEntity</code>.*/
 	protected int hitpoints = 0; // Not all non-actor entities will make use of this
 
+	/**
+	 * Constructor for this <code>HobbitEntity</code>. Will initialize this <code>HobbitEntity</code>'s
+	 * <code>messageRenderer</code> and set of capabilities.
+	 * 
+	 * @param m the <code>messageRenderer</code> to display messages
+	 */
 	protected HobbitEntity(MessageRenderer m) {
-		super(m);//will assign the MessageRenderer to the HobbitEntity and initialize the affordance Hashset
+		super(m);
 		capabilities = new HashSet<Capability>();
 	}
 
-	/* 
-	 * @see hobbit.HobbitEntityInterface#getSymbol()
-	 */
+
 	/**
-	 * Getter for the <code>symbol</code> of the <code>HobbitEntity</code>
-	 * @return symbol @see {@link #symbol}
+	 * Returns a String symbol representing this <code>HobbitEntity</code>.
+	 * 
+	 * @return 	symbol a String that represents this <code>HobbitEntity</code>
+	 * @see 	{@link #symbol}
 	 */
 	@Override
 	public String getSymbol() {
@@ -44,52 +48,40 @@ public class HobbitEntity extends Entity implements HobbitEntityInterface {
 	}
 	
 	/**
-	 * Setter for the <code>symbol</code> of the <code>HobbitEntity</code>
-	 *
-	 * @param s @see {@link #symbol} 
+	 * Sets the symbol of this <code>HobbitEntity</code> with a new string <code>s</code>.
+	 * 
+	 * @param 	s the new string symbol for this <code>HobbitEntity</code>
+	 * @see 	{@link #symbol} 
 	 */
+	@Override
 	public void setSymbol(String s) {
-		assert (!s.matches(".") && (s.length()==1)):"Symbol should be a single charater and not a '.'";
 		symbol = s;
 	}
 
-	/**
-	 * <p>Returns true if this Entity has the given capability, false otherwise.</p>
-	 * <p>Wrapper for HashSet<Capability>.contains().</p>
-	 * 
-	 * @param c the Capability to search for
-	 */
 	@Override
 	public boolean hasCapability(Capability c) {
 		return capabilities.contains(c);
 	}
 
-	/**
-	 * Getter for the <code>hitpoints</code> of <code>HobbitEntity</code>
-	 * 
-	 * @return @see {@link #hitpoints}
-	 */
+	@Override
 	public int getHitpoints() {
 		return hitpoints;
 	}
 	
 	/**
-	 * Setter for the <code>hitpoints</code> of <code>HobbitEntity</code>
+	 * Sets the <code>hitpoints</code> of this <code>HobbitEntity</code>
+	 * to a new number of hit points <code>p</code>.
 	 * 
-	 * @param p @see {@link #hitpoints}
+	 * @param p the new number of <code>hitpoints</code>
 	 */
 	public void setHitpoints(int p) {
 		hitpoints = p;
 	}
 	
-	/**
-	 * Method insists damage on this <code>HobbitEntity</code> by reducing a certain amount of <code>damage</code> from this <code>HobbitEntity</code>'s <code>hitpoints</code>
-	 * 
-	 * @param damage the amount of <code>hitpoints</code> to be reduced
-	 */
+	@Override
 	public void takeDamage(int damage) {
-		//assertion to ensure the damage is not negative. Negative damage could increase the HobbitEntity's hitpoints
-		assert (damage >= 0)	:"damage on HobbitActor must not be negative";
+		//Precondition 1: Ensure that the damage is not negative
+		assert (damage >= 0)	:"damage on HobbitEntity must not be negative";
 		this.hitpoints -= damage;
 	}
 	

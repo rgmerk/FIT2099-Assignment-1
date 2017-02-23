@@ -10,12 +10,23 @@ import java.util.List;
 
 import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
 
+/**
+ * A very minimal <code>HobbitActor</code> that just describes the scene. It just stands still.
+ */
+
 public class TestActor extends HobbitActor {
 
 	/**
-	 * Constructor for the Test Actor
-	 * @param m : message renderer to 
-	 * @param world : the world the Test Actor is in
+	 * Constructor for the <code>TestActor</code> class. This constructor will,
+	 * <ul>
+	 * 	<li>Initialize the message renderer for the <code>TestActor</code></li>
+	 * 	<li>Initialize the world for this <code>TestActor</code></li>
+	 *  <li>Set the <code>Team</code> for this <code>TestActor</code> as <code>Good</code></li>
+	 * 	<li>Set the hit points for this <code>TestActor</code> as 50</li>
+	 * </ul>
+	 * 
+	 * @param m <code>MessageRenderer</code> to display messages.
+	 * @param world the <code>MiddleEarth</code> world to which this <code>TestActor</code> belongs to
 	 */
 	public TestActor(MessageRenderer m, MiddleEarth world) {
 		super(Team.GOOD, 50, m, world);
@@ -23,9 +34,9 @@ public class TestActor extends HobbitActor {
 	
 	@Override
 	/**
-	 * Stands still and waits for other actors to try its affordances. Introduced so that Attack could be tested
+	 * Stands still and waits for other actors to try its affordances. Introduced so that <code>Attack</code> could be tested
 	 * <p>
-	 * This method will only be called if the <code>HobbitActor a</code> is alive
+	 * This method will only be called if this <code>Test Actor</code> is alive and is not waiting
 	 * 
 	 * @author dsquire
 	 */
@@ -35,12 +46,16 @@ public class TestActor extends HobbitActor {
 	}
 	
 	/**
-	 * This method will describe 
+	 * This method will describe, 
 	 * <ul>
-	 * 	<li>the player's location</li>
-	 * 	<li>items carried (if the player is carrying any)</li>
-	 * 	<li>the contents of the players location (what the player can see) other than itself</li>
+	 * 	<li>the this <code>Player</code>'s location</li>
+	 * 	<li>items carried (if this <code>Player</code> is carrying any)</li>
+	 * 	<li>the contents of this <code>Player</code> location (what this <code>Player</code> can see) other than itself</li>
 	 * <ul>
+	 * <p>
+	 * The output from this method would be through the <code>MessageRenderer</code>.
+	 * 
+	 *  @see {@link edu.monash.fit2024.simulator.userInterface.MessageRenderer}
 	 */
 	public void describeScene() {
 		//get the location of the player and describe it
@@ -59,7 +74,7 @@ public class TestActor extends HobbitActor {
 		List<HobbitEntityInterface> contents = this.world.getEntityManager().contents(location);
 		
 		//and describe the contents
-		if (contents.size() > 1) { // if it is equal to one, the only thing here is this Test Actor, so there is nothing to report
+		if (contents.size() > 1) { // if it is equal to one, the only thing here is this Player, so there is nothing to report
 			say(this.getShortDescription() + " can see:");
 			for (HobbitEntityInterface entity : contents) {
 				if (entity != this) { // don't include self in scene description

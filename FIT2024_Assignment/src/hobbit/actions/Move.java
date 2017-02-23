@@ -1,12 +1,3 @@
-/**
- * Action that lets Actors walk around the map.
- * 
- * @author ram
- */
-/*
- * Change log
- * 2017-02-03	Added a getter for whichDirection attribute (asel)
- */
 package hobbit.actions;
 
 import hobbit.HobbitAction;
@@ -15,17 +6,30 @@ import hobbit.MiddleEarth;
 import edu.monash.fit2024.simulator.space.Direction;
 import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
 
+/**
+ * <code>HobbitAction</code> that lets <code>HobbitActors</code> walk around the map.
+ * 
+ * @author ram
+ */
+/*
+ * Change log
+ * 2017-02-03	Added a getter for whichDirection attribute. Need it for the GUI to display the move 
+ * 				commands in a nice way (asel)
+ */
 public class Move extends HobbitAction {
 
-	/**Direction in which the moveAction must be performed*/
+	/**Direction in which this <code>Move</code> action must be performed*/
 	Direction whichDirection;
+	
+	/**The world in which this <code>Move</code> action should occur*/
 	MiddleEarth world;
 
 	/**
-	 * Constructor for Move class
-	 * @param d : the direction in which the Entity is supposed to move
-	 * @param m : message renderer to display messages
-	 * @param world : the world in which the move action needs to happen
+	 * Constructor for <code>Move</code> class. Will initialize the direction and the world for the <code>Move</code>.
+	 * 
+	 * @param d the <code>Direction</code> in which the Entity is supposed to move
+	 * @param m <code>MessageRenderer</code> to display messages
+	 * @param world the world in which the <code>Move</code> action needs to happen
 	 */
 	public Move(Direction d, MessageRenderer m, MiddleEarth world) {
 		super(m);
@@ -34,16 +38,16 @@ public class Move extends HobbitAction {
 	}
 
 	/**
-	 * Perform the move action.
+	 * Perform the <code>Move</code> action.
 	 * <p>
-	 * If it is possible for actor a to move in the given direction, tell the world to move them
-	 * and then reset a's move commands to take into account a possible new set of available moves.  If
-	 * it is not possible for the actor to move in that direction, this method does nothing.
+	 * If it is possible for <code>HobbitActor a</code> to move in the given direction, tell the world to move them
+	 * and then reset <code>a</code>'s move commands to take into account a possible new set of available <code>Moves</code>. 
+	 * If it is not possible for <code>a</code> to move in that direction, this method does nothing.
 	 * <p>
 	 * This method will only be called if the <code>HobbitActor a</code> is alive
 	 * 
-	 * @author ram
-	 * @param a the HobbitActor who is moving
+	 * @author 	ram
+	 * @param 	a the <code>HobbitActor</code> who is moving
 	 */
 	public void act(HobbitActor a) {
 		
@@ -56,64 +60,78 @@ public class Move extends HobbitAction {
 	}
 
 
-	@Override
+	
 	/**
 	 * This is a wrapper for getDescription().
 	 * 
 	 * @author ram
-	 * @return a String describing this move, suitable for display to the user
+	 * @return a String describing this <code>Move</code>, suitable for display to the user
 	 */
+	@Override
 	public String toString() {
 		return getDescription();
 	}
 
-	@Override
+	
 	/**
-	 * Returns a String describing this move, suitable for display to the user.
+	 * Returns a String describing this <code>Move</code>, suitable for display to the user.
 	 * 
 	 * @author ram
 	 * @return String comprising "move " and the direction.
 	 */
+	@Override
 	public String getDescription() {
 		return "move " + whichDirection.toString();
 	}
 
 	/**
-	 * Returns true, since this is a move command.  This may be able to be replaced with a Capability.
+	 * Returns true, since this is a move command.  
+	 * 
+	 * TODO: This may be able to be replaced with a Capability.
 	 * 
 	 * @author ram
+	 * @return true
 	 */
 	public boolean isMoveCommand() {
 		return true;
 	}
 
-	@Override
+	
 	/**
-	 * Return the duration of this command, currently hard-coded to be 1.
-	 * 
-	 * @author ram
+	 *Returns the time taken to perform this <code>Move</code> action.
+	 *
+	 *@return the duration of the <code>Move</code> action. Currently hard coded to return 1
 	 */
+	@Override
 	public int getDuration() {
 		return 1;
 	}
 
-	@Override
 	/**
+	 * Returns if or not a <code>HobbitActor a</code> can perform a <code>Move</code> command.
+	 * <p>
+	 * This method returns true if and only if <code>a</code> is not dead.
+	 * <p>
 	 * We assume that actors don't get movement commands attached to them unless they can
 	 * in fact move in the appropriate direction.  If this changes, then this method will
 	 * need to be altered or overridden.
 	 * 
-	 * @author ram
-	 * @param the Actor doing the moving
-	 * @return true
+	 * @author 	ram
+	 * @param 	a the <code>HobbitActor</code> doing the moving
+	 * @return 	true if and only if <code>a</code> is not dead, false otherwise.
+	 * @see 	{@link hobbit.HobbitActor#isDead()}
 	 */
+	@Override
 	public boolean canDo(HobbitActor a) {
 		return !a.isDead();
 	}
 
 	/**
-	 * @author Asel
-	 * @return @see {@link #whichDirection}
+	 * Returns the <code>Direction</code> in which this <code>Move</code> is directed.
+	 * 
+	 * @author 	Asel
+	 * @return 	The <code>Direction</code> of this <code>Move</code>
+	 * @see 	{@link #whichDirection}
 	 */
 	public Direction getWhichDirection() {
 		return whichDirection;

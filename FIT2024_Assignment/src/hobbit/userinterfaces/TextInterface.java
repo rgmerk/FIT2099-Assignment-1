@@ -30,6 +30,10 @@ import hobbit.HobbitGrid;
 import hobbit.HobbitLocation;
 import hobbit.MiddleEarth;
 
+/**
+ * IMPORTANT
+ * This UI is no longer required and is not compatible with the controller. Needs to be deleted! - Asel
+ */
 public class TextInterface implements MessageRenderer, MapRenderer, SimulationController {
 	
 	/** Hobbit grid of the world*/
