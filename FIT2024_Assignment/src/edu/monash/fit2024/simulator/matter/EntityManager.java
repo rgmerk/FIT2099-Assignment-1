@@ -133,6 +133,7 @@ public class EntityManager<E extends EntityInterface, L extends Location> {
 	 * @modified dsquire 20130416
 	 *  - added check so that the actor's own affordances aren't added to this list of things it can do.
 	 *    Affordances are things that can be done *to* an entity, not by it.
+	 *    
 	 *    Can we move this to the change log? - Asel
 	 */
 	/*
