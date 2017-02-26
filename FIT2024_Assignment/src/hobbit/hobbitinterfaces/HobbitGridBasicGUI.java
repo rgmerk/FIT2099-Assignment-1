@@ -1,8 +1,10 @@
 package hobbit.hobbitinterfaces;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -11,10 +13,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import edu.monash.fit2024.gridworld.GridRenderer;
@@ -43,18 +47,18 @@ public class HobbitGridBasicGUI extends JFrame implements GridRenderer {
 	private static HobbitGrid grid;
 	
 	/**Panel that contains the map formed as a matrix of JTextfields*/
-	private JPanel gridPanel = new JPanel();
+	private JPanel mapPanel = new JPanel();
 	
 	/**Panel that contains the label {@link #lblMessages}, {@link #moveActionPanel}  and {@link #otherActionPanel}*/
-	private JPanel actionPanel = new JPanel();
+	private JPanel controlPanel = new JPanel();
 	
-	/**Label that displays messages. Is contained in {@link #actionPanel}*/
+	/**Label that displays messages. Is contained in {@link #controlPanel}*/
 	private JLabel lblMessages = new JLabel();
 	
-	/**Panel that contains action buttons corresponding to move commands. Is contained in {@link #actionPanel}*/
+	/**Panel that contains action buttons corresponding to move commands. Is contained in {@link #controlPanel}*/
 	private static JPanel moveActionPanel = new JPanel();
 	
-	/**Panel that contains action buttons corresponding to non movement commands. Is contained in {@link #actionPanel}*/
+	/**Panel that contains action buttons corresponding to non movement commands. Is contained in {@link #controlPanel}*/
 	private static JPanel otherActionPanel = new JPanel();
 	
 	/**The index of the command selected*/
@@ -78,6 +82,12 @@ public class HobbitGridBasicGUI extends JFrame implements GridRenderer {
 	 */
 	private static final List<Integer> definedOrder = Arrays.asList(315,0,45,270,-1,90,225,180,135);
 	
+	/**the height of a location tile. Used to determine the total height of the grid on the display*/
+	private final int locHeight = 100;
+	
+	/**the width of a location tile. Used to determine the total width of the grid on the display*/
+	private final int locWidth  = 100;
+	
 	/**
 	 * Constructor for the <code>HobbitGridGUI</code>. This will draw the basic layout on the
 	 * window and open it as a maximized window.
@@ -88,30 +98,29 @@ public class HobbitGridBasicGUI extends JFrame implements GridRenderer {
 	 */
 	public HobbitGridBasicGUI(HobbitGrid grid) {
 		HobbitGridBasicGUI.grid = grid;
-		
-		drawLayout();
-		
+				
 		//setting a title and opening the window in full screen
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setTitle("Hobbit World");
         this.setVisible(true);
+        
+        drawLayout();
 	}
 	
 	@Override
 	public void displayMap() {
 		final int gridHeight = grid.getHeight();
 		final int gridWidth  = grid.getWidth();
-		
-		//font for pretty output
-		Font locFont = new Font(Font.MONOSPACED, Font.PLAIN, 15);
-		
-		gridPanel.removeAll();//clear previous grid
-		gridPanel.setLayout(new GridLayout(gridHeight, gridWidth));//grid layout for the locations	
-		
-		for (int row = 0; row <gridHeight; row++){//for each row
+				
+
+		JPanel map = new JPanel();
+		map.setLayout(new GridLayout(gridHeight, gridWidth));
 			
-			for (int col = 0; col <gridWidth; col++){//each column of row
+		Font locFont = new Font(Font.MONOSPACED, Font.PLAIN, 18);
+		
+		for (int row = 0; row< gridHeight; row++){ //for each row
+			for (int col = 0; col< gridWidth; col++){ //each column of a row
 				
 				HobbitLocation loc = grid.getLocationByCoordinates(col, row);
 				String locationText = getLocationString(loc); 
@@ -136,15 +145,25 @@ public class HobbitGridBasicGUI extends JFrame implements GridRenderer {
 				txtLoc.setToolTipText(loc.getShortDescription());//show the location description when mouse hovered
 				
 				//add text field to gridPanel
-				gridPanel.add(txtLoc);
+				map.add(txtLoc);
 				
 			}
+			
+			
 		}
 		
-		//refresh the panel with the changes
-		gridPanel.revalidate();;
-		gridPanel.repaint();
+		JScrollPane mapScrollPane = new JScrollPane(map);
+		mapScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		mapScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
+		
+		//refresh the panel with the changes
+		mapPanel.removeAll();
+		mapPanel.setLayout(new GridLayout(1, 1));
+		mapPanel.add(mapScrollPane);
+		
+		mapPanel.revalidate();
+		mapPanel.repaint();
 	}
 
 	@Override
@@ -154,7 +173,7 @@ public class HobbitGridBasicGUI extends JFrame implements GridRenderer {
 		lblMessages.setText("<html>"+messageBuffer+"</html>");	
 		
 		//for pretty looks
-		Font messageFont = new Font(Font.MONOSPACED, Font.BOLD, 15);
+		Font messageFont = new Font(Font.MONOSPACED, Font.BOLD, 18);
 		lblMessages.setFont(messageFont);
 		lblMessages.setHorizontalAlignment(JLabel.CENTER);
 		lblMessages.setVerticalAlignment(JLabel.CENTER);
@@ -353,13 +372,22 @@ public class HobbitGridBasicGUI extends JFrame implements GridRenderer {
 	 */
 	private static void addOtherActionButtons(ArrayList<HobbitActionInterface> otherCmds){
 		
+		//heights and widths for the action buttons
+		final int BUTTON_HEIGHT = 50;
+		final int BUTTON_WIDTH  = otherActionPanel.getWidth();
+	
+		
 		otherActionPanel.removeAll(); //remove other action buttons from previous layout
-		otherActionPanel.setLayout(new GridLayout(otherCmds.size(), 1));//Grid to contain non movement commands
+		otherActionPanel.setLayout(new BoxLayout(otherActionPanel, BoxLayout.Y_AXIS));
+		
 		
 		//add other buttons
 		for (HobbitActionInterface cmd : otherCmds) {
+			
+			
 			JButton actionButton = new JButton();
 			actionButton.setText(cmd.getDescription());
+			actionButton.setMaximumSize(new Dimension(BUTTON_WIDTH,BUTTON_HEIGHT));;
 			otherActionPanel.add(actionButton);
 			allCommandButtons.add(actionButton);
 			
@@ -369,8 +397,9 @@ public class HobbitGridBasicGUI extends JFrame implements GridRenderer {
 					selection = allCommandButtons.indexOf(actionButton);				
 				}
 			});
-		}
-
+			
+		}		
+		
 		//refresh panel with the changes
 		otherActionPanel.revalidate();;
 		otherActionPanel.repaint();
@@ -491,25 +520,85 @@ public class HobbitGridBasicGUI extends JFrame implements GridRenderer {
 			return Color.decode("#ececec");
 		}
 	}
-
+	
 	/**
-	 * Sets up the main layout to display grid and action panels
+	 * Sets up the main layout to display grid and action panels. This method attempts to optimize the 
+	 * screen real estate for the map and controls for different screen sizes as follows,
+	 * <ul>
+	 * 	<li>If the height of the screen is larger than the total map height, the window height is reduced to match the map height</li>
+	 *  <li>If the height of the screen is smaller than the total map height, the window is left maximized</li>
+	 * 	<li>If the screen is too wide, the map takes it's required width and the rest is taken up by the controls</li>
+	 * 	<li>If the screen is too narrow, the map and controls each take 50% of the total screen width</li>
+	 * </ul> 
+	 * 
+	 * TODO: - Dealing with scroll bar widths so that the map could be displayed without horizontal scrolls
+	 * 		 - Dealing with scroll bar widths and title bar height to avoid vertical scrolls if possible.
+	 * 		 - Changing the scroll policies didn't seem to work :( 
+	 * 		 - Asel
 	 * 
 	 * @author 	Asel
-	 * @post 	<code>gridPanel</code> takes up half the screen and the <code>actionPanel</code> takes up the rest
-	 * TODO : JScrollPanes please! (asel)
 	 */
-	private void drawLayout(){		
- 		this.setLayout(new GridLayout(1,2));//Layout with 2 columns. One for the gridPanel and the other for the actionPanel
-		this.add(gridPanel); //add the grid	to main layout
-
-		actionPanel.setLayout(new GridLayout(3, 1));//Layout with 3 rows. For lblMessages, moveActionPanel and otherActionPanel
-		actionPanel.add(lblMessages);
-		actionPanel.add(moveActionPanel);
-		actionPanel.add(otherActionPanel);
+	private void drawLayout(){	
+		
+		//window open on full screen
+		Rectangle windowFrame = this.getBounds();
+		int windowHeight = windowFrame.height;
+		int windowWidth  = windowFrame.width;
 				
-		this.add(actionPanel);//add action panel to main layout		
+		//get the max width of the map
+		int recMapWidth = locWidth * grid.getWidth(); //recommended width for the map
+		int recMapHeight = locHeight * grid.getHeight(); //recommended height for the map. This is also the maximum height for the window
+		
+		//set maximum height of the frame to the map height if the screen is too high
+		//this is required to avoid blank spaces in the map (spaces without a texture)
+		if (windowHeight>recMapHeight) {
+			this.setSize(windowWidth, recMapHeight);
+		}
+		
+		int recControlsWidth = 600; //minimum recommended width for the controls
+		int totalReqWidth = recMapWidth + recControlsWidth;
+		
+		int mapPanelWidth;
+		int controlPanelWidth;
+		
+		//here we are trying to determine the width for the control and map panels based on screen size
+		
+		if (windowWidth == totalReqWidth) {//perfect display width
+			mapPanelWidth = recMapWidth;
+			controlPanelWidth = recControlsWidth;
+		}
+		else if (windowWidth>totalReqWidth) {//we have a ultra wide display
+			mapPanelWidth = recMapWidth; //map can take it's recommended width
+			controlPanelWidth = windowWidth -mapPanelWidth; //the controls can take up the rest
+		}
+		else if (windowWidth>recControlsWidth && windowWidth<totalReqWidth) {//we have room for the controls but not entirely for the map
+			controlPanelWidth = recControlsWidth;//controls take their recommended width
+			mapPanelWidth = windowWidth - controlPanelWidth; //the map takes the little space left
+		}
+		else {//we have a display whos width doesn't even have enough room for the controls
+			controlPanelWidth = windowWidth/2; //we'll give 50% for each
+			mapPanelWidth = windowWidth/2;
+		}
+					
+		
+		this.setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));
+		
+		mapPanel.setMaximumSize(new Dimension(mapPanelWidth, windowHeight));
+		this.add(mapPanel);
+ 		//this.add(new JScrollPane(mapPanel));//map panel added
+		
+		
+		controlPanel.setLayout(new GridLayout(3, 1));//Layout with 3 rows. For lblMessages, moveActionPanel and otherActionPanel
+				
+		controlPanel.add(new JScrollPane(lblMessages));
+		controlPanel.add(new JScrollPane(moveActionPanel));
+		controlPanel.add(new JScrollPane(otherActionPanel));
+				
+		controlPanel.setMaximumSize(new Dimension(controlPanelWidth, windowHeight));
+		
+		this.add(controlPanel);//add control panel to main layout		
 	}
+	
 
 	/**
 	 * Clear the message buffer after tick
