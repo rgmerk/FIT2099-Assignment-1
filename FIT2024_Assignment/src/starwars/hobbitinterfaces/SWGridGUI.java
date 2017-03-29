@@ -683,7 +683,7 @@ public class SWGridGUI extends JFrame implements GridRenderer {
 	 * 		The respective images of <code>SWEntityInterface</code>s for
 	 * 			<ul>
 	 * 				<li>Axe</li>
-	 *				<li>Sword</li>
+	 *				<li>Blaster</li>
 	 * 				<li>Tree</li>
 	 * 				<li>Wood</li>
 	 * 				<li>Suit</li>
@@ -762,7 +762,7 @@ public class SWGridGUI extends JFrame implements GridRenderer {
 	 * <code>entities</code>. The images of the entities should loaded at the respective indices as follows,
 	 * <ul>
 	 * <li>Image of the Axe at index 0</li>
-	 * <li>Image of the Sword at index 1</li>
+	 * <li>Image of the Blaster at index 1</li>
 	 * <li>Image of the Tree at index 2</li>
 	 * <li>Image of the Wood at index 3</li>
 	 * <li>Image of the Suit at index 4</li>
@@ -830,7 +830,7 @@ public class SWGridGUI extends JFrame implements GridRenderer {
 	 * 
 	 * Sources
 	 * Axe		: 	http://piq.codeus.net/picture/96226/medieval_axe
-	 * Sword	:	http://husseinhorack.deviantart.com/art/Medieval-Heavy-Sword-Pixel-Art-456276713
+	 * Blaster	:	http://husseinhorack.deviantart.com/art/Medieval-Heavy-Blaster-Pixel-Art-456276713
 	 * Hobbit	:	https://au.pinterest.com/paranoiart/pixel/
 	 * Goblin	:	http://jinndev.deviantart.com/art/Gollum-340203110
 	 * Treasure	:	https://au.pinterest.com/seongkyuko/pixel-art/
