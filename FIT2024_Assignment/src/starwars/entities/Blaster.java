@@ -47,7 +47,7 @@ public class Blaster extends SWEntity {
 		
 		this.addAffordance(new Take(this, m));//add the Take affordance so that the blaster can be picked up
 		
-													//the sword has capabilities 
+													//the blaster has capabilities 
 		this.capabilities.add(Capability.WEAPON);   // and WEAPON so that it can be used to attack
 	}
 	
