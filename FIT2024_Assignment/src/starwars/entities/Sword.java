@@ -1,18 +1,18 @@
-package hobbit.entities;
+package starwars.entities;
 
-import hobbit.Capability;
-import hobbit.HobbitEntity;
-import hobbit.actions.Take;
 import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
+import starwars.Capability;
+import starwars.SWEntity;
+import starwars.actions.Take;
 
 /**
  * An entity that has the <code>CHOPPER</code> and <code>WEAPON</code> attributes and so can
  * be used to <code>Chop</code> down <code>Trees</code>, <code>Attack</code> others, etc.
  * 
  * @author 	dsquire
- * @see 	{@link hobbit.entities.Tree}
- * @see 	{@link hobbit.actions.Chop}
- * @see 	{@link hobbit.actions.Attack}
+ * @see 	{@link starwars.entities.Tree}
+ * @see 	{@link starwars.actions.Chop}
+ * @see 	{@link starwars.actions.Attack}
  */
 /*
  * 2017/02/04 Removed the Unicode symbol of the sword to a 's' since it wasn't displayed on the text interface(asel)
@@ -20,7 +20,7 @@ import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
  * 			  the takeDamage method will also remove the CHOPPER and WEAPON capabilities from the Sword as it should not be possible
  * 			  to attack or chop with a broken Sword (asel)
  */
-public class Sword extends HobbitEntity {
+public class Sword extends SWEntity {
 
 	/**
 	 * Constructor for the <code>Sword</code> class. This constructor will,
@@ -36,9 +36,9 @@ public class Sword extends HobbitEntity {
 	 * 
 	 * @param m <code>MessageRenderer</code> to display messages.
 	 * 
-	 * @see {@link hobbit.actions.Take}
-	 * @see {@link hobbit.Capability}
-	 * @see {@link hobbit.actions.Chop} 
+	 * @see {@link starwars.actions.Take}
+	 * @see {@link starwars.Capability}
+	 * @see {@link starwars.actions.Chop} 
 	 */
 	public Sword(MessageRenderer m) {
 		super(m);
@@ -59,7 +59,7 @@ public class Sword extends HobbitEntity {
 	 * A symbol that is used to represent the Sword on a text based user interface
 	 * 
 	 * @return 	Single Character string "s"
-	 * @see 	{@link hobbit.HobbitEntityInterface#getSymbol()}
+	 * @see 	{@link starwars.SWEntityInterface#getSymbol()}
 	 */
 	public String getSymbol() {
 		return "s"; 
@@ -80,7 +80,7 @@ public class Sword extends HobbitEntity {
 	 * 
 	 * @author 	Asel
 	 * @param 	damage the amount of <code>hitpoints</code> to be reduced
-	 * @see 	{@link hobbit.actions.Attack}
+	 * @see 	{@link starwars.actions.Attack}
 	 */
 	@Override
 	public void takeDamage(int damage) {

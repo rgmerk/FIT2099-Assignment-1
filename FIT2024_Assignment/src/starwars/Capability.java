@@ -1,10 +1,10 @@
-package hobbit;
+package starwars;
 /**
  * Capabilities that various entities may have.  This is useful in <code>canDo()</code> methods of 
- * <code>HobbitActionInterface</code> implementations.
+ * <code>SWActionInterface</code> implementations.
  *  
  * @author 	ram
- * @see 	{@link HobbitActionInterface}
+ * @see 	{@link SWActionInterface}
  */
 
 public enum Capability {

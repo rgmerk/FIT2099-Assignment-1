@@ -9,9 +9,9 @@
 /*
  * Change log
  * 2017-02-02: Displaying the map/grid is now a responsibility of the TextInterface and not of Grid or MiddleWorld (asel)
- * 2017-02-04: Removed the HobbitGrid parameter from the displayTextGrid method and renamed it to drawGrid() - (asel)
+ * 2017-02-04: Removed the SWGrid parameter from the displayTextGrid method and renamed it to drawGrid() - (asel)
  */
-package hobbit.userinterfaces;
+package starwars.userinterfaces;
 
 
 import java.util.ArrayList;
@@ -23,12 +23,12 @@ import edu.monash.fit2024.simulator.matter.EntityManager;
 import edu.monash.fit2024.simulator.userInterface.MapRenderer;
 import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
 import edu.monash.fit2024.simulator.userInterface.SimulationController;
-import hobbit.HobbitActionInterface;
-import hobbit.HobbitActor;
-import hobbit.HobbitEntityInterface;
-import hobbit.HobbitGrid;
-import hobbit.HobbitLocation;
-import hobbit.MiddleEarth;
+import starwars.SWActionInterface;
+import starwars.SWActor;
+import starwars.SWEntityInterface;
+import starwars.SWGrid;
+import starwars.SWLocation;
+import starwars.SWWorld;
 
 /**
  * IMPORTANT
@@ -37,7 +37,7 @@ import hobbit.MiddleEarth;
 public class TextInterface implements MessageRenderer, MapRenderer, SimulationController {
 	
 	/** Hobbit grid of the world*/
-	private HobbitGrid grid;
+	private SWGrid grid;
 	
 	/** The number of items to be displayed per location including the location label and colon ':'*/
 	private static int locationWidth = 8;
@@ -51,7 +51,7 @@ public class TextInterface implements MessageRenderer, MapRenderer, SimulationCo
 	 * @param 	world The world being considered by the Text Interface
 	 * @pre 	world should not be null
 	 */
-	public TextInterface(MiddleEarth world) {
+	public TextInterface(SWWorld world) {
 		grid = world.getGrid();
 	}
 
@@ -117,14 +117,14 @@ public class TextInterface implements MessageRenderer, MapRenderer, SimulationCo
 		final int gridHeight = grid.getHeight();
 		final int gridWidth  = grid.getWidth();
 		
-		EntityManager<HobbitEntityInterface, HobbitLocation> em = MiddleEarth.getEntitymanager();
+		EntityManager<SWEntityInterface, SWLocation> em = SWWorld.getEntitymanager();
 		
 	
 		for (int row = 0; row< gridHeight; row++){ //for each row
 			for (int col = 0; col< gridWidth; col++){ //each column of a row
 				
 				//current location
-				HobbitLocation loc = grid.getLocationByCoordinates(col, row);
+				SWLocation loc = grid.getLocationByCoordinates(col, row);
 				
 				StringBuffer emptyBuffer = new StringBuffer();
 				char es = loc.getEmptySymbol(); 
@@ -137,13 +137,13 @@ public class TextInterface implements MessageRenderer, MapRenderer, SimulationCo
 				StringBuffer buf = new StringBuffer("|" + loc.getSymbol() + ":"); 
 				
 				//get the Contents of the location
-				List<HobbitEntityInterface> contents = em.contents(loc);
+				List<SWEntityInterface> contents = em.contents(loc);
 				
 				
 				if (contents == null || contents.isEmpty())
 					buf.append(emptyBuffer);//add empty buffer to buf to complete the string buffer
 				else {
-					for (HobbitEntityInterface e: contents) { //add the symbols of the contents
+					for (SWEntityInterface e: contents) { //add the symbols of the contents
 						buf.append(e.getSymbol());
 					}
 				}
@@ -165,15 +165,15 @@ public class TextInterface implements MessageRenderer, MapRenderer, SimulationCo
 	/**
 	 * Display a menu and receive user input.
 	 * 
-	 * @param a the HobbitActor to display options for
-	 * @return the HobbitActionInterface that the player has chosen to perform.
+	 * @param a the SWActor to display options for
+	 * @return the SWActionInterface that the player has chosen to perform.
 	 */
-	public static HobbitActionInterface getUserDecision(HobbitActor a) {
+	public static SWActionInterface getUserDecision(SWActor a) {
 		Scanner instream = new Scanner(System.in);
-		ArrayList<HobbitActionInterface> cmds = new ArrayList<HobbitActionInterface>();
+		ArrayList<SWActionInterface> cmds = new ArrayList<SWActionInterface>();
 
 		//for all the actions of the Hobbit actor
-		for (HobbitActionInterface ac : MiddleEarth.getEntitymanager().getActionsFor(a)) {
+		for (SWActionInterface ac : SWWorld.getEntitymanager().getActionsFor(a)) {
 			if (ac.canDo(a))
 				cmds.add(ac);//add the ones the Hobbit Actor can do
 		}

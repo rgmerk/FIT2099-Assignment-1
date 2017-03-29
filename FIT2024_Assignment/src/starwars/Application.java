@@ -1,16 +1,16 @@
-package hobbit;
+package starwars;
 
 import edu.monash.fit2024.simulator.time.Scheduler;
-import hobbit.hobbitinterfaces.HobbitGridController;
+import starwars.hobbitinterfaces.SWGridController;
 
 /**
- * Driver class for the Hobbit package with <code>GridController</code>.  Contains nothing but a main().
+ * Driver class for the Star Wars package with <code>GridController</code>.  Contains nothing but a main().
  * 
  * @author ram
  */
 /*
  * Change log
- * 2017-02-02	The TextInterface handles the responsibly of displaying the grid not the HobbitGrid or HobbitWorld classes (asel)
+ * 2017-02-02	The TextInterface handles the responsibly of displaying the grid not the SWGrid or SWWorld classes (asel)
  * 2017-02-10	GridController controls the interactions with the user and will determine which UI it should use to do this. 
  * 			    Therefore there is tight coupling with the user interfaces and the driver. The application no longer has to worry about the
  * 				UI(asel)
@@ -20,13 +20,13 @@ import hobbit.hobbitinterfaces.HobbitGridController;
 public class Application {
 	public static void main(String args[]) {
 		
-		MiddleEarth world = new MiddleEarth();
+		SWWorld world = new SWWorld();
 		
 		//Grid controller controls the data and commands between the UI and the model
-		HobbitGridController uiController = new HobbitGridController(world);
+		SWGridController uiController = new SWGridController(world);
 		
 		Scheduler theScheduler = new Scheduler(1, world);
-		HobbitActor.setScheduler(theScheduler);
+		SWActor.setScheduler(theScheduler);
 		
 		// set up the world
 		world.initializeWorld(uiController);

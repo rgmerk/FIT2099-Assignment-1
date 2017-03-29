@@ -11,7 +11,7 @@
  * 				Added a message buffer string that allows all say messages of within a tick to be displayed at once (asel)
  * 2017/02/04	Fixed the issue with the message renderer. It now prints all the messages from the message renderer (asel)
  */
-package hobbit.userinterfaces;
+package starwars.userinterfaces;
 
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -38,13 +38,13 @@ import edu.monash.fit2024.simulator.matter.EntityManager;
 import edu.monash.fit2024.simulator.userInterface.MapRenderer;
 import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
 import edu.monash.fit2024.simulator.userInterface.SimulationController;
-import hobbit.HobbitActionInterface;
-import hobbit.HobbitActor;
-import hobbit.HobbitEntityInterface;
-import hobbit.HobbitGrid;
-import hobbit.HobbitLocation;
-import hobbit.MiddleEarth;
-import hobbit.actions.Move;
+import starwars.SWActionInterface;
+import starwars.SWActor;
+import starwars.SWEntityInterface;
+import starwars.SWGrid;
+import starwars.SWLocation;
+import starwars.SWWorld;
+import starwars.actions.Move;
 
 /**
  * IMPORTANT
@@ -53,7 +53,7 @@ import hobbit.actions.Move;
 public class SimpleGUInterface extends JFrame implements MessageRenderer, MapRenderer, SimulationController{
 
 	/**Hobbit grid of the world*/
-	private HobbitGrid grid;
+	private SWGrid grid;
 	
 	/**The number of items to be displayed per location including the location symbol and colon ':'*/
 	private static int locationWidth = 8;
@@ -90,7 +90,7 @@ public class SimpleGUInterface extends JFrame implements MessageRenderer, MapRen
 	 * @pre 	<code>world</code> should not be null
 	 * @post	opens a full screen JFrame window with the map, messages and action buttons (if any)
 	 */
-	public SimpleGUInterface(MiddleEarth world) {
+	public SimpleGUInterface(SWWorld world) {
 		grid = world.getGrid();
 		drawLayout();
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -161,7 +161,7 @@ public class SimpleGUInterface extends JFrame implements MessageRenderer, MapRen
 	 * @author 	Asel
 	 * @post	a grid of JTextField created
 	 * @post	each text field is non editable
-	 * @post	each text field contains a location string @see	{@link #getLocationString(HobbitLocation)}
+	 * @post	each text field contains a location string @see	{@link #getLocationString(SWLocation)}
 	 */
 	private void drawGrid(){
 		
@@ -179,7 +179,7 @@ public class SimpleGUInterface extends JFrame implements MessageRenderer, MapRen
 			
 			for (int col = 0; col <gridWidth; col++){//each column of row
 				
-				HobbitLocation loc = grid.getLocationByCoordinates(col, row);
+				SWLocation loc = grid.getLocationByCoordinates(col, row);
 				String locationText = getLocationString(loc); 
 				
 				//Each location has a non editable JTextField with the Text for each Location
@@ -215,8 +215,8 @@ public class SimpleGUInterface extends JFrame implements MessageRenderer, MapRen
 	 * @post	the <code>string</code> contains the symbols of the locations contents plus any empty characters of the location
 	 * @post	<code>string</code> length is equal to location width
 	 */
-	private String getLocationString(HobbitLocation loc){
-		EntityManager<HobbitEntityInterface, HobbitLocation> em = MiddleEarth.getEntitymanager();
+	private String getLocationString(SWLocation loc){
+		EntityManager<SWEntityInterface, SWLocation> em = SWWorld.getEntitymanager();
 		
 		StringBuffer emptyBuffer = new StringBuffer();
 		char es = loc.getEmptySymbol(); 
@@ -229,12 +229,12 @@ public class SimpleGUInterface extends JFrame implements MessageRenderer, MapRen
 		StringBuffer buf = new StringBuffer(loc.getSymbol() + ":"); 
 		
 		//get the Contents of the location
-		List<HobbitEntityInterface> contents = em.contents(loc);
+		List<SWEntityInterface> contents = em.contents(loc);
 		
 		if (contents == null || contents.isEmpty())
 			buf.append(emptyBuffer);//add empty buffer to buf to complete the string buffer
 		else {
-			for (HobbitEntityInterface e: contents) { //add the symbols of the contents
+			for (SWEntityInterface e: contents) { //add the symbols of the contents
 				buf.append(e.getSymbol());
 			}
 		}
@@ -248,20 +248,20 @@ public class SimpleGUInterface extends JFrame implements MessageRenderer, MapRen
 	/**
 	 * Display a the action buttons and receive user input.
 	 * 
-	 * @param a the HobbitActor to display options for
-	 * @return the HobbitActionInterface that the player has chosen to perform.
+	 * @param a the SWActor to display options for
+	 * @return the SWActionInterface that the player has chosen to perform.
 	 */
-	 public static HobbitActionInterface getUserDecision(HobbitActor a) {
+	 public static SWActionInterface getUserDecision(SWActor a) {
 		 
 		 clearMessageBuffer();//this method is called in each tick so the message buffer can be cleared
 
 		//selection value set to -1 in order to trigger the wait
 		selection = -1;
 		
-		ArrayList<HobbitActionInterface> cmds = new ArrayList<HobbitActionInterface>(); //all commands
+		ArrayList<SWActionInterface> cmds = new ArrayList<SWActionInterface>(); //all commands
 		
-		//get the Actions the HobbitActor can do
-		for (HobbitActionInterface ac : MiddleEarth.getEntitymanager().getActionsFor(a)) {
+		//get the Actions the SWActor can do
+		for (SWActionInterface ac : SWWorld.getEntitymanager().getActionsFor(a)) {
 			if (ac.canDo(a))
 				cmds.add(ac);
 		}

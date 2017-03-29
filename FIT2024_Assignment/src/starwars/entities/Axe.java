@@ -1,17 +1,17 @@
-package hobbit.entities;
+package starwars.entities;
 
-import hobbit.Capability;
-import hobbit.HobbitEntity;
-import hobbit.actions.Take;
 import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
+import starwars.Capability;
+import starwars.SWEntity;
+import starwars.actions.Take;
 
 /**
  * A very minimal entity that has the <code>CHOPPER</code> attribute and so can
  * be used to <code>Chop</code> down <code>Trees</code>.
  * 
  *  @author ram
- *  @see {@link hobbit.entities.Tree}
- *  @see {@link hobbit.actions.Chop}
+ *  @see {@link starwars.entities.Tree}
+ *  @see {@link starwars.actions.Chop}
  */
 /*
  * Change log
@@ -20,7 +20,7 @@ import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
  * 			  to chop with a broken Axe. (asel)
  * 2017/02/22 removed the overriding method. Chopping don't have to damage the axe.
  */
-public class Axe extends HobbitEntity {
+public class Axe extends SWEntity {
 
 	/**
 	 * Constructor for the <code>Axe</code> class. This constructor will,
@@ -35,9 +35,9 @@ public class Axe extends HobbitEntity {
 	 * 
 	 * @param m <code>MessageRenderer</code> to display messages.
 	 * 
-	 * @see {@link hobbit.actions.Take}
-	 * @see {@link hobbit.Capability}
-	 * @see {@link hobbit.actions.Chop} 
+	 * @see {@link starwars.actions.Take}
+	 * @see {@link starwars.Capability}
+	 * @see {@link starwars.actions.Chop} 
 	 */
 	public Axe(MessageRenderer m) {
 		super(m);
@@ -54,7 +54,7 @@ public class Axe extends HobbitEntity {
 	 * A symbol that is used to represent the Axe on a text based user interface
 	 * 
 	 * @return 	Single Character string "Æ"
-	 * @see 	{@link hobbit.HobbitEntityInterface#getSymbol()}
+	 * @see 	{@link starwars.SWEntityInterface#getSymbol()}
 	 */
 	@Override
 	public String getSymbol() {

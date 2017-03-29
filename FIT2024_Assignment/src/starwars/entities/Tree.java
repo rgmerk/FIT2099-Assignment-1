@@ -1,18 +1,18 @@
-package hobbit.entities;
+package starwars.entities;
 
-import hobbit.HobbitAffordance;
-import hobbit.HobbitEntity;
-import hobbit.actions.Chop;
 import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
+import starwars.SWAffordance;
+import starwars.SWEntity;
+import starwars.actions.Chop;
 
 /**
  * Class to represent a tree.  <code>Trees</code> are currently pretty passive.  They can be chopped down
  * to produce wood.
  * 
  * @author 	ram
- * @see 	{@link hobbit.actions.Chop} 
+ * @see 	{@link starwars.actions.Chop} 
  */
-public class Tree extends HobbitEntity {
+public class Tree extends SWEntity {
 
 	/**
 	 * Constructor for the <code>Tree</code> class. This constructor will,
@@ -25,11 +25,11 @@ public class Tree extends HobbitEntity {
 	 * </ul>
 	 * 
 	 * @param 	m <code>MessageRenderer</code> to display messages.
-	 * @see 	{@link hobbit.actions.Chop} 
+	 * @see 	{@link starwars.actions.Chop} 
 	 */
 	public Tree(MessageRenderer m) {
 		super(m);
-		HobbitAffordance chop = new Chop(this, m);
+		SWAffordance chop = new Chop(this, m);
 		this.addAffordance(chop);	
 		
 		this.setLongDescription("A beautiful spreading oak tree.");

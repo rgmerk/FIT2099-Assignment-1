@@ -1,13 +1,13 @@
-package hobbit.actions;
+package starwars.actions;
 
-import hobbit.HobbitAction;
-import hobbit.HobbitActor;
-import hobbit.MiddleEarth;
 import edu.monash.fit2024.simulator.space.Direction;
 import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
+import starwars.SWAction;
+import starwars.SWActor;
+import starwars.SWWorld;
 
 /**
- * <code>HobbitAction</code> that lets <code>HobbitActors</code> walk around the map.
+ * <code>SWAction</code> that lets <code>SWActor</code>s walk around the map.
  * 
  * @author ram
  */
@@ -16,13 +16,13 @@ import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
  * 2017-02-03	Added a getter for whichDirection attribute. Need it for the GUI to display the move 
  * 				commands in a nice way (asel)
  */
-public class Move extends HobbitAction {
+public class Move extends SWAction {
 
 	/**Direction in which this <code>Move</code> action must be performed*/
 	Direction whichDirection;
 	
 	/**The world in which this <code>Move</code> action should occur*/
-	MiddleEarth world;
+	SWWorld world;
 
 	/**
 	 * Constructor for <code>Move</code> class. Will initialize the direction and the world for the <code>Move</code>.
@@ -31,7 +31,7 @@ public class Move extends HobbitAction {
 	 * @param m <code>MessageRenderer</code> to display messages
 	 * @param world the world in which the <code>Move</code> action needs to happen
 	 */
-	public Move(Direction d, MessageRenderer m, MiddleEarth world) {
+	public Move(Direction d, MessageRenderer m, SWWorld world) {
 		super(m);
 		this.whichDirection = d;
 		this.world = world;
@@ -40,16 +40,16 @@ public class Move extends HobbitAction {
 	/**
 	 * Perform the <code>Move</code> action.
 	 * <p>
-	 * If it is possible for <code>HobbitActor a</code> to move in the given direction, tell the world to move them
+	 * If it is possible for <code>SWActor a</code> to move in the given direction, tell the world to move them
 	 * and then reset <code>a</code>'s move commands to take into account a possible new set of available <code>Moves</code>. 
 	 * If it is not possible for <code>a</code> to move in that direction, this method does nothing.
 	 * <p>
-	 * This method will only be called if the <code>HobbitActor a</code> is alive
+	 * This method will only be called if the <code>SWActor a</code> is alive
 	 * 
 	 * @author 	ram
-	 * @param 	a the <code>HobbitActor</code> who is moving
+	 * @param 	a the <code>SWActor</code> who is moving
 	 */
-	public void act(HobbitActor a) {
+	public void act(SWActor a) {
 		
 		if (world.canMove(a, whichDirection)) {
 			world.moveEntity(a, whichDirection);
@@ -108,7 +108,7 @@ public class Move extends HobbitAction {
 	}
 
 	/**
-	 * Returns if or not a <code>HobbitActor a</code> can perform a <code>Move</code> command.
+	 * Returns if or not a <code>SWActor a</code> can perform a <code>Move</code> command.
 	 * <p>
 	 * This method returns true if and only if <code>a</code> is not dead.
 	 * <p>
@@ -117,12 +117,12 @@ public class Move extends HobbitAction {
 	 * need to be altered or overridden.
 	 * 
 	 * @author 	ram
-	 * @param 	a the <code>HobbitActor</code> doing the moving
+	 * @param 	a the <code>SWActor</code> doing the moving
 	 * @return 	true if and only if <code>a</code> is not dead, false otherwise.
-	 * @see 	{@link hobbit.HobbitActor#isDead()}
+	 * @see 	{@link starwars.SWActor#isDead()}
 	 */
 	@Override
-	public boolean canDo(HobbitActor a) {
+	public boolean canDo(SWActor a) {
 		return !a.isDead();
 	}
 

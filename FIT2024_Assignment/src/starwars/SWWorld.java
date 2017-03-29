@@ -1,16 +1,16 @@
-package hobbit;
+package starwars;
 
-import hobbit.actions.Take;
-import hobbit.entities.actors.*;
-import hobbit.entities.*;
 import edu.monash.fit2024.simulator.matter.EntityManager;
 import edu.monash.fit2024.simulator.space.Direction;
 import edu.monash.fit2024.simulator.space.Location;
 import edu.monash.fit2024.simulator.space.World;
 import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
+import starwars.actions.Take;
+import starwars.entities.*;
+import starwars.entities.actors.*;
 
 /**
- * Class representing the Hobbit world.
+ * Class representing a world in the Star Wars universe. 
  * 
  * @author ram
  */
@@ -20,23 +20,23 @@ import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
  * 				Displaying the Grid is now handled by the TextInterface rather 
  * 				than by the Grid or MiddleWorld classes (asel)
  */
-public class MiddleEarth extends World {
+public class SWWorld extends World {
 	
 	/**
-	 * <code>HobbitGrid</code> of this <code>MiddleEarth</code>
+	 * <code>SWGrid</code> of this <code>SWWorld</code>
 	 */
-	private HobbitGrid myGrid;
+	private SWGrid myGrid;
 	
-	/**The entity manager of the world which keeps track of <code>HobbitEntities</code> and their <code>HobbitLocations</code>*/
-	private static final EntityManager<HobbitEntityInterface, HobbitLocation> entityManager = new EntityManager<HobbitEntityInterface, HobbitLocation>();
+	/**The entity manager of the world which keeps track of <code>SWEntities</code> and their <code>SWLocation</code>s*/
+	private static final EntityManager<SWEntityInterface, SWLocation> entityManager = new EntityManager<SWEntityInterface, SWLocation>();
 	
 	/**
-	 * Constructor of <code>MiddleEarth</code>. This will initialize the <code>HobbitLocationMaker</code>
+	 * Constructor of <code>SWWorld</code>. This will initialize the <code>SWLocationMaker</code>
 	 * and the grid.
 	 */
-	public MiddleEarth() {
-		HobbitLocation.HobbitLocationMaker factory = HobbitLocation.getMaker();
-		myGrid = new HobbitGrid(factory);
+	public SWWorld() {
+		SWLocation.SWLocationMaker factory = SWLocation.getMaker();
+		myGrid = new SWGrid(factory);
 		space = myGrid;
 		
 	}
@@ -69,13 +69,13 @@ public class MiddleEarth extends World {
 	 * @param 	iface a MessageRenderer to be passed onto newly-created entities
 	 */
 	public void initializeWorld(MessageRenderer iface) {
-		HobbitLocation loc;
+		SWLocation loc;
 		// Set default location string
 		for (int row=0; row < height(); row++) {
 			for (int col=0; col < width(); col++) {
 				loc = myGrid.getLocationByCoordinates(col, row);
-				loc.setLongDescription("Middle Earth (" + col + ", " + row + ")");
-				loc.setShortDescription("Middle Earth (" + col + ", " + row + ")");
+				loc.setLongDescription("SWWorld (" + col + ", " + row + ")");
+				loc.setShortDescription("SWWorld (" + col + ", " + row + ")");
 				loc.setSymbol('.');				
 			}
 		}
@@ -85,8 +85,8 @@ public class MiddleEarth extends World {
 		for (int row = 5; row < 8; row++) {
 			for (int col = 4; col < 7; col++) {
 				loc = myGrid.getLocationByCoordinates(col, row);
-				loc.setLongDescription("The Shire (" + col + ", " + row + ")");
-				loc.setShortDescription("The Shire (" + col + ", " + row + ")");
+				loc.setLongDescription("Moisture Farm (" + col + ", " + row + ")");
+				loc.setShortDescription("Moisture Farm (" + col + ", " + row + ")");
 				loc.setSymbol('S');
 			}
 		}
@@ -97,7 +97,7 @@ public class MiddleEarth extends World {
 		loc.setShortDescription("Bag End");
 		loc.setSymbol('b');
 		// let's put an object here - just for a test
-		HobbitEntity chainMail = new HobbitEntity(iface);
+		SWEntity chainMail = new SWEntity(iface);
 		chainMail.setShortDescription("chain mail");
 		chainMail.setLongDescription("a small chain-mail suit");
 		chainMail.setSymbol("c");
@@ -105,11 +105,11 @@ public class MiddleEarth extends World {
 		// add a Take affordance to the chain mail, so that an actor can take it
 		entityManager.setLocation(chainMail, loc);
 		chainMail.addAffordance(new Take(chainMail, iface));
-		// Bilbo
-		Player bilbo = new Player(Team.GOOD, 100, iface, this);
-		bilbo.setShortDescription("Bilbo");
-		entityManager.setLocation(bilbo, loc);
-		bilbo.resetMoveCommands(loc);
+		// Luke
+		Player luke = new Player(Team.GOOD, 100, iface, this);
+		luke.setShortDescription("Luke");
+		entityManager.setLocation(luke, loc);
+		luke.resetMoveCommands(loc);
 		
 		
 		// The River Sherbourne
@@ -140,7 +140,7 @@ public class MiddleEarth extends World {
 		 */
 		// a ring
 		loc = myGrid.getLocationByCoordinates(3,1);
-		HobbitEntity ring = new HobbitEntity(iface);
+		SWEntity ring = new SWEntity(iface);
 		ring.setShortDescription("a ring");
 		ring.setLongDescription("a dully shining ring");
 		ring.setSymbol("o");
@@ -151,7 +151,7 @@ public class MiddleEarth extends World {
 
 		// a troll treasure
 		loc = myGrid.getLocationByCoordinates(1,5);
-		HobbitEntity treasure = new HobbitEntity(iface);
+		SWEntity treasure = new SWEntity(iface);
 		treasure.setShortDescription("a treasure");
 		treasure.setLongDescription("a troll treasure");
 		treasure.setSymbol("×");
@@ -178,11 +178,11 @@ public class MiddleEarth extends World {
 		entityManager.setLocation(goblin, loc);	
 		
 		// A target actor for testing actions
-		TestActor testActor = new TestActor(iface, this);
-		testActor.setShortDescription("Dorko the nobody");
-		testActor.setSymbol("d");
+		TuskenRaider tim = new TuskenRaider(10, "Tim", iface, this);
+		
+		tim.setSymbol("T");
 		loc = myGrid.getLocationByCoordinates(3,3);
-		entityManager.setLocation(testActor, loc);
+		entityManager.setLocation(tim, loc);
 
 	}
 
@@ -191,16 +191,16 @@ public class MiddleEarth extends World {
 	 */
 	
 	/**
-	 * Determine whether a given <code>HobbitActor a</code> can move in a given direction
+	 * Determine whether a given <code>SWActor a</code> can move in a given direction
 	 * <code>whichDirection</code>.
 	 * 
 	 * @author 	ram
-	 * @param 	a the <code>HobbitActor</code> being queried.
+	 * @param 	a the <code>SWActor</code> being queried.
 	 * @param 	whichDirection the <code>Direction</code> if which they want to move
 	 * @return 	true if the actor can see an exit in <code>whichDirection</code>, false otherwise.
 	 */
-	public boolean canMove(HobbitActor a, Direction whichDirection) {
-		HobbitLocation where = (HobbitLocation)entityManager.whereIs(a); // requires a cast for no reason I can discern
+	public boolean canMove(SWActor a, Direction whichDirection) {
+		SWLocation where = (SWLocation)entityManager.whereIs(a); // requires a cast for no reason I can discern
 		return where.hasExit(whichDirection);
 	}
 	
@@ -210,7 +210,7 @@ public class MiddleEarth extends World {
 	 * @author ram
 	 * @return the grid
 	 */
-	public HobbitGrid getGrid() {
+	public SWGrid getGrid() {
 		return myGrid;
 	}
 
@@ -221,27 +221,27 @@ public class MiddleEarth extends World {
 	 * @param a the actor to move
 	 * @param whichDirection the direction in which to move the actor
 	 */
-	public void moveEntity(HobbitActor a, Direction whichDirection) {
+	public void moveEntity(SWActor a, Direction whichDirection) {
 		
 		//get the neighboring location in whichDirection
 		Location loc = entityManager.whereIs(a).getNeighbour(whichDirection);
 		
 		// Base class unavoidably stores superclass references, so do a checked downcast here
-		if (loc instanceof HobbitLocation)
+		if (loc instanceof SWLocation)
 			//perform the move action by setting the new location to the the neighboring location
-			entityManager.setLocation(a, (HobbitLocation) entityManager.whereIs(a).getNeighbour(whichDirection));
+			entityManager.setLocation(a, (SWLocation) entityManager.whereIs(a).getNeighbour(whichDirection));
 	}
 
 	/**
-	 * Returns the <code>Location</code> of a <code>HobbitEntity</code> in this grid, null if not found.
+	 * Returns the <code>Location</code> of a <code>SWEntity</code> in this grid, null if not found.
 	 * Wrapper for <code>entityManager.whereIs()</code>.
 	 * 
 	 * @author 	ram
 	 * @param 	e the entity to find
 	 * @return 	the <code>Location</code> of that entity, or null if it's not in this grid
 	 */
-	public Location find(HobbitEntityInterface e) {
-		return entityManager.whereIs(e); //cast and return a hobbitLocation?
+	public Location find(SWEntityInterface e) {
+		return entityManager.whereIs(e); //cast and return a SWLocation?
 	}
 
 	/**
@@ -250,18 +250,18 @@ public class MiddleEarth extends World {
 	 */
 
 	@SuppressWarnings("unchecked")
-	public EntityManager<HobbitEntityInterface, HobbitLocation> getEntityManager() {
-		return MiddleEarth.getEntitymanager();
+	public EntityManager<SWEntityInterface, SWLocation> getEntityManager() {
+		return SWWorld.getEntitymanager();
 	}
 
 	/**
-	 * Returns the <code>EntityManager</code> which keeps track of the <code>HobbitEntities</code> and
-	 * <code>HobbitLocations</code> in this <code>MiddleEarth</code>.
+	 * Returns the <code>EntityManager</code> which keeps track of the <code>SWEntities</code> and
+	 * <code>SWLocations</code> in <code>SWWorld</code>.
 	 * 
-	 * @return 	the <code>EntityManager</code> of this <code>MiddleEarth</code>
+	 * @return 	the <code>EntityManager</code> of this <code>SWWorld</code>
 	 * @see 	{@link #entityManager}
 	 */
-	public static EntityManager<HobbitEntityInterface, HobbitLocation> getEntitymanager() {
+	public static EntityManager<SWEntityInterface, SWLocation> getEntitymanager() {
 		return entityManager;
 	}
 }

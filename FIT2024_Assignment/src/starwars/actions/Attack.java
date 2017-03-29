@@ -1,11 +1,11 @@
-package hobbit.actions;
+package starwars.actions;
 
-import hobbit.Capability;
-import hobbit.HobbitActionInterface;
-import hobbit.HobbitActor;
-import hobbit.HobbitAffordance;
-import hobbit.HobbitEntityInterface;
 import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
+import starwars.Capability;
+import starwars.SWActionInterface;
+import starwars.SWActor;
+import starwars.SWAffordance;
+import starwars.SWEntityInterface;
 
 /**
  * Command to attack entities.
@@ -19,7 +19,7 @@ import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
  * 2017/02/03	Fixed the bug where the an actor could attack another actor in the same team (asel)
  * 2017/02/08	Attack given a priority of 1 in constructor (asel)
  */
-public class Attack extends HobbitAffordance implements HobbitActionInterface {
+public class Attack extends SWAffordance implements SWActionInterface {
 
 	
 	/**
@@ -29,7 +29,7 @@ public class Attack extends HobbitAffordance implements HobbitActionInterface {
 	 * @param theTarget the target being attacked
 	 * @param m message renderer to display messages
 	 */
-	public Attack(HobbitEntityInterface theTarget, MessageRenderer m) {
+	public Attack(SWEntityInterface theTarget, MessageRenderer m) {
 		super(theTarget, m);	
 		priority = 1;
 	}
@@ -58,15 +58,15 @@ public class Attack extends HobbitAffordance implements HobbitActionInterface {
 
 
 	/**
-	 * Determine whether a particular <code>HobbitActor a</code> can attack the target.
+	 * Determine whether a particular <code>SWActor a</code> can attack the target.
 	 * 
 	 * @author 	dsquire
-	 * @param 	a the <code>HobbitActor</code> being queried
-	 * @return 	true any <code>HobbitActor</code> can always try an attack, it just won't do much 
-	 * 			good unless this <code>HobbitActor a</code> has a suitable weapon.
+	 * @param 	a the <code>SWActor</code> being queried
+	 * @return 	true any <code>SWActor</code> can always try an attack, it just won't do much 
+	 * 			good unless this <code>SWActor a</code> has a suitable weapon.
 	 */
 	@Override
-	public boolean canDo(HobbitActor a) {
+	public boolean canDo(SWActor a) {
 		return true;
 	}
 
@@ -76,8 +76,8 @@ public class Attack extends HobbitAffordance implements HobbitActionInterface {
 	 * <p>
 	 * This method does not perform any damage (an attack) if,
 	 * <ul>
-	 * 	<li>The target of the <code>Attack</code> and the <code>HobbitActor a</code> are in the same <code>Team</code></li>
-	 * 	<li>The <code>HobbitActor a</code> is holding an item without the <code>WEAPON Affordance</code></li>
+	 * 	<li>The target of the <code>Attack</code> and the <code>SWActor a</code> are in the same <code>Team</code></li>
+	 * 	<li>The <code>SWActor a</code> is holding an item without the <code>WEAPON Affordance</code></li>
 	 * </ul>
 	 * <p>
 	 * else it would damage the entity attacked, tires the attacker, and blunts any weapon used for the attack.
@@ -86,22 +86,22 @@ public class Attack extends HobbitAffordance implements HobbitActionInterface {
 	 * 
 	 * @author 	dsquire -  adapted from the equivalent class in the old Eiffel version
 	 * @author 	Asel - bug fixes.
-	 * @param 	a the <code>HobbitActor</code> who is attacking
-	 * @pre 	this method should only be called if the <code>HobbitActor a</code> is alive
-	 * @pre		an <code>Attack</code> must not be performed on a dead <code>HobbitActor</code>
-	 * @post	if a <code>HobbitActor</code>dies in an <code>Attack</code> their <code>Attack</code> affordance would be removed
-	 * @see		hobbit.HobbitActor#isDead()
-	 * @see 	hobbit.Team
+	 * @param 	a the <code>SWActor</code> who is attacking
+	 * @pre 	this method should only be called if the <code>SWActor a</code> is alive
+	 * @pre		an <code>Attack</code> must not be performed on a dead <code>SWActor</code>
+	 * @post	if a <code>SWActor</code>dies in an <code>Attack</code> their <code>Attack</code> affordance would be removed
+	 * @see		starwars.SWActor#isDead()
+	 * @see 	starwars.Team
 	 */
 	@Override
-	public void act(HobbitActor a) {
-		HobbitEntityInterface target = this.getTarget();
-		boolean targetIsActor = target instanceof HobbitActor;
-		HobbitActor targetActor = null;
+	public void act(SWActor a) {
+		SWEntityInterface target = this.getTarget();
+		boolean targetIsActor = target instanceof SWActor;
+		SWActor targetActor = null;
 		int energyForAttackWithWeapon = 1;//the amount of energy required to attack with a weapon
 		
 		if (targetIsActor) {
-			targetActor = (HobbitActor) target;
+			targetActor = (SWActor) target;
 		}
 					
 		
@@ -113,7 +113,7 @@ public class Attack extends HobbitAffordance implements HobbitActionInterface {
 				
 			a.say(a.getShortDescription() + " is attacking " + target.getShortDescription() + "!");
 			
-			HobbitEntityInterface itemCarried = a.getItemCarried();
+			SWEntityInterface itemCarried = a.getItemCarried();
 			if (itemCarried != null) {//if the actor is carrying an item 
 				if (itemCarried.hasCapability(Capability.WEAPON)) {
 					target.takeDamage(itemCarried.getHitpoints() + 1); // blunt weapon won't do much, but it will still do some damage

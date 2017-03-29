@@ -1,22 +1,19 @@
 /**
- * Class that represents an Actor (i.e. something that can perform actions) in the hobbit world.
+ * Class that represents an Actor (i.e. something that can perform actions) in the starwars world.
  * 
  * @author ram
  * 
  * @modified 20130414 dsquire
- * 	- changed constructor so that affordances that all HobbitActors must have can be added
+ * 	- changed constructor so that affordances that all SWActors must have can be added
  * 	- changed team to be an enum rather than a string
  */
 /*
  * Change log
  * 2017-01-20: Added missing Javadocs and improved comments (asel)
  * 2017-02-08: Removed the removeEventsMethod as it's no longer required.
- * 			   Removed the tick and act methods for HobbitActor as they are never called
+ * 			   Removed the tick and act methods for SWActor as they are never called
  */
-package hobbit;
-
-import hobbit.actions.Attack;
-import hobbit.actions.Move;
+package starwars;
 
 import java.util.HashSet;
 
@@ -26,71 +23,73 @@ import edu.monash.fit2024.simulator.matter.Actor;
 import edu.monash.fit2024.simulator.space.Location;
 import edu.monash.fit2024.simulator.time.Scheduler;
 import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
+import starwars.actions.Attack;
+import starwars.actions.Move;
 
-public abstract class HobbitActor extends Actor<HobbitAction> implements HobbitEntityInterface {
+public abstract class SWActor extends Actor<SWAction> implements SWEntityInterface {
 	
-	/**the <code>Team</code> to which this <code>HobbitActor</code> belongs to**/
+	/**the <code>Team</code> to which this <code>SWActor</code> belongs to**/
 	private Team team;
 	
 	/**The amount of <code>hitpoints</code> of this actor. If the hitpoints are zero or less this <code>Actor</code> is dead*/
 	private int hitpoints;
 	
-	/**The world this <code>HobbitActor</code> belongs to.*/
-	protected MiddleEarth world;
+	/**The world this <code>SWActor</code> belongs to.*/
+	protected SWWorld world;
 	
-	/**Scheduler to schedule this <code>HobbitActor</code>'s events*/
+	/**Scheduler to schedule this <code>SWActor</code>'s events*/
 	protected static Scheduler scheduler;
 	
-	/**The item carried by this <code>HobbitActor</code>. <code>itemCarried</code> is null if this <code>HobbitActor</code> is not carrying an item*/
-	private HobbitEntityInterface itemCarried;
+	/**The item carried by this <code>SWActor</code>. <code>itemCarried</code> is null if this <code>SWActor</code> is not carrying an item*/
+	private SWEntityInterface itemCarried;
 	
-	/**If or not this <code>HobbitActor</code> is human controlled. <code>HobbitActor</code>s are not human controlled by default*/
+	/**If or not this <code>SWActor</code> is human controlled. <code>SWActor</code>s are not human controlled by default*/
 	protected boolean humanControlled = false;
 	
-	/**A string symbol that represents this <code>HobbitActor</code>, suitable for display*/
+	/**A string symbol that represents this <code>SWActor</code>, suitable for display*/
 	private String symbol;
 	
-	/**A set of <code>Capabilities</code> of this <code>HobbitActor</code>*/
+	/**A set of <code>Capabilities</code> of this <code>SWActor</code>*/
 	private HashSet<Capability> capabilities;
 	
 	/**
-	 * Constructor for the <code>HobbitActor</code>.
+	 * Constructor for the <code>SWActor</code>.
 	 * <p>
-	 * The constructor initializes the <code>actions</code> list of this <code>HobbitActor</code>.
+	 * The constructor initializes the <code>actions</code> list of this <code>SWActor</code>.
 	 * <p>
 	 * By default,
 	 * <ul>
-	 * 	<li>All <code>HobbitActors</code> can be attacked.</li>
+	 * 	<li>All <code>SWActor</code>s can be attacked.</li>
 	 * 	<li>Have their symbol set to '@'</li>
 	 * </ul>
 	 * 
-	 * @param 	team to which this <code>HobbitActor</code> belongs to
-	 * @param 	hitpoints initial hitpoints of this <code>HobbitActor</code> to start with
-	 * @param 	m	message renderer for this <code>HobbitActor</code> to display messages
-	 * @param 	world the <code>World</code> to which <code>HobbitActor</code> belongs to
+	 * @param 	team to which this <code>SWActor</code> belongs to
+	 * @param 	hitpoints initial hitpoints of this <code>SWActor</code> to start with
+	 * @param 	m	message renderer for this <code>SWActor</code> to display messages
+	 * @param 	world the <code>World</code> to which <code>SWActor</code> belongs to
 	 * 
 	 * @see 	{@link #team}
 	 * @see 	{@link #hitpoints}
 	 * @see 	{@link #world}
-	 * @see 	{@link hobbit.actions.Attack}
+	 * @see 	{@link starwars.actions.Attack}
 	 */
-	public HobbitActor(Team team, int hitpoints, MessageRenderer m, MiddleEarth world) {
+	public SWActor(Team team, int hitpoints, MessageRenderer m, SWWorld world) {
 		super(m);
-		actions = new HashSet<HobbitAction>();
+		actions = new HashSet<SWAction>();
 		this.team = team;
 		this.hitpoints = hitpoints;
 		this.world = world;
 		this.symbol = "@";
 		
-		//HobbitActors are given the Attack affordance hence they can be attacked
-		HobbitAffordance attack = new Attack(this, m);
+		//SWActors are given the Attack affordance hence they can be attacked
+		SWAffordance attack = new Attack(this, m);
 		this.addAffordance(attack);
 	}
 	
 	/**
-	 * Sets the <code>scheduler</code> of this <code>HobbitActor</code> to a new <code>Scheduler s</code>
+	 * Sets the <code>scheduler</code> of this <code>SWActor</code> to a new <code>Scheduler s</code>
 	 * 
-	 * @param	s the new <code>Scheduler</code> of this <code>HobbitActor</code> 
+	 * @param	s the new <code>Scheduler</code> of this <code>SWActor</code> 
 	 * @see 	{@link #scheduler}
 	 */
 	public static void setScheduler(Scheduler s) {
@@ -98,11 +97,11 @@ public abstract class HobbitActor extends Actor<HobbitAction> implements HobbitE
 	}
 	
 	/**
-	 * Returns the team to which this <code>HobbitActor</code> belongs to.
+	 * Returns the team to which this <code>SWActor</code> belongs to.
 	 * <p>
-	 * Useful in comparing the teams different <code>HobbitActor</code> belong to.
+	 * Useful in comparing the teams different <code>SWActor</code> belong to.
 	 * 
-	 * @return 	the team of this <code>HobbitActor</code>
+	 * @return 	the team of this <code>SWActor</code>
 	 * @see 	{@link #team}
 	 */
 	public Team getTeam() {
@@ -110,9 +109,9 @@ public abstract class HobbitActor extends Actor<HobbitAction> implements HobbitE
 	}
 
 	/**
-	 * Returns the hit points of this <code>HobbitActor</code>.
+	 * Returns the hit points of this <code>SWActor</code>.
 	 * 
-	 * @return 	the hit points of this <code>HobbitActor</code> 
+	 * @return 	the hit points of this <code>SWActor</code> 
 	 * @see 	{@link #hitpoints}
 	 * @see 	{@link #isDead()}
 	 */
@@ -122,27 +121,27 @@ public abstract class HobbitActor extends Actor<HobbitAction> implements HobbitE
 	}
 
 	/**
-	 * Returns the item carried by this <code>HobbitActor</code>. 
+	 * Returns the item carried by this <code>SWActor</code>. 
 	 * <p>
 	 * This method only returns the reference of the item carried 
-	 * and does not remove the item held from this <code>HobbitActor</code>.
+	 * and does not remove the item held from this <code>SWActor</code>.
 	 * <p>
-	 * If this <code>HobbitActor</code> is not carrying an item this method would return null.
+	 * If this <code>SWActor</code> is not carrying an item this method would return null.
 	 * 
-	 * @return 	the item carried by this <code>HobbitActor</code> or null if no item is held by this <code>HobbitActor</code>
+	 * @return 	the item carried by this <code>SWActor</code> or null if no item is held by this <code>SWActor</code>
 	 * @see 	{@link #itemCarried}
 	 */
-	public HobbitEntityInterface getItemCarried() {
+	public SWEntityInterface getItemCarried() {
 		return itemCarried;
 	}
 
 	/**
-	 * Sets the team of this <code>HobbitActor</code> to a new team <code>team</code>.
+	 * Sets the team of this <code>SWActor</code> to a new team <code>team</code>.
 	 * <p>
-	 * Useful when the <code>HobbitActor</code>'s team needs to change dynamically during the simulation.
+	 * Useful when the <code>SWActor</code>'s team needs to change dynamically during the simulation.
 	 * For example, a bite from an evil actor makes a good actor bad.
 	 *
-	 * @param 	team the new team of this <code>HobbitActor</code>
+	 * @param 	team the new team of this <code>SWActor</code>
 	 * @see 	{@link #team}
 	 */
 	public void setTeam(Team team) {
@@ -150,41 +149,41 @@ public abstract class HobbitActor extends Actor<HobbitAction> implements HobbitE
 	}
 
 	/**
-	 * Method insists damage on this <code>HobbitActor</code> by reducing a 
-	 * certain amount of <code>damage</code> from this <code>HobbitActor</code>'s <code>hitpoints</code>
+	 * Method insists damage on this <code>SWActor</code> by reducing a 
+	 * certain amount of <code>damage</code> from this <code>SWActor</code>'s <code>hitpoints</code>
 	 * 
 	 * @param 	damage the amount of <code>hitpoints</code> to be reduced
 	 * @pre 	<code>damage</code> should not be negative
 	 */
 	@Override
 	public void takeDamage(int damage) {
-		//Precondition 1: Ensure the damage is not negative. Negative damage could increase the HobbitActor's hitpoints
-		assert (damage >= 0)	:"damage on HobbitActor must not be negative";
+		//Precondition 1: Ensure the damage is not negative. Negative damage could increase the SWActor's hitpoints
+		assert (damage >= 0)	:"damage on SWActor must not be negative";
 		this.hitpoints -= damage;
 	}
 
 	/**
-	 * Assigns this <code>HobbitActor</code>'s <code>itemCarried</code> to 
+	 * Assigns this <code>SWActor</code>'s <code>itemCarried</code> to 
 	 * a new item <code>target</code>
 	 * <p>
-	 * This method will replace items already held by the <code>HobbitActor</code> with the <code>target</code>.
-	 * A null <code>target</code> would signify that this <code>HobbitActor</code> is not carrying an item anymore.
+	 * This method will replace items already held by the <code>SWActor</code> with the <code>target</code>.
+	 * A null <code>target</code> would signify that this <code>SWActor</code> is not carrying an item anymore.
 	 * 
 	 * @param 	target the new item to be set as item carried
 	 * @see 	{@link #itemCarried}
 	 */
-	public void setItemCarried(HobbitEntityInterface target) {
+	public void setItemCarried(SWEntityInterface target) {
 		this.itemCarried = target;
 	}
 	
 	
 	/**
-	 * Returns true if this <code>HobbitActor</code> is dead, false otherwise.
+	 * Returns true if this <code>SWActor</code> is dead, false otherwise.
 	 * <p>
-	 * A <code>HobbitActor</code> is dead when it's <code>hitpoints</code> are less than or equal to zero (0)
+	 * A <code>SWActor</code> is dead when it's <code>hitpoints</code> are less than or equal to zero (0)
 	 *
 	 * @author 	ram
-	 * @return 	true if and only if this <code>HobbitActor</code> is dead, false otherwise
+	 * @return 	true if and only if this <code>SWActor</code> is dead, false otherwise
 	 * @see 	{@link #hitpoints}
 	 */
 	public boolean isDead() {
@@ -204,11 +203,11 @@ public abstract class HobbitActor extends Actor<HobbitAction> implements HobbitE
 	}
 	
 	/**
-	 * Returns if or not this <code>HobbitActor</code> is human controlled.
+	 * Returns if or not this <code>SWActor</code> is human controlled.
 	 * <p>
-	 * Human controlled <code>HobbitActors</code>' <code>HobbitActions</code> are selected by the user as commands from the Views.
+	 * Human controlled <code>SWActors</code>' <code>SWActions</code> are selected by the user as commands from the Views.
 	 * 
-	 * @return 	true if the <code>HobbitActor</code> is controlled by a human, false otherwise
+	 * @return 	true if the <code>SWActor</code> is controlled by a human, false otherwise
 	 * @see 	{@link #humanControlled}
 	 */
 	public boolean isHumanControlled() {
@@ -222,21 +221,21 @@ public abstract class HobbitActor extends Actor<HobbitAction> implements HobbitE
 	}
 	
 	/**
-	 * This method will poll this <code>HobbitActor</code>'s current <code>Location loc</code>
+	 * This method will poll this <code>SWActor</code>'s current <code>Location loc</code>
 	 * to find potential exits, and replaces all the instances of <code>Move</code>
-	 * in this <code>HobbitActor</code>'s command set with <code>Moves</code> to the new exits.
+	 * in this <code>SWActor</code>'s command set with <code>Moves</code> to the new exits.
 	 * <p>
-	 * This method doesn't affect other non-movement actions in this <code>HobbitActor</code>'s command set.
+	 * This method doesn't affect other non-movement actions in this <code>SWActor</code>'s command set.
 	 *  
 	 * @author 	ram
-	 * @param 	loc this <code>HobbitActor</code>'s location
-	 * @pre		<code>loc</code> is the actual location of this <code>HobbitActor</code>
+	 * @param 	loc this <code>SWActor</code>'s location
+	 * @pre		<code>loc</code> is the actual location of this <code>SWActor</code>
 	 */
 	public void resetMoveCommands(Location loc) {
-		HashSet<HobbitAction> newActions = new HashSet<HobbitAction>();
+		HashSet<SWAction> newActions = new HashSet<SWAction>();
 		
 		// Copy all the existing non-movement options to newActions
-		for (HobbitAction a: actions) {
+		for (SWAction a: actions) {
 			if (!a.isMoveCommand())
 				newActions.add(a);
 		}
@@ -247,7 +246,7 @@ public abstract class HobbitActor extends Actor<HobbitAction> implements HobbitE
 				newActions.add(new Move(d,messageRenderer, world)); 
 		}
 		
-		// replace command list of this HobbitActor
+		// replace command list of this SWActor
 		this.actions = newActions;		
 		
 		// TODO: This assumes that the only actions are the Move actions. This will clobber any others. Needs to be fixed.

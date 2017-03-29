@@ -1,4 +1,4 @@
-package hobbit.hobbitinterfaces;
+package starwars.hobbitinterfaces;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -25,26 +25,26 @@ import edu.monash.fit2024.gridworld.GridRenderer;
 import edu.monash.fit2024.gridworld.Grid.CompassBearing;
 import edu.monash.fit2024.simulator.matter.ActionInterface;
 import edu.monash.fit2024.simulator.matter.EntityManager;
-import hobbit.HobbitActionInterface;
-import hobbit.HobbitActor;
-import hobbit.HobbitEntityInterface;
-import hobbit.HobbitGrid;
-import hobbit.HobbitLocation;
-import hobbit.MiddleEarth;
-import hobbit.actions.Move;
+import starwars.SWActionInterface;
+import starwars.SWActor;
+import starwars.SWEntityInterface;
+import starwars.SWGrid;
+import starwars.SWLocation;
+import starwars.SWWorld;
+import starwars.actions.Move;
 
 /**
  * This is a basic graphical based user interface for the simulation. Is responsible for outputting a graphical map and messages on a JFrame
  * window and also obtain user selection of commands from the same JFrame window.
  * <p>
- * The graphics of this UI are pretty basic. Its operations are controlled by the <code>HobbitGridController</code>
+ * The graphics of this UI are pretty basic. Its operations are controlled by the <code>SWGridController</code>
  * 
  * @author Asel
  */
-public class HobbitGridBasicGUI extends JFrame implements GridRenderer {
+public class SWGridBasicGUI extends JFrame implements GridRenderer {
 
 	/**The grid of the world*/
-	private static HobbitGrid grid;
+	private static SWGrid grid;
 	
 	/**Panel that contains the map formed as a matrix of JTextfields*/
 	private JPanel mapPanel = new JPanel();
@@ -89,15 +89,15 @@ public class HobbitGridBasicGUI extends JFrame implements GridRenderer {
 	private final int locWidth  = 100;
 	
 	/**
-	 * Constructor for the <code>HobbitGridGUI</code>. This will draw the basic layout on the
+	 * Constructor for the <code>SWGridGUI</code>. This will draw the basic layout on the
 	 * window and open it as a maximized window.
 	 * 
 	 * @param 	grid the grid of the world
 	 * @pre 	<code>grid</code> should not be null
 	 * 
 	 */
-	public HobbitGridBasicGUI(HobbitGrid grid) {
-		HobbitGridBasicGUI.grid = grid;
+	public SWGridBasicGUI(SWGrid grid) {
+		SWGridBasicGUI.grid = grid;
 				
 		//setting a title and opening the window in full screen
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -122,7 +122,7 @@ public class HobbitGridBasicGUI extends JFrame implements GridRenderer {
 		for (int row = 0; row< gridHeight; row++){ //for each row
 			for (int col = 0; col< gridWidth; col++){ //each column of a row
 				
-				HobbitLocation loc = grid.getLocationByCoordinates(col, row);
+				SWLocation loc = grid.getLocationByCoordinates(col, row);
 				String locationText = getLocationString(loc); 
 				
 				//Each location has a non editable JTextField with location string of each text
@@ -192,17 +192,17 @@ public class HobbitGridBasicGUI extends JFrame implements GridRenderer {
 		//selection set to -1 to trigger the wait for user input
 		selection = -1;
 		
-		ArrayList<HobbitActionInterface> moveCmds = new ArrayList<HobbitActionInterface>(); //all move commands
-		ArrayList<HobbitActionInterface> otherCmds = new ArrayList<HobbitActionInterface>(); //all other non move commands
+		ArrayList<SWActionInterface> moveCmds = new ArrayList<SWActionInterface>(); //all move commands
+		ArrayList<SWActionInterface> otherCmds = new ArrayList<SWActionInterface>(); //all other non move commands
 
 		//Separate the move and other commands
 		for (ActionInterface ac : cmds) {
 			
-			if (((HobbitActionInterface) ac).isMoveCommand()){ //move commands
-				moveCmds.add((HobbitActionInterface)ac);
+			if (((SWActionInterface) ac).isMoveCommand()){ //move commands
+				moveCmds.add((SWActionInterface)ac);
 			}
 			else{ //non move commands
-				otherCmds.add((HobbitActionInterface)ac);
+				otherCmds.add((SWActionInterface)ac);
 			}
 			
 		}
@@ -213,15 +213,15 @@ public class HobbitGridBasicGUI extends JFrame implements GridRenderer {
 		//sort other commands for prettier output
 		Collections.sort(otherCmds);
 		
-		ArrayList<HobbitActionInterface> allCmds = new ArrayList<HobbitActionInterface>(); //all commands
+		ArrayList<SWActionInterface> allCmds = new ArrayList<SWActionInterface>(); //all commands
 		
 		//add move commands to list of all commands first
-		for (HobbitActionInterface ac:moveCmds){
+		for (SWActionInterface ac:moveCmds){
 			allCmds.add(ac);
 		}
 		
 		//next add the other commands
-		for (HobbitActionInterface ac:otherCmds){
+		for (SWActionInterface ac:otherCmds){
 			allCmds.add(ac);
 		}
 		
@@ -242,8 +242,8 @@ public class HobbitGridBasicGUI extends JFrame implements GridRenderer {
 	}
 	
 	/**
-	 * Returns a string consisting of the symbol of the <code>HobbitLocation loc</code>, a colon ':' followed by 
-	 * any symbols of the contents of the <code>HobbitLocation loc</code> and/or empty spaces of the <code>HobbitLocation loc</code>.
+	 * Returns a string consisting of the symbol of the <code>SWLocation loc</code>, a colon ':' followed by 
+	 * any symbols of the contents of the <code>SWLocation loc</code> and/or empty spaces of the <code>SWLocation loc</code>.
 	 * <p>
 	 * All string returned by this method are of a fixed length and doesn't contain any line breaks.
 	 * 
@@ -253,9 +253,9 @@ public class HobbitGridBasicGUI extends JFrame implements GridRenderer {
 	 * @return 	a string in the format location symbol of <code>loc</code> + : + symbols of contents of <code>loc</code> + any empty characters of <code>loc</code>
 	 * @post	all strings returned are of a fixed size
 	 */
-	private String getLocationString(HobbitLocation loc) {
+	private String getLocationString(SWLocation loc) {
 		
-		final EntityManager<HobbitEntityInterface, HobbitLocation> em = MiddleEarth.getEntitymanager();
+		final EntityManager<SWEntityInterface, SWLocation> em = SWWorld.getEntitymanager();
 		
 		//all string would be of locationWidth length
 		final int locationWidth = 8;
@@ -271,13 +271,13 @@ public class HobbitGridBasicGUI extends JFrame implements GridRenderer {
 		StringBuffer buf = new StringBuffer(loc.getSymbol() + ":"); 
 		
 		//get the Contents of the location
-		List<HobbitEntityInterface> contents = em.contents(loc);
+		List<SWEntityInterface> contents = em.contents(loc);
 		
 		
 		if (contents == null || contents.isEmpty())
 			buf.append(emptyBuffer);//add empty buffer to buf to complete the string buffer
 		else {
-			for (HobbitEntityInterface e: contents) { //add the symbols of the contents
+			for (SWEntityInterface e: contents) { //add the symbols of the contents
 				buf.append(e.getSymbol());
 			}
 		}
@@ -291,24 +291,24 @@ public class HobbitGridBasicGUI extends JFrame implements GridRenderer {
 	
 	
 	/**
-	 * Returns is a given <code>HobbitLocation loc</code> has a human controlled <HobbitActor>
+	 * Returns is a given <code>SWLocation loc</code> has a human controlled <SWActor>
 	 * <p>
 	 * Useful to highlight the human controlled player's locations.
 	 * 
-	 * @param 	loc the <code>HobbitLocation</code> being queried
+	 * @param 	loc the <code>SWLocation</code> being queried
 	 * @return	true if <code>loc</code> contains a human controlled actor, false otherwise
 	 */
-	private boolean locationHasHumanControlledActor(HobbitLocation loc){
+	private boolean locationHasHumanControlledActor(SWLocation loc){
 		
-		EntityManager<HobbitEntityInterface, HobbitLocation> em = MiddleEarth.getEntitymanager();
+		EntityManager<SWEntityInterface, SWLocation> em = SWWorld.getEntitymanager();
 		
 		//get the contents of the location
-		List<HobbitEntityInterface> contents = em.contents(loc);
+		List<SWEntityInterface> contents = em.contents(loc);
 		
 		if (contents!=null && !contents.isEmpty()){
-			for (HobbitEntityInterface e: contents) { //find if human controlled
-				if (e instanceof HobbitActor){
-					if (((HobbitActor)e).isHumanControlled()){;
+			for (SWEntityInterface e: contents) { //find if human controlled
+				if (e instanceof SWActor){
+					if (((SWActor)e).isHumanControlled()){;
 						return true;
 					}
 				}
@@ -324,14 +324,14 @@ public class HobbitGridBasicGUI extends JFrame implements GridRenderer {
 	 * 
 	 * @author	Asel
 	 * @param 	moveCmds move commands to be sorted
-	 * @pre 	<code>moveCmds</code> should only contain <code>HobbitActionInterface</code> objects that are instances of <code>Move</code>
+	 * @pre 	<code>moveCmds</code> should only contain <code>SWActionInterface</code> objects that are instances of <code>Move</code>
 	 */
-	private static void sortMoveCommands(ArrayList<HobbitActionInterface> moveCmds){
+	private static void sortMoveCommands(ArrayList<SWActionInterface> moveCmds){
 		
-		Comparator<HobbitActionInterface> comparator = new Comparator<HobbitActionInterface>(){
+		Comparator<SWActionInterface> comparator = new Comparator<SWActionInterface>(){
 
 		    @Override
-		    public int compare(final HobbitActionInterface moveAction1, final HobbitActionInterface moveAction2){
+		    public int compare(final SWActionInterface moveAction1, final SWActionInterface moveAction2){
 		    	int move1Index = 0;
 		    	int move2Index = 0;
 		    	
@@ -370,7 +370,7 @@ public class HobbitGridBasicGUI extends JFrame implements GridRenderer {
 	 * @post	all commands in <code>otherCmds</code> added to <code>otherActionPanel</code> as JButtons
 	 * @post	<code>allCommandButtons</code> updated with the new JButtons added.
 	 */
-	private static void addOtherActionButtons(ArrayList<HobbitActionInterface> otherCmds){
+	private static void addOtherActionButtons(ArrayList<SWActionInterface> otherCmds){
 		
 		//heights and widths for the action buttons
 		final int BUTTON_HEIGHT = 50;
@@ -382,7 +382,7 @@ public class HobbitGridBasicGUI extends JFrame implements GridRenderer {
 		
 		
 		//add other buttons
-		for (HobbitActionInterface cmd : otherCmds) {
+		for (SWActionInterface cmd : otherCmds) {
 			
 			
 			JButton actionButton = new JButton();
@@ -414,7 +414,7 @@ public class HobbitGridBasicGUI extends JFrame implements GridRenderer {
 	 * @post	All commands in <code>moveCmds</code> are displayed with action buttons with their positions corresponding to the bearings
 	 * @post	<code>allCommandButtons</code> updated with the new JButtons added.
 	 */
-	private static void addMoveActionButtons(ArrayList<HobbitActionInterface> moveCmds){
+	private static void addMoveActionButtons(ArrayList<SWActionInterface> moveCmds){
 		
 		moveActionPanel.removeAll(); //remove move action buttons from previous layout
 		moveActionPanel.setLayout(new GridLayout(3,3)); //3X3 grid for all 8 directions plus the empty space in the middle
@@ -427,7 +427,7 @@ public class HobbitGridBasicGUI extends JFrame implements GridRenderer {
 			
 			if (moveCmdIndex < moveCmds.size()){ //if there are move commands in moveCmd that have not been added yet
 				
-				HobbitActionInterface currMoveCommand = moveCmds.get(moveCmdIndex);
+				SWActionInterface currMoveCommand = moveCmds.get(moveCmdIndex);
 				
 				/* In a higher level the program is trying to add the currMoveCommand at the right 
 				 * position in a 3X3 grid so that it would corresponds to the bearing
@@ -475,7 +475,7 @@ public class HobbitGridBasicGUI extends JFrame implements GridRenderer {
 	}
 	
 	/**
-	 * This method returns a color for a <code>HobbitLocation loc</code>
+	 * This method returns a color for a <code>SWLocation loc</code>
 	 * <p>
 	 * This method always returns
 	 * <p>
@@ -492,7 +492,7 @@ public class HobbitGridBasicGUI extends JFrame implements GridRenderer {
 	 * 				<li>Gray for locations not specified above</li>
 	 * 			</ul>
 	 */
-	private Color getColorOfLoc(HobbitLocation loc) {
+	private Color getColorOfLoc(SWLocation loc) {
 		
 		final char FOREST 	= 'F';
 		final char RIVER 	= 'R';

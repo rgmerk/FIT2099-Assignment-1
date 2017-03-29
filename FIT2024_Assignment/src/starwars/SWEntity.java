@@ -1,4 +1,4 @@
-package hobbit;
+package starwars;
 
 import java.util.HashSet;
 
@@ -6,40 +6,40 @@ import edu.monash.fit2024.simulator.matter.Entity;
 import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
 
 /**
- * Class that represents inanimate objects in the Hobbit world. Objects that cannot move for example trees.
+ * Class that represents inanimate objects in the Star Wars world. Objects that cannot move for example trees.
  * 
  * @author 	ram
  * @see 	{@link edu.monash.fit2024.simulator.matter.Entity}
- * @see 	{@link HobbitEntityInterface}
+ * @see 	{@link SWEntityInterface}
  */
 
-public class HobbitEntity extends Entity implements HobbitEntityInterface {
+public class SWEntity extends Entity implements SWEntityInterface {
 	
-	/**A string symbol that represents this <code>HobbitEntity</code>, suitable for display*/
+	/**A string symbol that represents this <code>SWEntity</code>, suitable for display*/
 	private String symbol;
 	
-	/**A set of <code>Capabilities</code> of this <code>HobbitEntity</code>*/
+	/**A set of <code>Capabilities</code> of this <code>SWEntity</code>*/
 	protected HashSet<Capability> capabilities;
 	
-	/**The amount of <code>hitpoints</code> of this <code>HobbitEntity</code>.*/
+	/**The amount of <code>hitpoints</code> of this <code>SWEntity</code>.*/
 	protected int hitpoints = 0; // Not all non-actor entities will make use of this
 
 	/**
-	 * Constructor for this <code>HobbitEntity</code>. Will initialize this <code>HobbitEntity</code>'s
+	 * Constructor for this <code>SWEntity</code>. Will initialize this <code>SWEntity</code>'s
 	 * <code>messageRenderer</code> and set of capabilities.
 	 * 
 	 * @param m the <code>messageRenderer</code> to display messages
 	 */
-	protected HobbitEntity(MessageRenderer m) {
+	protected SWEntity(MessageRenderer m) {
 		super(m);
 		capabilities = new HashSet<Capability>();
 	}
 
 
 	/**
-	 * Returns a String symbol representing this <code>HobbitEntity</code>.
+	 * Returns a String symbol representing this <code>SWEntity</code>.
 	 * 
-	 * @return 	symbol a String that represents this <code>HobbitEntity</code>
+	 * @return 	symbol a String that represents this <code>SWEntity</code>
 	 * @see 	{@link #symbol}
 	 */
 	@Override
@@ -48,9 +48,9 @@ public class HobbitEntity extends Entity implements HobbitEntityInterface {
 	}
 	
 	/**
-	 * Sets the symbol of this <code>HobbitEntity</code> with a new string <code>s</code>.
+	 * Sets the symbol of this <code>SWEntity</code> with a new string <code>s</code>.
 	 * 
-	 * @param 	s the new string symbol for this <code>HobbitEntity</code>
+	 * @param 	s the new string symbol for this <code>SWEntity</code>
 	 * @see 	{@link #symbol} 
 	 */
 	@Override
@@ -69,7 +69,7 @@ public class HobbitEntity extends Entity implements HobbitEntityInterface {
 	}
 	
 	/**
-	 * Sets the <code>hitpoints</code> of this <code>HobbitEntity</code>
+	 * Sets the <code>hitpoints</code> of this <code>SWEntity</code>
 	 * to a new number of hit points <code>p</code>.
 	 * 
 	 * @param p the new number of <code>hitpoints</code>
@@ -81,7 +81,7 @@ public class HobbitEntity extends Entity implements HobbitEntityInterface {
 	@Override
 	public void takeDamage(int damage) {
 		//Precondition 1: Ensure that the damage is not negative
-		assert (damage >= 0)	:"damage on HobbitEntity must not be negative";
+		assert (damage >= 0)	:"damage on SWEntity must not be negative";
 		this.hitpoints -= damage;
 	}
 	

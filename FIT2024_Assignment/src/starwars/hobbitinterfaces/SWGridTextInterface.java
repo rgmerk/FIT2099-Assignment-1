@@ -1,4 +1,4 @@
-package hobbit.hobbitinterfaces;
+package starwars.hobbitinterfaces;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,18 +11,18 @@ import edu.monash.fit2024.gridworld.GridRenderer;
 import edu.monash.fit2024.simulator.matter.ActionInterface;
 import edu.monash.fit2024.simulator.matter.Actor;
 import edu.monash.fit2024.simulator.matter.EntityManager;
-import hobbit.HobbitActionInterface;
-import hobbit.HobbitActor;
-import hobbit.HobbitEntityInterface;
-import hobbit.HobbitGrid;
-import hobbit.HobbitLocation;
-import hobbit.MiddleEarth;
+import starwars.SWActionInterface;
+import starwars.SWActor;
+import starwars.SWEntityInterface;
+import starwars.SWGrid;
+import starwars.SWLocation;
+import starwars.SWWorld;
 
 /**
  * This is the text based user interface for the simulation. Is responsible for outputting a 
  * text based map and messages on the console and obtaining user selection of commands from the console
  * <p>
- * Its operations are controlled by the <code>HobbitGridController</code>.
+ * Its operations are controlled by the <code>SWGridController</code>.
  * 
  * @author Asel
  */
@@ -30,23 +30,23 @@ import hobbit.MiddleEarth;
  * Changelog
  * 2017-02-19	: Show banner method added. I used a boolean attribute to show the banner only once with the map render. (asel)
  */
-public class HobbitGridTextInterface implements GridRenderer {
+public class SWGridTextInterface implements GridRenderer {
 	
 	/**The grid of the world*/
-	private static HobbitGrid grid;
+	private static SWGrid grid;
 	
 	/**If or not to show the banner*/
 	private static boolean showBanner;
 	
 	/**
-	 * Constructor for the <code>HobbitGridTextInterface</code>. Will set showBanner flag to true to
+	 * Constructor for the <code>SWGridTextInterface</code>. Will set showBanner flag to true to
 	 * show the text banner with the first map render.
 	 * 
 	 * @param 	grid the grid of the world
 	 * @pre 	grid should not be null 
 	 */
-	public HobbitGridTextInterface(HobbitGrid grid) {
-		HobbitGridTextInterface.grid = grid;
+	public SWGridTextInterface(SWGrid grid) {
+		SWGridTextInterface.grid = grid;
 		
 		//set the show banner to true so that the banner would be displayed on the first map render
 		showBanner = true;
@@ -54,8 +54,8 @@ public class HobbitGridTextInterface implements GridRenderer {
 	
 	
 	/**
-	 * Returns a string consisting of the symbol of the <code>HobbitLocation loc</code>, a colon ':' followed by 
-	 * any symbols of the contents of the <code>HobbitLocation loc</code> and/or empty spaces of the <code>HobbitLocation loc</code>.
+	 * Returns a string consisting of the symbol of the <code>SWLocation loc</code>, a colon ':' followed by 
+	 * any symbols of the contents of the <code>SWLocation loc</code> and/or empty spaces of the <code>SWLocation loc</code>.
 	 * <p>
 	 * All string returned by this method are of a fixed length and doesn't contain any line breaks.
 	 * 
@@ -65,9 +65,9 @@ public class HobbitGridTextInterface implements GridRenderer {
 	 * @return 	a string in the format location symbol of <code>loc</code> + : + symbols of contents of <code>loc</code> + any empty characters of <code>loc</code>
 	 * @post	all strings returned are of a fixed size
 	 */
-	private String getLocationString(HobbitLocation loc) {
+	private String getLocationString(SWLocation loc) {
 		
-		final EntityManager<HobbitEntityInterface, HobbitLocation> em = MiddleEarth.getEntitymanager();
+		final EntityManager<SWEntityInterface, SWLocation> em = SWWorld.getEntitymanager();
 		
 		//all string would be of locationWidth length
 		final int locationWidth = 8;
@@ -83,13 +83,13 @@ public class HobbitGridTextInterface implements GridRenderer {
 		StringBuffer buf = new StringBuffer(loc.getSymbol() + ":"); 
 		
 		//get the Contents of the location
-		List<HobbitEntityInterface> contents = em.contents(loc);
+		List<SWEntityInterface> contents = em.contents(loc);
 		
 		
 		if (contents == null || contents.isEmpty())
 			buf.append(emptyBuffer);//add empty buffer to buf to complete the string buffer
 		else {
-			for (HobbitEntityInterface e: contents) { //add the symbols of the contents
+			for (SWEntityInterface e: contents) { //add the symbols of the contents
 				buf.append(e.getSymbol());
 			}
 		}
@@ -138,7 +138,7 @@ public class HobbitGridTextInterface implements GridRenderer {
 		for (int row = 0; row< gridHeight; row++){ //for each row
 			for (int col = 0; col< gridWidth; col++){ //each column of a row
 				
-				HobbitLocation loc = (HobbitLocation) grid.getLocationByCoordinates(col, row);
+				SWLocation loc = (SWLocation) grid.getLocationByCoordinates(col, row);
 				
 				//construct the string of a location to be displayed on the text interface
 				buffer = buffer + "|"+ getLocationString(loc)+"| ";

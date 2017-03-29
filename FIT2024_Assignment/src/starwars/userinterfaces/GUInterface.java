@@ -16,7 +16,7 @@
  * 2017/02/04	Fixed the issue with the message renderer. It now prints all the messages from the message renderer (asel)
  * 2017/02/08	human controlled player's locations are highlighted in yellow. The text if the GUI is mono spaced (asel)
  */
-package hobbit.userinterfaces;
+package starwars.userinterfaces;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -40,14 +40,13 @@ import edu.monash.fit2024.simulator.matter.EntityManager;
 import edu.monash.fit2024.simulator.userInterface.MapRenderer;
 import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
 import edu.monash.fit2024.simulator.userInterface.SimulationController;
-
-import hobbit.HobbitActionInterface;
-import hobbit.HobbitActor;
-import hobbit.HobbitEntityInterface;
-import hobbit.HobbitGrid;
-import hobbit.HobbitLocation;
-import hobbit.MiddleEarth;
-import hobbit.actions.Move;
+import starwars.SWActionInterface;
+import starwars.SWActor;
+import starwars.SWEntityInterface;
+import starwars.SWGrid;
+import starwars.SWLocation;
+import starwars.SWWorld;
+import starwars.actions.Move;
 
 /**
  * IMPORTANT
@@ -56,7 +55,7 @@ import hobbit.actions.Move;
 public class GUInterface extends JFrame implements MessageRenderer, MapRenderer, SimulationController{
 
 	/**Hobbit grid of the world*/
-	private HobbitGrid grid;
+	private SWGrid grid;
 	
 	/**The number of items to be displayed per location including the location label and colon ':'*/
 	private static int locationWidth = 8;
@@ -110,7 +109,7 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 	 * @post	opens a full screen JFrame window with the map, messages and action buttons (if any)
 	 * @post	the action buttons for movement are separate from the action buttons for non movement commands
 	 */
-	public GUInterface(MiddleEarth world) {
+	public GUInterface(SWWorld world) {
 		grid = world.getGrid();
 		drawLayout();
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -180,12 +179,12 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 	/**
 	 * Draws the map as a matrix of non editable JTextFields on the gridPanel.
 	 * <p>
-	 * <code>HobbitLocation</code>s of human controlled actors will be highlighted with yellow.
+	 * <code>SWLocation</code>s of human controlled actors will be highlighted with yellow.
 	 * 
 	 * @author 	Asel
 	 * @post	a grid of JTextField created
 	 * @post	each text field is non editable
-	 * @post	each text field contains a location string @see	{@link #getLocationString(HobbitLocation)}
+	 * @post	each text field contains a location string @see	{@link #getLocationString(SWLocation)}
 	 */
 	private void drawGrid(){
 		
@@ -205,7 +204,7 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 			
 			for (int col = 0; col <gridWidth; col++){//each column of row
 				
-				HobbitLocation loc = grid.getLocationByCoordinates(col, row);
+				SWLocation loc = grid.getLocationByCoordinates(col, row);
 				String locationText = getLocationString(loc); 
 				
 				//Each location has a non editable JTextField with the Text for each Location
@@ -248,8 +247,8 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 	 * @post	the string contains the symbols of the locations contents
 	 * @post	string length is equal to location width
 	 */
-	private String getLocationString(HobbitLocation loc){
-		EntityManager<HobbitEntityInterface, HobbitLocation> em = MiddleEarth.getEntitymanager();
+	private String getLocationString(SWLocation loc){
+		EntityManager<SWEntityInterface, SWLocation> em = SWWorld.getEntitymanager();
 		
 		StringBuffer emptyBuffer = new StringBuffer();
 		char es = loc.getEmptySymbol(); 
@@ -262,12 +261,12 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 		StringBuffer buf = new StringBuffer(loc.getSymbol() + ":"); 
 		
 		//get the Contents of the location
-		List<HobbitEntityInterface> contents = em.contents(loc);
+		List<SWEntityInterface> contents = em.contents(loc);
 		
 		if (contents == null || contents.isEmpty())
 			buf.append(emptyBuffer);//add empty buffer to buf to complete the string buffer
 		else {
-			for (HobbitEntityInterface e: contents) { //add the symbols of the contents
+			for (SWEntityInterface e: contents) { //add the symbols of the contents
 				buf.append(e.getSymbol());
 			}
 		}
@@ -279,22 +278,22 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 	}
 	
 	/**
-	 * Returns is a given <code>HobbitLocation loc</code> has a human controlled <HobbitActor>
+	 * Returns is a given <code>SWLocation loc</code> has a human controlled <SWActor>
 	 * 
-	 * @param 	loc the <code>HobbitLocation</code> being queried
+	 * @param 	loc the <code>SWLocation</code> being queried
 	 * @return	true if <code>loc</code> contains a human controlled actor, false otherwise
 	 */
-	private boolean locationHasHumanControlledActor(HobbitLocation loc){
+	private boolean locationHasHumanControlledActor(SWLocation loc){
 		
-		EntityManager<HobbitEntityInterface, HobbitLocation> em = MiddleEarth.getEntitymanager();
+		EntityManager<SWEntityInterface, SWLocation> em = SWWorld.getEntitymanager();
 		
 		//get the contents of the location
-		List<HobbitEntityInterface> contents = em.contents(loc);
+		List<SWEntityInterface> contents = em.contents(loc);
 		
 		if (contents!=null && !contents.isEmpty()){
-			for (HobbitEntityInterface e: contents) { //find if human controlled
-				if (e instanceof HobbitActor){
-					if (((HobbitActor)e).isHumanControlled()){;
+			for (SWEntityInterface e: contents) { //find if human controlled
+				if (e instanceof SWActor){
+					if (((SWActor)e).isHumanControlled()){;
 						return true;
 					}
 				}
@@ -307,21 +306,21 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 	/**
 	 * Display the action buttons and receive user input.
 	 * 
-	 * @param a the HobbitActor to display options for
-	 * @return the HobbitActionInterface that the player has chosen to perform.
+	 * @param a the SWActor to display options for
+	 * @return the SWActionInterface that the player has chosen to perform.
 	 */
-	public static HobbitActionInterface getUserDecision(HobbitActor a) {
+	public static SWActionInterface getUserDecision(SWActor a) {
 		clearMessageBuffer();//this method is called in each tick so the message buffer can be cleared
 		
 		//selection set to -1 to trigger wait for user input
 		selection = -1;
 		
-		ArrayList<HobbitActionInterface> cmds = new ArrayList<HobbitActionInterface>(); //all commands (move and non move)
-		ArrayList<HobbitActionInterface> moveCmds = new ArrayList<HobbitActionInterface>(); //all move commands
-		ArrayList<HobbitActionInterface> otherCmds = new ArrayList<HobbitActionInterface>(); //all other non move commands
+		ArrayList<SWActionInterface> cmds = new ArrayList<SWActionInterface>(); //all commands (move and non move)
+		ArrayList<SWActionInterface> moveCmds = new ArrayList<SWActionInterface>(); //all move commands
+		ArrayList<SWActionInterface> otherCmds = new ArrayList<SWActionInterface>(); //all other non move commands
 
-		//get the Actions the HobbitActor can do
-		for (HobbitActionInterface ac : MiddleEarth.getEntitymanager().getActionsFor(a)) {
+		//get the Actions the SWActor can do
+		for (SWActionInterface ac : SWWorld.getEntitymanager().getActionsFor(a)) {
 			if (ac.canDo(a)){
 				if (ac.isMoveCommand()){
 					moveCmds.add(ac);
@@ -339,12 +338,12 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 		Collections.sort(otherCmds);
 		
 		//add move commands to list of all commands first
-		for (HobbitActionInterface ac:moveCmds){
+		for (SWActionInterface ac:moveCmds){
 			cmds.add(ac);
 		}
 		
 		//next add the other commands
-		for (HobbitActionInterface ac:otherCmds){
+		for (SWActionInterface ac:otherCmds){
 			cmds.add(ac);
 		}
 		
@@ -370,14 +369,14 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 	 * 
 	 * @author	Asel
 	 * @param 	moveCmds move commands to be sorted
-	 * @pre 	<code>moveCmds</code> should only contain <code>HobbitActionInterface</code> objects that are instances of <code>Move</code>
+	 * @pre 	<code>moveCmds</code> should only contain <code>SWActionInterface</code> objects that are instances of <code>Move</code>
 	 */
-	private static void sortMoveCommands(ArrayList<HobbitActionInterface> moveCmds){
+	private static void sortMoveCommands(ArrayList<SWActionInterface> moveCmds){
 		
-		Comparator<HobbitActionInterface> comparator = new Comparator<HobbitActionInterface>(){
+		Comparator<SWActionInterface> comparator = new Comparator<SWActionInterface>(){
 
 		    @Override
-		    public int compare(final HobbitActionInterface moveAction1, final HobbitActionInterface moveAction2){
+		    public int compare(final SWActionInterface moveAction1, final SWActionInterface moveAction2){
 		    	int move1Index = 0;
 		    	int move2Index = 0;
 		    	
@@ -414,13 +413,13 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 	 * @param 	otherCmds a list of non movement commands
 	 * @post	all commands in <code>otherCmds</code> added to <code>otherActionPanel</code> as JButtons
 	 */
-	private static void addOtherActionButtons(ArrayList<HobbitActionInterface> otherCmds){
+	private static void addOtherActionButtons(ArrayList<SWActionInterface> otherCmds){
 	
 		otherActionPanel.removeAll(); //remove other action buttons from previous layout
 		otherActionPanel.setLayout(new GridLayout(otherCmds.size(), 1));//Grid to contain non movement commands
 		
 		//add other buttons
-		for (HobbitActionInterface cmd : otherCmds) {
+		for (SWActionInterface cmd : otherCmds) {
 			JButton actionButton = new JButton();
 			actionButton.setText(cmd.getDescription());
 			otherActionPanel.add(actionButton);
@@ -447,7 +446,7 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 	 * @pre 	<code>moveCmds</code> must be sorted in the defined order. @see {@link #sortMoveCommands(ArrayList)}
 	 * @post	All commands in <code>moveCmds</code> are displayed with action buttons with their positions corresponding to the bearings
 	 */
-	private static void addMoveActionButtons(ArrayList<HobbitActionInterface> moveCmds){
+	private static void addMoveActionButtons(ArrayList<SWActionInterface> moveCmds){
 		
 		moveActionPanel.removeAll(); //remove move action buttons from previous layout
 		moveActionPanel.setLayout(new GridLayout(3,3)); //3X3 grid for all 8 directions plus the empty space in the middle
@@ -460,7 +459,7 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 			
 			if (moveCmdIndex < moveCmds.size()){ //if there are move commands in moveCmd that have not been added yet
 				
-				HobbitActionInterface currMoveCommand = moveCmds.get(moveCmdIndex);
+				SWActionInterface currMoveCommand = moveCmds.get(moveCmdIndex);
 				
 				/* In a higher level the program is trying to add the currMoveCommand at the right 
 				 * position in a 3X3 grid so that it would corresponds to the bearing
@@ -508,7 +507,7 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 	}
 	
 	/**
-	 * This method returns a color for a <code>HobbitLocation loc</code>
+	 * This method returns a color for a <code>SWLocation loc</code>
 	 * <p>
 	 * This method always returns
 	 * <p>
@@ -525,7 +524,7 @@ public class GUInterface extends JFrame implements MessageRenderer, MapRenderer,
 	 * 				<li>Gray for locations not specified above</li>
 	 * 			</ul>
 	 */
-	private Color getColorOfLoc(HobbitLocation loc) {
+	private Color getColorOfLoc(SWLocation loc) {
 		
 		final char FOREST 	= 'F';
 		final char RIVER 	= 'R';

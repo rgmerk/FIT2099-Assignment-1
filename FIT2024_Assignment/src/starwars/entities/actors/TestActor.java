@@ -1,20 +1,19 @@
-package hobbit.entities.actors;
-
-import hobbit.HobbitActor;
-import hobbit.HobbitEntityInterface;
-import hobbit.HobbitLocation;
-import hobbit.MiddleEarth;
-import hobbit.Team;
+package starwars.entities.actors;
 
 import java.util.List;
 
 import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
+import starwars.SWActor;
+import starwars.SWEntityInterface;
+import starwars.SWLocation;
+import starwars.SWWorld;
+import starwars.Team;
 
 /**
- * A very minimal <code>HobbitActor</code> that just describes the scene. It just stands still.
+ * A very minimal <code>SWActor</code> that just describes the scene. It just stands still.
  */
 
-public class TestActor extends HobbitActor {
+public class TestActor extends SWActor {
 
 	/**
 	 * Constructor for the <code>TestActor</code> class. This constructor will,
@@ -26,9 +25,9 @@ public class TestActor extends HobbitActor {
 	 * </ul>
 	 * 
 	 * @param m <code>MessageRenderer</code> to display messages.
-	 * @param world the <code>MiddleEarth</code> world to which this <code>TestActor</code> belongs to
+	 * @param world the <code>SWWorld</code> world to which this <code>TestActor</code> belongs to
 	 */
-	public TestActor(MessageRenderer m, MiddleEarth world) {
+	public TestActor(MessageRenderer m, SWWorld world) {
 		super(Team.GOOD, 50, m, world);
 	}
 	
@@ -59,11 +58,11 @@ public class TestActor extends HobbitActor {
 	 */
 	public void describeScene() {
 		//get the location of the player and describe it
-		HobbitLocation location = this.world.getEntityManager().whereIs(this);
+		SWLocation location = this.world.getEntityManager().whereIs(this);
 		say(this.getShortDescription() + " [" + this.getHitpoints() + "] is at " + location.getShortDescription());
 		
 		//get the items carried for the player
-		HobbitEntityInterface itemCarried = this.getItemCarried();
+		SWEntityInterface itemCarried = this.getItemCarried();
 		if (itemCarried != null) {
 			//and describe the item carried if the player is actually carrying an item
 			say(this.getShortDescription() 
@@ -71,12 +70,12 @@ public class TestActor extends HobbitActor {
 		}
 		
 		//get the contents of the location
-		List<HobbitEntityInterface> contents = this.world.getEntityManager().contents(location);
+		List<SWEntityInterface> contents = this.world.getEntityManager().contents(location);
 		
 		//and describe the contents
 		if (contents.size() > 1) { // if it is equal to one, the only thing here is this Player, so there is nothing to report
 			say(this.getShortDescription() + " can see:");
-			for (HobbitEntityInterface entity : contents) {
+			for (SWEntityInterface entity : contents) {
 				if (entity != this) { // don't include self in scene description
 					say("\t " + entity.getSymbol() + " - " + entity.getLongDescription() + " [" + entity.getHitpoints() + "]");
 				}

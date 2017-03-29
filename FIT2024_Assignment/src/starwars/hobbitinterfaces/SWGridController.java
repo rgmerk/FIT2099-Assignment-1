@@ -1,14 +1,14 @@
-package hobbit.hobbitinterfaces;
+package starwars.hobbitinterfaces;
 
 import java.util.ArrayList;
 
 import edu.monash.fit2024.gridworld.GridController;
 import edu.monash.fit2024.gridworld.GridRenderer;
 import edu.monash.fit2024.simulator.matter.ActionInterface;
-import hobbit.HobbitActionInterface;
-import hobbit.HobbitActor;
-import hobbit.HobbitGrid;
-import hobbit.MiddleEarth;
+import starwars.SWActionInterface;
+import starwars.SWActor;
+import starwars.SWGrid;
+import starwars.SWWorld;
 
 /**
  * Concrete implementation of the <code>GridController</code>.
@@ -19,7 +19,7 @@ import hobbit.MiddleEarth;
  * @see 	{@link edu.monash.fit2024.gridworld.GridController}
  *
  */
-public class HobbitGridController implements GridController {
+public class SWGridController implements GridController {
 
 	/**The user interface to be used by the controller. All user interfaces should be concrete 
 	 * implementations of the <code>GridRenderer</code> interface
@@ -28,10 +28,10 @@ public class HobbitGridController implements GridController {
 	private static GridRenderer ui; 
 	
 	/**Hobbit grid of the world*/
-	private HobbitGrid grid;
+	private SWGrid grid;
 	
 	/**
-	 * Constructor of this <code>HobbitGridController</code>
+	 * Constructor of this <code>SWGridController</code>
 	 * <p>
 	 * The constructor will initialize the <code>grid</code> and the user interface to be used by the controller.
 	 * <p>
@@ -40,13 +40,13 @@ public class HobbitGridController implements GridController {
 	 * @param 	world the world to be considered by the controller
 	 * @pre 	the world should not be null
 	 */
-	public HobbitGridController(MiddleEarth world) {
+	public SWGridController(SWWorld world) {
 		this.grid = world.getGrid();
 		
 		//change the user interface to be used here in the constructor
-		//this.ui = new HobbitGridTextInterface(this.grid); //use a Text Interface to interact
-		//this.ui = new HobbitGridBasicGUI(this.grid); //Use a Basic GUI to interact
-		this.ui = new HobbitGridGUI(this.grid); //Use a GUI with better graphics to interact
+		this.ui = new SWGridTextInterface(this.grid); //use a Text Interface to interact
+		//this.ui = new SWGridBasicGUI(this.grid); //Use a Basic GUI to interact
+		//this.ui = new SWGridGUI(this.grid); //Use a GUI with better graphics to interact
 	}
 
 	@Override
@@ -67,16 +67,16 @@ public class HobbitGridController implements GridController {
 	 * This method will provide the user interface with a list of commands from which the user 
 	 * needs to select one from and will return this selection.	
 	 * 
-	 * @param 	a the <code>HobbitActor</code> for whom an Action needs to be selected
-	 * @return	the selected action for the <code>HobbitActor a</code>
+	 * @param 	a the <code>SWActor</code> for whom an Action needs to be selected
+	 * @return	the selected action for the <code>SWActor a</code>
 	 */
-	public static HobbitActionInterface getUserDecision(HobbitActor a) {
+	public static SWActionInterface getUserDecision(SWActor a) {
 		
-		//this list will store all the commands that HobbitActor a can perform
+		//this list will store all the commands that SWActor a can perform
 		ArrayList<ActionInterface> cmds = new ArrayList<ActionInterface>();
 
-		//Get all the actions the HobbitActor a can perform
-		for (HobbitActionInterface ac : MiddleEarth.getEntitymanager().getActionsFor(a)) {
+		//Get all the actions the SWActor a can perform
+		for (SWActionInterface ac : SWWorld.getEntitymanager().getActionsFor(a)) {
 			if (ac.canDo(a))
 				cmds.add(ac);
 		}
@@ -88,7 +88,7 @@ public class HobbitGridController implements GridController {
 		ActionInterface selectedAction = ui.getSelection(cmds);
 		
 		//cast and return selection
-		return (HobbitActionInterface)selectedAction;
+		return (SWActionInterface)selectedAction;
 	}
 	
 }

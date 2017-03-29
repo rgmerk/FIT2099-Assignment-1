@@ -1,11 +1,11 @@
-package hobbit.entities.actors;
+package starwars.entities.actors;
 
-import hobbit.HobbitActor;
-import hobbit.MiddleEarth;
-import hobbit.Team;
-import hobbit.actions.Move;
 import edu.monash.fit2024.gridworld.Grid;
 import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
+import starwars.SWActor;
+import starwars.SWWorld;
+import starwars.Team;
+import starwars.actions.Move;
 
 /**
  * A simple bad guy.  
@@ -16,7 +16,7 @@ import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
  * @author ram 
  */
 
-public class Goblin extends HobbitActor {
+public class Goblin extends SWActor {
 
 	/**
 	 * <code>CompassBearing</code> to keep track of this <code>Goblin</code>'s direction
@@ -34,10 +34,10 @@ public class Goblin extends HobbitActor {
 	 * </ul>
 	 * 
 	 * @param 	m <code>MessageRenderer</code> to display messages.
-	 * @param 	world the <code>MiddleEarth</code> world to which this <code>Goblin</code> belongs to
+	 * @param 	world the <code>SWWorld</code> world to which this <code>Goblin</code> belongs to
 	 * @see 	{@link edu.monash.fit2024.gridworld.Grid.CompassBearing}
 	 */
-	public Goblin(MessageRenderer m, MiddleEarth world) {
+	public Goblin(MessageRenderer m, SWWorld world) {
 		super(Team.EVIL, 50, m, world);
 		myDirection = Grid.CompassBearing.getRandomBearing();
 	}
@@ -58,7 +58,7 @@ public class Goblin extends HobbitActor {
 		// Did I hit something?  If so, bear right.
 		Grid.CompassBearing oldDirection = myDirection;
 		
-		while (!MiddleEarth.getEntitymanager().seesExit(this, myDirection)) {//loop until there is an exist
+		while (!SWWorld.getEntitymanager().seesExit(this, myDirection)) {//loop until there is an exist
 			myDirection = myDirection.turn(45);
 			if (myDirection == oldDirection) {
 				// I've turned completely around and can't find an exit -- I'm stuck!

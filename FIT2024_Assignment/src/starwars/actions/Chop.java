@@ -1,11 +1,11 @@
-package hobbit.actions;
+package starwars.actions;
 
-import hobbit.Capability;
-import hobbit.HobbitActionInterface;
-import hobbit.HobbitActor;
-import hobbit.HobbitAffordance;
-import hobbit.HobbitEntityInterface;
 import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
+import starwars.Capability;
+import starwars.SWActionInterface;
+import starwars.SWActor;
+import starwars.SWAffordance;
+import starwars.SWEntityInterface;
 
 /**
  * Command to chop down trees.
@@ -14,23 +14,23 @@ import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
  * carrying a <code>CHOPPER</code>.
  * 
  * @author 	ram
- * @see 	{@link hobbit.entities.Tree}
+ * @see 	{@link starwars.entities.Tree}
  */
 /*Change Log
  * 2017/02/08	Chop given a priority of 1 in constructor (asel)
  * 2017/02/09	Chopping would blunt the CHOPPER (asel)
  * 2017/02/22	Chooping shouldnt blunt the CHOPPER (asel)
  */
-public class Chop extends HobbitAffordance implements HobbitActionInterface {
+public class Chop extends SWAffordance implements SWActionInterface {
 
 	/**
 	 * Constructor for the <code>Chop</code> Class. Will initialize the message renderer, the target and 
 	 * set the priority of this <code>Action</code> to 1 (lowest priority is 0).
 	 * 
-	 * @param theTarget a <code>HobbitEntity</code> that is being chopped
+	 * @param theTarget a <code>SWEntity</code> that is being chopped
 	 * @param m the message renderer to display messages
 	 */
-	public Chop(HobbitEntityInterface theTarget, MessageRenderer m) {
+	public Chop(SWEntityInterface theTarget, MessageRenderer m) {
 		super(theTarget, m);
 		priority = 1;
 	}
@@ -59,15 +59,15 @@ public class Chop extends HobbitAffordance implements HobbitActionInterface {
 
 	@Override
 	/**
-	 * Determine whether a particular <code>HobbitActor a</code> can chop the target.
+	 * Determine whether a particular <code>SWActor a</code> can chop the target.
 	 * The item carried by <code>a</code> needs to have the <code>CHOPPER Capability</code>
 	 * in order to chop the target.
 	 * 
 	 * @author 	ram
-	 * @param 	a the <code>HobbitActor</code> being queried
+	 * @param 	a the <code>SWActor</code> being queried
 	 * @return 	true if <code>a</code>'s item carried has a <code>CHOPPER Capability</code>, false otherwise.
 	 */
-	public boolean canDo(HobbitActor a) {
+	public boolean canDo(SWActor a) {
 		if (a.getItemCarried() == null)
 			return false;
 		return a.getItemCarried().hasCapability(Capability.CHOPPER);
@@ -83,11 +83,11 @@ public class Chop extends HobbitAffordance implements HobbitActionInterface {
 	 *
 	 * @author 	ram
 	 * @param 	the actor who is chopping 
-	 * @pre 	the <code>HobbitActor a</code> is alive
-	 * @see 	{@link hobbit.entities.Tree}
+	 * @pre 	the <code>SWActor a</code> is alive
+	 * @see 	{@link starwars.entities.Tree}
 	 */
 	@Override
-	public void act(HobbitActor a) {
+	public void act(SWActor a) {
 		// tree becomes a pile of wood
 		// remove chop affordance (so it can no longer be chopped) and change the way it appears
 		target.removeAffordance(this);
