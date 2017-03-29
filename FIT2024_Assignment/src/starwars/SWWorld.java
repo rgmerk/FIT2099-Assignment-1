@@ -166,18 +166,11 @@ public class SWWorld extends World {
 		entityManager.setLocation(axe, loc);
 		
 		// A sword
-		Sword sword = new Sword(iface);
+		Blaster blaster = new Blaster(iface);
 		loc = myGrid.getLocationByCoordinates(3, 4);
-		entityManager.setLocation(sword, loc);
+		entityManager.setLocation(blaster, loc);
 		
-		// A bad guy
-		Goblin goblin = new Goblin(iface, this);
-		goblin.setShortDescription("Glorp the goblin");
-		goblin.setSymbol("g");
-		loc = myGrid.getLocationByCoordinates(7,7);
-		entityManager.setLocation(goblin, loc);	
-		
-		// A target actor for testing actions
+		// A Tusken Raider
 		TuskenRaider tim = new TuskenRaider(10, "Tim", iface, this);
 		
 		tim.setSymbol("T");

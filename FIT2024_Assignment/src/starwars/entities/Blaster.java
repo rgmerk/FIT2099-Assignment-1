@@ -26,11 +26,10 @@ public class Blaster extends SWEntity {
 	 * Constructor for the <code>Blaster</code> class. This constructor will,
 	 * <ul>
 	 * 	<li>Initialize the message renderer for the <code>Blaster</code></li>
-	 * 	<li>Set the short description of this <code>Blaster</code> to "a sword"</li>
-	 * 	<li>Set the long description of this <code>Blaster</code> to "A gleaming sword"</li>
+	 * 	<li>Set the short description of this <code>Blaster</code> to "a blaster"</li>
+	 * 	<li>Set the long description of this <code>Blaster</code> to "A shiny blaster pistol"</li>
 	 * 	<li>Set the hit points of this <code>Blaster</code> to 100</li>
 	 * 	<li>Add a <code>Take</code> affordance to this <code>Blaster</code> so it can be taken</li> 
-	 *	<li>Add a <code>CHOPPER Capability</code> to this <code>Blaster</code> so it can be used to <code>Chop</code></li>
 	 *	<li>Add a <code>WEAPON Capability</code> to this <code>Blaster</code> so it can be used to <code>Attack</code></li>
 	 * </ul>
 	 * 
@@ -38,7 +37,6 @@ public class Blaster extends SWEntity {
 	 * 
 	 * @see {@link starwars.actions.Take}
 	 * @see {@link starwars.Capability}
-	 * @see {@link starwars.actions.Chop} 
 	 */
 	public Blaster(MessageRenderer m) {
 		super(m);
