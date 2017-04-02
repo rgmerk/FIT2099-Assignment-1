@@ -34,9 +34,17 @@ public class Reservoir extends SWEntity {
 		SWAffordance dip = new Dip(this, m);
 		this.addAffordance(dip);	
 		
-		this.setLongDescription("A water reservoir.");
-		this.setShortDescription("A water reservoir, full of cool, clear, refreshing water");
+		this.setLongDescription("a water reservoir.");
+		this.setShortDescription("a water reservoir, full of cool, clear, refreshing water");
 		this.setSymbol("W");
 	}
 
+	@Override 
+	public String getShortDescription() {
+		return shortDescription;
+	}
+	
+	public String getLongDescription() {
+		return longDescription;
+	}
 }
