@@ -12,8 +12,8 @@ import starwars.actions.Fill;
  * be written at this stage, to minimize the amount of work that needs to be done to add new <code>Affordances</code>.
  * 
  * @author 	ram
- * @see 	{@link edu.monash.fit2024.simulator.matter.Affordance}
- * @see 	{@link starwars.SWActionInterface}
+ * @see 	edu.monash.fit2024.simulator.matter.Affordance
+ * @see 	starwars.SWActionInterface
  */
 /*
  * Change log
@@ -90,8 +90,8 @@ public abstract class SWAffordance extends Affordance implements SWActionInterfa
 	 * else this method does nothing.
 	 * 
 	 * @param 	a a sub class of <code>Actor</code>
-	 * @see 	{@link #act(SWActor)}
-	 * @see 	{@link SWActor#isDead()}
+	 * @see 	#act(SWActor)
+	 * @see 	SWActor#isDead()
 	 */
 	@Override
 	public void execute(Actor<?> actor) {

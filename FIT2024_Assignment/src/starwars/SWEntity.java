@@ -9,8 +9,8 @@ import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
  * Class that represents inanimate objects in the Star Wars world. Objects that cannot move for example trees.
  * 
  * @author 	ram
- * @see 	{@link edu.monash.fit2024.simulator.matter.Entity}
- * @see 	{@link SWEntityInterface}
+ * @see 	edu.monash.fit2024.simulator.matter.Entity
+ * @see 	SWEntityInterface
  */
 
 public class SWEntity extends Entity implements SWEntityInterface {
@@ -40,7 +40,7 @@ public class SWEntity extends Entity implements SWEntityInterface {
 	 * Returns a String symbol representing this <code>SWEntity</code>.
 	 * 
 	 * @return 	symbol a String that represents this <code>SWEntity</code>
-	 * @see 	{@link #symbol}
+	 * @see 	#symbol
 	 */
 	@Override
 	public String getSymbol() {
@@ -51,7 +51,7 @@ public class SWEntity extends Entity implements SWEntityInterface {
 	 * Sets the symbol of this <code>SWEntity</code> with a new string <code>s</code>.
 	 * 
 	 * @param 	s the new string symbol for this <code>SWEntity</code>
-	 * @see 	{@link #symbol} 
+	 * @see 	#symbol 
 	 */
 	@Override
 	public void setSymbol(String s) {

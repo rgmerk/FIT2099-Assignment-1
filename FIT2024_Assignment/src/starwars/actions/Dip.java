@@ -10,6 +10,17 @@ import starwars.SWActor;
 import starwars.SWEntityInterface;
 import starwars.entities.Fillable;
 
+/**
+ * An Affordance for dipping things into large bodies of liquid.
+ * 
+ * The affordance is offered by the large bodies of liquid and can only be
+ * applied in partnership with an <code>Entity</code> that is  <code>Fillable</code>
+ * and implements the <code>Fill</code> interface.
+ * 
+ * @author Robert Merkel
+ * @see {@link starwars.actions.Fill}
+ * @see {@link starwars.entities.Fillable}
+ */
 public class Dip extends SWAffordance implements SWActionInterface {
 
 	public Dip(SWEntityInterface theTarget, MessageRenderer m) {

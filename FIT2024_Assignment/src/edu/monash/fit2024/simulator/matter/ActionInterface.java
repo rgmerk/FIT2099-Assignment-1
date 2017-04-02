@@ -21,7 +21,7 @@ public interface ActionInterface extends Comparable<ActionInterface> {
 	 * of short duration complete before <code>Actions</code> of long duration.
 	 * 
 	 * @return 	the length of time an <code>Action</code> takes
-	 * @see		{@link edu.monash.fit2024.simulator.time.Scheduler}
+	 * @see		edu.monash.fit2024.simulator.time.Scheduler
 	 */
 	public abstract int getDuration();
 

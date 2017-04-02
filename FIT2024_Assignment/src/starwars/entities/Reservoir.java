@@ -12,7 +12,7 @@ import starwars.actions.Dip;
  * are assumed to have infinite capacity.
  * 
  * @author 	ram
- * @see 	{@link starwars.actions.Chop} 
+ * @see 	{@link starwars.actions.Fill} 
  */
 public class Reservoir extends SWEntity {
 
@@ -20,9 +20,9 @@ public class Reservoir extends SWEntity {
 	 * Constructor for the <code>Reservoir</code> class. This constructor will,
 	 * <ul>
 	 * 	<li>Initialize the message renderer for the <code>Reservoir</code></li>
-	 * 	<li>Set the short description of this <code>Reservoir</code> to "an tree"</li>
-	 * 	<li>Set the long description of this <code>Reservoir</code> to "A beautiful spreading oak tree."</li>
-	 * 	<li>Add a <code>Chop</code> affordance to this <code>Reservoir</code> so it can be taken</li> 
+	 * 	<li>Set the short description of this <code>Reservoir</code> to "a water reservoir</li>
+	 * 	<li>Set the long description of this <code>Reservoir</code> to "a water reservoir..."</li>
+	 * 	<li>Add a <code>Dip</code> affordance to this <code>Reservoir</code> so it can be taken</li> 
 	 *	<li>Set the symbol of this <code>Reservoir</code> to "T"</li>
 	 * </ul>
 	 * 

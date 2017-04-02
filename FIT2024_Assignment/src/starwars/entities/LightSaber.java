@@ -6,20 +6,18 @@ import starwars.SWEntity;
 import starwars.actions.Take;
 
 /**
- * A very minimal entity that has the <code>CHOPPER</code> attribute and so can
- * be used to <code>Chop</code> down <code>Trees</code>.
+ * An extremely powerful, indestructible weapon that implements the Weapon capability
  * 
- *  @author ram
- *  @see {@link starwars.entities.Reservoir}
- *  @see {@link starwars.actions.Chop}
+ * It does not take damage with use.
+ * 
+ * This class does not implement all of the abilities shown in the films; there is
+ * no capacity for using it to play cover drives with Blaster bolts, or parry 
+ * other lightsabers; there are also no restrictions on who wields it.
+ * 
+ *  @author Robert
+ *  @see {@link starwars.actions.Attack}
  */
-/*
- * Change log
- * 2017/02/08 takeDamage method was overridden to change it's descriptions when the Axes hitpoints are zero or less
- * 			  the takeDamage method will also remove the CHOPPER capability from the LightSaber as it should not be possible
- * 			  to chop with a broken LightSaber. (asel)
- * 2017/02/22 removed the overriding method. Chopping don't have to damage the axe.
- */
+
 public class LightSaber extends SWEntity {
 
 	/**
@@ -63,12 +61,12 @@ public class LightSaber extends SWEntity {
 	/**
 	 * A symbol that is used to represent the LightSaber on a text based user interface
 	 * 
-	 * @return 	Single Character string "Æ"
+	 * @return 	A String containing a single character.
 	 * @see 	{@link starwars.SWEntityInterface#getSymbol()}
 	 */
 	@Override
 	public String getSymbol() {
-		return "Æ";
+		return "|";
 	}
 	
 	

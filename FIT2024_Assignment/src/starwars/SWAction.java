@@ -10,8 +10,8 @@ import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
  * This class is an implementation of the <code>SWActionInterface</code>
  * 
  * @author 	ram
- * @see 	{@link edu.monash.fit2024.simulator.matter.Action}
- * @see 	{@link SWActionInterface}
+ * @see 	edu.monash.fit2024.simulator.matter.Action
+ * @see 	SWActionInterface
  */
 /*
  * Change log
@@ -65,8 +65,8 @@ public abstract class SWAction extends Action implements SWActionInterface {
 	 * else this method does nothing.
 	 * 
 	 * @param 	a a sub class of <code>Actor</code>
-	 * @see 	{@link #act(SWActor)}
-	 * @see 	{@link SWActor#isDead()}
+	 * @see 	#act(SWActor)
+	 * @see 	SWActor#isDead()
 	 */
 	@Override
 	public void execute(Actor<?> a) {
@@ -83,7 +83,7 @@ public abstract class SWAction extends Action implements SWActionInterface {
 	 * Returns the <code>EntityManager</code> which keeps track of <code>SWEntities</code> and their <code>SWLocation</code>s
 	 * 
 	 * @return 	entityManager of the <code>World</code> 
-	 * @see 	{@link #entityManager}
+	 * @see 	#entityManager
 	 */
 	public static EntityManager<SWEntityInterface, SWLocation> getEntitymanager() {
 		return entityManager;

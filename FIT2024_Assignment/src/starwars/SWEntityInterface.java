@@ -8,8 +8,8 @@ import edu.monash.fit2024.simulator.matter.EntityInterface;
  * It allows them to be managed by the <code>EntityManager</code>.
  * 
  * @author ram
- * @see	{@link edu.monash.fit2024.simulator.matter.EntityInterface}
- * @see {@link edu.monash.fit2024.simulator.matter.EntityManager}
+ * @see	edu.monash.fit2024.simulator.matter.EntityInterface
+ * @see edu.monash.fit2024.simulator.matter.EntityManager
  */
 public interface SWEntityInterface extends EntityInterface {
 
@@ -20,9 +20,7 @@ public interface SWEntityInterface extends EntityInterface {
 	 *  
 	 * @return a String representing the <code>SWEntity</code> or <code>SWActor</code>.
 	 * 
-	 * @see 	{@link starwars.swinterfaces.SWGridTextInterface}
-	 * @see 	{@link starwars.swinterfaces.SWGridBasicGUI}
-	 * @see 	{@link starwars.swinterfaces.SWGridGUI}
+	 * @see 	starwars.swinterfaces.SWGridTextInterface
 	 */
 	public abstract String getSymbol();
 	
@@ -47,7 +45,7 @@ public interface SWEntityInterface extends EntityInterface {
 	 * 
 	 * @param 	c the <code>Capability</code> to search for
 	 * @return	true if this <code>Capability c</code> is manifested, false otherwise
-	 * @see 	{@link starwars.Capability}
+	 * @see 	starwars.Capability
 	 */
 	public boolean hasCapability(Capability c);
 	

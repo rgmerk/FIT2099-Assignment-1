@@ -81,7 +81,7 @@ public abstract class Action implements ActionInterface {
 	 * Returns the <code>delay</code> of this <code>Action</code>
 	 * 
 	 * @return 	the <code>delay</code> of this <code>Action</code>
-	 * @see		{@link #delay}
+	 * @see		#delay
 	 */
 	public int getDelay() {
 		return delay;
@@ -92,7 +92,7 @@ public abstract class Action implements ActionInterface {
 	 * 
 	 * @param 	delay the new delay of this <code>Action</code>
 	 * @pre 	the new <code>delay</code> should be greater than or equal to zero
-	 * @see 	{@link #delay}
+	 * @see 	#delay
 	 */
 	public void setDelay(int delay) {
 		
@@ -105,7 +105,7 @@ public abstract class Action implements ActionInterface {
 	 * Returns the <code>cooldown</code> of this <code>Action</code>
 	 * 
 	 * @return 	The <code>cooldown</code> of this <code>Action</code>
-	 * @see		{@link #cooldown}
+	 * @see		#cooldown
 	 */
 	public int getCooldown() {
 		return cooldown;
@@ -116,7 +116,7 @@ public abstract class Action implements ActionInterface {
 	 * 
 	 * @param 	cooldown the new cooldown of this <code>Action</code>
 	 * @pre 	the new <code>cooldown</code> should be greater than or equal to zero
-	 * @see 	{@link #cooldown}
+	 * @see 	#cooldown
 	 */
 	public void setCooldown(int cooldown) {
 		

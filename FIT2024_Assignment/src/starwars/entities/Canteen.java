@@ -5,6 +5,19 @@ import starwars.Capability;
 import starwars.SWEntity;
 import starwars.actions.Fill;
 
+/**
+ * A canteen that can be used to contain water.
+ * 
+ * It can be filled at a Reservoir, or any other Entity
+ * that has a Dip affordance.
+ * 
+ * Please note that drinking from the canteen is currently 
+ * unimplemented
+ * 
+ * 
+ * @author Robert Merkel
+ * 
+ */
 public class Canteen extends SWEntity implements Fillable {
 
 	private int capacity;
@@ -22,7 +35,7 @@ public class Canteen extends SWEntity implements Fillable {
 	}
 
 	public void fill() {
-		System.out.println("Fill method called");
+	
 		level = capacity;
 	}
 	@Override 

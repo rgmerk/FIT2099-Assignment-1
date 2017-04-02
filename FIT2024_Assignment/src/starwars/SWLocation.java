@@ -78,7 +78,7 @@ public class SWLocation extends Location {
 	 * 
 	 * @author 	ram
 	 * @return 	a char representing this <code>SWLocation</code>.
-	 * @see 	{@link #symbol}
+	 * @see 	#symbol
 	 */
 	public char getSymbol() {
 		return symbol;
@@ -92,7 +92,7 @@ public class SWLocation extends Location {
 	 * 
 	 * @author 	ram
 	 * @param 	c the new character symbol of this <code>SWLocation</code>
-	 * @see 	{@link #symbol}
+	 * @see 	#symbol
 	 */
 	public void setSymbol(char c) {
 		symbol = c;
@@ -105,7 +105,7 @@ public class SWLocation extends Location {
 	 * 
 	 * @author 	dsquire
 	 * @return 	a char representing empty space at this <code>SWLocation</code>
-	 * @see 	{@link #emptySymbol}
+	 * @see 	#emptySymbol
 	 */
 	public char getEmptySymbol() {
 		return emptySymbol;
@@ -119,7 +119,7 @@ public class SWLocation extends Location {
 	 * 
 	 * @author 	dsquire
 	 * @param 	c the character to set the empty symbol to
-	 * @see 	{@link #emptySymbol}
+	 * @see 	#emptySymbol
 	 */
 	public void setEmptySymbol(char c) {
 		emptySymbol = c;
@@ -133,7 +133,7 @@ public class SWLocation extends Location {
 	 * should not contain any information regarding what this location contains.
 	 * 
 	 * @param 	s the new long description string of this <code>SWLocation</code>
-	 * @see 	{@link #longDescription}
+	 * @see 	#longDescription
 	 */
 	public void setLongDescription(String s) {
 		longDescription = s;
@@ -146,7 +146,7 @@ public class SWLocation extends Location {
 	 * should not contain any information regarding what this location contains.
 	 * 
 	 * @param 	s the new short description string of this <code>SWLocation</code>
-	 * @see 	{@link #longDescription}
+	 * @see 	#longDescription
 	 */
 	public void setShortDescription(String s) {
 		shortDescription = s;
@@ -156,17 +156,17 @@ public class SWLocation extends Location {
 	 * Returns the long description of this <code>SWLocation</code>.
 	 * 
 	 * @return a string that describes this <code>SWLocation</code>
-	 * @see {@link #longDescription}
+	 * @see #longDescription
 	 */
 	public String getLongDescription() {
 		return longDescription;
 	}
 	
 	/**
-	 * Returns the long description of this <code>SWLocation</code>.
+	 * Returns the short description of this <code>SWLocation</code>.
 	 *  
 	 * @return a string that describes this <code>SWLocation</code>
-	 * @see {@link #longDescription}
+	 * @see #shortDescription
 	 */
 	public String getShortDescription() {
 		return shortDescription;

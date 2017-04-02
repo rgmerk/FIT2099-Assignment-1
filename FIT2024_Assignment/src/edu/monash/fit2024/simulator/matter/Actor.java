@@ -111,8 +111,8 @@ public abstract class Actor<T extends ActionInterface> extends Entity {
 	 * TODO: Should we decrement the waittime by the tick size of the scheduler?- Asel
 	 * 
 	 * @param 	l is the current <code>Location</code> of this <code>Actor</code>.
-	 * @see 	{@link #waittime}
-	 * @see 	{@link #act}
+	 * @see 	#waittime
+	 * @see 	#act
 	 */
 	public void tick(Location l) {
 		
@@ -131,7 +131,7 @@ public abstract class Actor<T extends ActionInterface> extends Entity {
 	 * 
 	 * @param 	waittime the new wait time of this <code>Actor</code> 
 	 * @pre		<code>waittime</code> should be greater than or equal to zero (0)
-	 * @see 	{@link #waittime}
+	 * @see 	#waittime
 	 */
 	public void setWaittime(int waittime){
 		
@@ -148,8 +148,8 @@ public abstract class Actor<T extends ActionInterface> extends Entity {
 	 * The <code>tick(Location)</code> method uses this method to determine if this <code>Actor</code> can <code>act</code> within the tick
 	 * 
 	 * @return 	the wait time of this <code>Actor</code>
-	 * @see 	{@link #tick(Location)}
-	 * @see		{@link #waittime}
+	 * @see 	#tick(Location)
+	 * @see		#waittime
 	 */
 	public int getWaittime() {
 		return waittime;

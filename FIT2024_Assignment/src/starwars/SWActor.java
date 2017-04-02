@@ -68,10 +68,10 @@ public abstract class SWActor extends Actor<SWAction> implements SWEntityInterfa
 	 * @param 	m	message renderer for this <code>SWActor</code> to display messages
 	 * @param 	world the <code>World</code> to which <code>SWActor</code> belongs to
 	 * 
-	 * @see 	{@link #team}
-	 * @see 	{@link #hitpoints}
-	 * @see 	{@link #world}
-	 * @see 	{@link starwars.actions.Attack}
+	 * @see 	#team
+	 * @see 	#hitpoints
+	 * @see 	#world
+	 * @see 	starwars.actions.Attack
 	 */
 	public SWActor(Team team, int hitpoints, MessageRenderer m, SWWorld world) {
 		super(m);
@@ -90,7 +90,7 @@ public abstract class SWActor extends Actor<SWAction> implements SWEntityInterfa
 	 * Sets the <code>scheduler</code> of this <code>SWActor</code> to a new <code>Scheduler s</code>
 	 * 
 	 * @param	s the new <code>Scheduler</code> of this <code>SWActor</code> 
-	 * @see 	{@link #scheduler}
+	 * @see 	#scheduler
 	 */
 	public static void setScheduler(Scheduler s) {
 		scheduler = s;
@@ -102,7 +102,7 @@ public abstract class SWActor extends Actor<SWAction> implements SWEntityInterfa
 	 * Useful in comparing the teams different <code>SWActor</code> belong to.
 	 * 
 	 * @return 	the team of this <code>SWActor</code>
-	 * @see 	{@link #team}
+	 * @see 	#team
 	 */
 	public Team getTeam() {
 		return team;
@@ -112,8 +112,8 @@ public abstract class SWActor extends Actor<SWAction> implements SWEntityInterfa
 	 * Returns the hit points of this <code>SWActor</code>.
 	 * 
 	 * @return 	the hit points of this <code>SWActor</code> 
-	 * @see 	{@link #hitpoints}
-	 * @see 	{@link #isDead()}
+	 * @see 	#hitpoints
+	 * @see 	#isDead()
 	 */
 	@Override
 	public int getHitpoints() {
@@ -126,10 +126,10 @@ public abstract class SWActor extends Actor<SWAction> implements SWEntityInterfa
 	 * This method only returns the reference of the item carried 
 	 * and does not remove the item held from this <code>SWActor</code>.
 	 * <p>
-	 * If this <code>SWActor</code> is not carrying an item this method would return null.
+	 * If this <code>SWActor</code> is not carrying an item this method will return null.
 	 * 
 	 * @return 	the item carried by this <code>SWActor</code> or null if no item is held by this <code>SWActor</code>
-	 * @see 	{@link #itemCarried}
+	 * @see 	#itemCarried
 	 */
 	public SWEntityInterface getItemCarried() {
 		return itemCarried;
@@ -142,7 +142,7 @@ public abstract class SWActor extends Actor<SWAction> implements SWEntityInterfa
 	 * For example, a bite from an evil actor makes a good actor bad.
 	 *
 	 * @param 	team the new team of this <code>SWActor</code>
-	 * @see 	{@link #team}
+	 * @see 	#team
 	 */
 	public void setTeam(Team team) {
 		this.team = team;
@@ -170,7 +170,7 @@ public abstract class SWActor extends Actor<SWAction> implements SWEntityInterfa
 	 * A null <code>target</code> would signify that this <code>SWActor</code> is not carrying an item anymore.
 	 * 
 	 * @param 	target the new item to be set as item carried
-	 * @see 	{@link #itemCarried}
+	 * @see 	#itemCarried
 	 */
 	public void setItemCarried(SWEntityInterface target) {
 		this.itemCarried = target;
@@ -184,7 +184,7 @@ public abstract class SWActor extends Actor<SWAction> implements SWEntityInterfa
 	 *
 	 * @author 	ram
 	 * @return 	true if and only if this <code>SWActor</code> is dead, false otherwise
-	 * @see 	{@link #hitpoints}
+	 * @see 	#hitpoints
 	 */
 	public boolean isDead() {
 		return hitpoints <= 0;
@@ -208,7 +208,7 @@ public abstract class SWActor extends Actor<SWAction> implements SWEntityInterfa
 	 * Human controlled <code>SWActors</code>' <code>SWActions</code> are selected by the user as commands from the Views.
 	 * 
 	 * @return 	true if the <code>SWActor</code> is controlled by a human, false otherwise
-	 * @see 	{@link #humanControlled}
+	 * @see 	#humanControlled
 	 */
 	public boolean isHumanControlled() {
 		return humanControlled;
