@@ -10,6 +10,17 @@ import starwars.entities.actors.behaviors.AttackInformation;
 import starwars.entities.actors.behaviors.AttackNeighbours;
 import starwars.entities.actors.behaviors.Patrol;
 
+/**
+ * Ben (aka Obe-Wan) Kenobe.  
+ * 
+ * At this stage, he's an extremely strong critter with a <code>Lightsaber</code>
+ * who wanders around in a fixed pattern and neatly slices any Actor not on his
+ * team with his lightsaber.
+ * 
+ * Note that you can only create ONE Ben, like all SWLegends.
+ * @author rober_000
+ *
+ */
 public class BenKenobe extends SWLegend {
 
 	private static BenKenobe ben = null; // yes, it is OK to return the static instance!
