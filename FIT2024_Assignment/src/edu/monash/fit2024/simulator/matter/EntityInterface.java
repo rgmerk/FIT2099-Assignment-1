@@ -54,7 +54,7 @@ public interface EntityInterface {
 	 * This message would be displayed on the View (an implementation of <code>GridRenderer</code>)
 	 * 
 	 * @param 	message the String to display
-	 * @see 	{@link edu.monash.fit2024.gridworld.GridRenderer}
+	 * @see 	edu.monash.fit2024.gridworld.GridRenderer
 	 */
 	public abstract void say(String message);
 
