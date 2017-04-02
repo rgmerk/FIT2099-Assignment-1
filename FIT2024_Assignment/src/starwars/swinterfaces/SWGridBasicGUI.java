@@ -1,4 +1,4 @@
-package starwars.hobbitinterfaces;
+package starwars.swinterfaces;
 
 import java.awt.Color;
 import java.awt.Dimension;

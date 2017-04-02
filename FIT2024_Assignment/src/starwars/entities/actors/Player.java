@@ -9,7 +9,7 @@ import starwars.SWEntityInterface;
 import starwars.SWLocation;
 import starwars.SWWorld;
 import starwars.Team;
-import starwars.hobbitinterfaces.SWGridController;
+import starwars.swinterfaces.SWGridController;
 
 /**
  * A very minimal <code>SWActor</code> that the user can control.  Its <code>act()</code> method
@@ -52,7 +52,7 @@ public class Player extends SWActor {
 	 * This method will only be called if this <code>Player</code> is alive and is not waiting.
 	 * 
 	 * @see {@link #describeScene()}
-	 * @see {@link starwars.hobbitinterfaces.SWGridController}
+	 * @see {@link starwars.swinterfaces.SWGridController}
 	 */
 	@Override
 	public void act() {	

@@ -6,11 +6,11 @@ import starwars.SWEntity;
 import starwars.actions.Take;
 
 /**
- * An entity that has the <code>CHOPPER</code> and <code>WEAPON</code> attributes and so can
- * be used to <code>Chop</code> down <code>Trees</code>, <code>Attack</code> others, etc.
+ * An entity that has the <code>WEAPON</code> attribute and so can
+ * be used to <code>Attack</code> others, etc.
  * 
  * @author 	dsquire
- * @see 	{@link starwars.entities.Tree}
+ * @see 	{@link starwars.entities.Reservoir}
  * @see 	{@link starwars.actions.Chop}
  * @see 	{@link starwars.actions.Attack}
  */

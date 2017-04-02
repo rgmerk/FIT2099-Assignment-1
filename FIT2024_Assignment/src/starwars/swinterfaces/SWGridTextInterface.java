@@ -1,4 +1,4 @@
-package starwars.hobbitinterfaces;
+package starwars.swinterfaces;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -110,15 +110,33 @@ public class SWGridTextInterface implements GridRenderer {
 	 * @author ram
 	 */
 	public static void showBanner() {
-		System.out.println(" _______ _            _    _       _     _     _ _   ");
-		System.out.println("|__   __| |          | |  | |     | |   | |   (_) |  ");
-		System.out.println("   | |  | |__   ___  | |__| | ___ | |__ | |__  _| |_ ");
-		System.out.println("   | |  |  _ \\ / _ \\ |  __  |/ _ \\|  _ \\|  _ \\| | __|");
-		System.out.println("   | |  | | | |  __/ | |  | | (_) | |_) | |_) | | |_ ");
-		System.out.println("   |_|  |_| |_|\\___| |_|  |_|\\___/|_.__/|_.__/|_|\\__|\n\n");
+		String [] lines = { 
+			" ____  _              __        __           ",
+			"/ ___|| |_ __ _ _ __  \\ \\      / /_ _ _ __ ___",
+			"\\___ \\| __/ _` | '__|  \\ \\ /\\ / / _` | '__/ __|",
+			" ___) | || (_| | |      \\ \\V  \\V / (_| | |  \\__ \\",
+			"|____/ \\__\\__,_|_|       \\_/\\_/ \\__,_|_|  |___/",
+			"",
+			"A long time ago in a galaxy far, far away",
+			"",
+			"The laws of physics were compressed onto a",
+			"",
+			"two-dimensional grid, and time was composed of",
+			"",
+			"discrete instants.  And some other stuff happened",
+			"",
+			"but waiting for it to scroll down is boring."};
 		
-		//set the show banner to false so to avoid the banner being displayed again
-		//this is the final state of the variable showBanner and should not be set to true again.
+		for(String line: lines) {
+			System.out.println(line);
+			try {
+				Thread.sleep(250);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 		showBanner = false;
 	}
 	

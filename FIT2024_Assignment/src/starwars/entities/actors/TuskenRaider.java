@@ -17,7 +17,9 @@ import starwars.SWWorld;
 import starwars.Team;
 import starwars.actions.Attack;
 import starwars.actions.Move;
-import starwars.hobbitinterfaces.SWGridController;
+import starwars.entities.actors.behaviors.AttackInformation;
+import starwars.entities.actors.behaviors.AttackNeighbours;
+import starwars.swinterfaces.SWGridController;
 
 public class TuskenRaider extends SWActor {
 
@@ -44,7 +46,7 @@ public class TuskenRaider extends SWActor {
 	 * 
 	 */
 	public TuskenRaider(int hitpoints, String name, MessageRenderer m, SWWorld world) {
-		super(Team.TUSKEN, 10, m, world);
+		super(Team.TUSKEN, 50, m, world);
 		// TODO Auto-generated constructor stub
 		this.name = name;
 	}
@@ -53,47 +55,12 @@ public class TuskenRaider extends SWActor {
 	public void act() {
 		say(describeLocation());
 
-		// find out what's here
-		SWLocation location = this.world.getEntityManager().whereIs(this);
-		EntityManager<SWEntityInterface, SWLocation> em = this.world.getEntityManager();
-		List<SWEntityInterface> entities = em.contents(location);
-
-		// select the attackable things that are here
-
-		HashSet<SWEntityInterface> attackables = new HashSet<SWEntityInterface>();
-		for (SWEntityInterface e : entities) {
-			// Even Tusken Raiders are smart enough to not attack themselves.
-			if( e != this ) {
-				for (Affordance a : e.getAffordances()) {
-					if (a instanceof Attack) {
-
-						attackables.add(e);
-						break;
-					}
-				}
-			}
+		AttackInformation attack = AttackNeighbours.attackLocals(this, this.world, false, false);
+		if (attack != null) {
+			say(getShortDescription() + " has attacked" + attack.entity.getShortDescription());
+			scheduler.schedule(attack.affordance, this, 1);
 		}
-
-		// if there's at least one thing we can attack, randomly choose
-		// something to attack
-		if (attackables.size() > 0) {
-
-			SWEntityInterface[] targets = attackables.toArray(new SWEntityInterface[0]);
-			SWEntityInterface target = targets[(int) Math.floor(Math.random() * targets.length)];
-
-			// get the attack affordance
-			Affordance attack = null;
-			for (Affordance a : target.getAffordances()) {
-				if (a instanceof Attack) {
-					attack = a;
-					break;
-				}
-			}
-			// schedule the attack
-			say(getShortDescription() + " decides to attack " + target.getShortDescription());
-			scheduler.schedule(attack, this, 1);
-			
-		} else if (Math.random() > 0.5){
+		else if (Math.random() > 0.5){
 			
 			ArrayList<Direction> possibledirections = new ArrayList<Direction>();
 

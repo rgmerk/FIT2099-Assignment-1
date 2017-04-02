@@ -14,7 +14,7 @@ import starwars.SWEntityInterface;
  * carrying a <code>CHOPPER</code>.
  * 
  * @author 	ram
- * @see 	{@link starwars.entities.Tree}
+ * @see 	{@link starwars.entities.Reservoir}
  */
 /*Change Log
  * 2017/02/08	Chop given a priority of 1 in constructor (asel)
@@ -75,7 +75,7 @@ public class Chop extends SWAffordance implements SWActionInterface {
 
 	
 	/**
-	 * Perform the <code>Chop</code> command on a <code>Tree</code>. This replaces the <code>Tree</code> with 
+	 * Perform the <code>Chop</code> command on a <code>Reservoir</code>. This replaces the <code>Reservoir</code> with 
 	 * a pile of wood.
 	 * <p>
 	 * This method assumes the targets with the Chop Affordance (targets that can be chopped) are trees. No harm 
@@ -84,7 +84,7 @@ public class Chop extends SWAffordance implements SWActionInterface {
 	 * @author 	ram
 	 * @param 	the actor who is chopping 
 	 * @pre 	the <code>SWActor a</code> is alive
-	 * @see 	{@link starwars.entities.Tree}
+	 * @see 	{@link starwars.entities.Reservoir}
 	 */
 	@Override
 	public void act(SWActor a) {

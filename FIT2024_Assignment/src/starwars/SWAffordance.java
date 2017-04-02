@@ -3,6 +3,7 @@ package starwars;
 import edu.monash.fit2024.simulator.matter.Actor;
 import edu.monash.fit2024.simulator.matter.Affordance;
 import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
+import starwars.actions.Fill;
 
 /**
  * Class that represents <code>Affordances</code> in the <code>starwars</code> world.
@@ -94,6 +95,9 @@ public abstract class SWAffordance extends Affordance implements SWActionInterfa
 	 */
 	@Override
 	public void execute(Actor<?> actor) {
+		if (this instanceof Fill) {
+			System.out.println("Fill execute called");
+		}
 		if (actor instanceof SWActor && !((SWActor)actor).isDead())
 			act((SWActor) actor);
 

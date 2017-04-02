@@ -1,5 +1,6 @@
 package starwars;
 
+import edu.monash.fit2024.gridworld.Grid.CompassBearing;
 import edu.monash.fit2024.simulator.matter.EntityManager;
 import edu.monash.fit2024.simulator.space.Direction;
 import edu.monash.fit2024.simulator.space.Location;
@@ -81,21 +82,37 @@ public class SWWorld extends World {
 		}
 		
 		
-		// The Shire
+		// BadLands
 		for (int row = 5; row < 8; row++) {
 			for (int col = 4; col < 7; col++) {
 				loc = myGrid.getLocationByCoordinates(col, row);
-				loc.setLongDescription("Moisture Farm (" + col + ", " + row + ")");
-				loc.setShortDescription("Moisture Farm (" + col + ", " + row + ")");
-				loc.setSymbol('S');
+				loc.setLongDescription("Badlands (" + col + ", " + row + ")");
+				loc.setShortDescription("Badlands (" + col + ", " + row + ")");
+				loc.setSymbol('b');
 			}
 		}
 		
-		//Bag End
+		//Ben's Hut
 		loc = myGrid.getLocationByCoordinates(5, 6);
-		loc.setLongDescription("Bag End");
-		loc.setShortDescription("Bag End");
-		loc.setSymbol('b');
+		loc.setLongDescription("Ben's Hut");
+		loc.setShortDescription("Ben's Hut");
+		loc.setSymbol('H');
+		
+		Direction [] patrolmoves = {CompassBearing.EAST, CompassBearing.EAST,
+                CompassBearing.SOUTH,
+                CompassBearing.WEST, CompassBearing.WEST,
+                CompassBearing.SOUTH,
+                CompassBearing.EAST, CompassBearing.EAST,
+                CompassBearing.NORTHWEST, CompassBearing.NORTHWEST};
+		
+		BenKenobe ben = BenKenobe.getBenKenobe(iface, this, patrolmoves);
+		
+		loc = myGrid.getLocationByCoordinates(4,  5);
+		entityManager.setLocation(ben, loc);
+		
+		
+		loc = myGrid.getLocationByCoordinates(5,9);
+		
 		// let's put an object here - just for a test
 		SWEntity chainMail = new SWEntity(iface);
 		chainMail.setShortDescription("chain mail");
@@ -112,60 +129,57 @@ public class SWWorld extends World {
 		luke.resetMoveCommands(loc);
 		
 		
-		// The River Sherbourne
+		// Beggar's Canyon 
 		for (int col = 3; col < 8; col++) {
 			loc = myGrid.getLocationByCoordinates(col, 8);
-			loc.setShortDescription("The River Sherboune (" + col + ", " + 8 + ")");
-			loc.setLongDescription("The River Sherboune (" + col + ", " + 8 + ")");
-			loc.setSymbol('R');
-			loc.setEmptySymbol('~'); // to represent water
+			loc.setShortDescription("Beggar's Canyon (" + col + ", " + 8 + ")");
+			loc.setLongDescription("Beggar's Canyon  (" + col + ", " + 8 + ")");
+			loc.setSymbol('C');
+			loc.setEmptySymbol('='); // to represent sides of the canyon
 		}
 		
-		// Mirkwood Forest
+		// Moisture Farms
 		for (int row = 0; row < 10; row++) {
 			for (int col = 8; col < 10; col++) {
 				loc = myGrid.getLocationByCoordinates(col, row);
-				loc.setLongDescription("Mirkwood Forest (" + col + ", " + row + ")");
-				loc.setShortDescription("Mirkwood Forest (" + col + ", " + row + ")");
+				loc.setLongDescription("Moisture Farm (" + col + ", " + row + ")");
+				loc.setShortDescription("Moisture Farm (" + col + ", " + row + ")");
 				loc.setSymbol('F');
 				
-				// forests have trees
-				for (int i=0; i<4; i++)
-					entityManager.setLocation(new Tree(iface), loc);				
+				// moisture farms have reservoirs
+				entityManager.setLocation(new Reservoir(iface), loc);				
 			}
 		}
 		
+		// Ben Kenobe's hut
 		/*
 		 * Scatter some other entities and actors around
 		 */
-		// a ring
+		// a canteen
 		loc = myGrid.getLocationByCoordinates(3,1);
-		SWEntity ring = new SWEntity(iface);
-		ring.setShortDescription("a ring");
-		ring.setLongDescription("a dully shining ring");
-		ring.setSymbol("o");
-		ring.setHitpoints(500);
-		// add a Take affordance to the ring, so that an actor can take it
-		entityManager.setLocation(ring, loc);
-		ring.addAffordance(new Take(ring, iface));
+		SWEntity canteen = new Canteen(iface, 10,0);
+		canteen.setSymbol("o");
+		canteen.setHitpoints(500);
+		entityManager.setLocation(canteen, loc);
+		canteen.addAffordance(new Take(canteen, iface));
 
 		// a troll treasure
 		loc = myGrid.getLocationByCoordinates(1,5);
-		SWEntity treasure = new SWEntity(iface);
-		treasure.setShortDescription("a treasure");
-		treasure.setLongDescription("a troll treasure");
-		treasure.setSymbol("×");
-		treasure.setHitpoints(100);
-		// add a Take affordance to the treasure, so that an actor can take it
-		entityManager.setLocation(treasure, loc);
-		treasure.addAffordance(new Take(treasure, iface));
+		SWEntity oilcan = new SWEntity(iface);
+		oilcan.setShortDescription("an oil can");
+		oilcan.setLongDescription("an oil can, which would theoretically be useful for fixing robots");
+		oilcan.setSymbol("×");
+		oilcan.setHitpoints(100);
+		// add a Take affordance to the oil can, so that an actor can take it
+		entityManager.setLocation(oilcan, loc);
+		oilcan.addAffordance(new Take(oilcan, iface));
 		
 		// "And my axe!"
-		Axe axe = new Axe(iface);
+		LightSaber axe = new LightSaber(iface);
 		loc = myGrid.getLocationByCoordinates(5,5);
 		entityManager.setLocation(axe, loc);
 		
-		// A sword
+		// A blaster 
 		Blaster blaster = new Blaster(iface);
 		loc = myGrid.getLocationByCoordinates(3, 4);
 		entityManager.setLocation(blaster, loc);
@@ -174,7 +188,7 @@ public class SWWorld extends World {
 		TuskenRaider tim = new TuskenRaider(10, "Tim", iface, this);
 		
 		tim.setSymbol("T");
-		loc = myGrid.getLocationByCoordinates(3,3);
+		loc = myGrid.getLocationByCoordinates(4,3);
 		entityManager.setLocation(tim, loc);
 
 	}

@@ -1,7 +1,7 @@
 package starwars;
 
 import edu.monash.fit2024.simulator.time.Scheduler;
-import starwars.hobbitinterfaces.SWGridController;
+import starwars.swinterfaces.SWGridController;
 
 /**
  * Driver class for the Star Wars package with <code>GridController</code>.  Contains nothing but a main().
