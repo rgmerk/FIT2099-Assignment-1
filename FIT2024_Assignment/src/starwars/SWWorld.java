@@ -105,7 +105,7 @@ public class SWWorld extends World {
                 CompassBearing.EAST, CompassBearing.EAST,
                 CompassBearing.NORTHWEST, CompassBearing.NORTHWEST};
 		
-		BenKenobe ben = BenKenobe.getBenKenobe(iface, this, patrolmoves);
+		BenKenobi ben = BenKenobi.getBenKenobe(iface, this, patrolmoves);
 		
 		loc = myGrid.getLocationByCoordinates(4,  5);
 		entityManager.setLocation(ben, loc);
@@ -113,15 +113,6 @@ public class SWWorld extends World {
 		
 		loc = myGrid.getLocationByCoordinates(5,9);
 		
-		// let's put an object here - just for a test
-		SWEntity chainMail = new SWEntity(iface);
-		chainMail.setShortDescription("chain mail");
-		chainMail.setLongDescription("a small chain-mail suit");
-		chainMail.setSymbol("c");
-		chainMail.setHitpoints(5);
-		// add a Take affordance to the chain mail, so that an actor can take it
-		entityManager.setLocation(chainMail, loc);
-		chainMail.addAffordance(new Take(chainMail, iface));
 		// Luke
 		Player luke = new Player(Team.GOOD, 100, iface, this);
 		luke.setShortDescription("Luke");
@@ -151,7 +142,7 @@ public class SWWorld extends World {
 			}
 		}
 		
-		// Ben Kenobe's hut
+		// Ben Kenobi's hut
 		/*
 		 * Scatter some other entities and actors around
 		 */
@@ -168,7 +159,7 @@ public class SWWorld extends World {
 		SWEntity oilcan = new SWEntity(iface);
 		oilcan.setShortDescription("an oil can");
 		oilcan.setLongDescription("an oil can, which would theoretically be useful for fixing robots");
-		oilcan.setSymbol("×");
+		oilcan.setSymbol("x");
 		oilcan.setHitpoints(100);
 		// add a Take affordance to the oil can, so that an actor can take it
 		entityManager.setLocation(oilcan, loc);

@@ -11,7 +11,7 @@ import starwars.entities.actors.behaviors.AttackNeighbours;
 import starwars.entities.actors.behaviors.Patrol;
 
 /**
- * Ben (aka Obe-Wan) Kenobe.  
+ * Ben (aka Obe-Wan) Kenobi.  
  * 
  * At this stage, he's an extremely strong critter with a <code>Lightsaber</code>
  * who wanders around in a fixed pattern and neatly slices any Actor not on his
@@ -21,11 +21,11 @@ import starwars.entities.actors.behaviors.Patrol;
  * @author rober_000
  *
  */
-public class BenKenobe extends SWLegend {
+public class BenKenobi extends SWLegend {
 
-	private static BenKenobe ben = null; // yes, it is OK to return the static instance!
+	private static BenKenobi ben = null; // yes, it is OK to return the static instance!
 	private Patrol path;
-	private BenKenobe(MessageRenderer m, SWWorld world, Direction [] moves) {
+	private BenKenobi(MessageRenderer m, SWWorld world, Direction [] moves) {
 		super(Team.GOOD, 1000, m, world);
 		path = new Patrol(moves);
 		this.setShortDescription("Ben Kenobe");
@@ -34,8 +34,8 @@ public class BenKenobe extends SWLegend {
 		setItemCarried(bensweapon);
 	}
 
-	public static BenKenobe getBenKenobe(MessageRenderer m, SWWorld world, Direction [] moves) {
-		ben = new BenKenobe(m, world, moves);
+	public static BenKenobi getBenKenobe(MessageRenderer m, SWWorld world, Direction [] moves) {
+		ben = new BenKenobi(m, world, moves);
 		ben.activate();
 		return ben;
 	}
