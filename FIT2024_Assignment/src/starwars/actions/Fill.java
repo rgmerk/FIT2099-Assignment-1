@@ -22,7 +22,6 @@ public class Fill extends SWAffordance {
 	@Override
 	public void act(SWActor a) {
 		// TODO Auto-generated method stub
-		System.out.println("Fill act method called");
 		assert(this.getTarget().hasCapability(Capability.FILLABLE));
 		Fillable fillableTarget = (Fillable) (this.getTarget());
 		fillableTarget.fill();

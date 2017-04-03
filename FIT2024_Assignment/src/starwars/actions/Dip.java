@@ -50,7 +50,6 @@ public class Dip extends SWAffordance implements SWActionInterface {
 
 	@Override
 	public boolean canDo(SWActor a) {
-		System.out.println("Dip canDo called");
 		SWEntityInterface item = a.getItemCarried();
 		if (item!= null) {
 			return item.hasCapability(Capability.FILLABLE);
@@ -60,7 +59,6 @@ public class Dip extends SWAffordance implements SWActionInterface {
 
 	@Override
 	public void act(SWActor a) {
-		System.out.println("Dip act method called");
 		SWEntityInterface item = a.getItemCarried();
 		assert(item instanceof Fillable);
 
