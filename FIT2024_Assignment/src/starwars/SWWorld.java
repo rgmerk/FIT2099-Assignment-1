@@ -154,7 +154,7 @@ public class SWWorld extends World {
 		entityManager.setLocation(canteen, loc);
 		canteen.addAffordance(new Take(canteen, iface));
 
-		// a troll treasure
+		// an oil can treasure
 		loc = myGrid.getLocationByCoordinates(1,5);
 		SWEntity oilcan = new SWEntity(iface);
 		oilcan.setShortDescription("an oil can");
@@ -165,10 +165,10 @@ public class SWWorld extends World {
 		entityManager.setLocation(oilcan, loc);
 		oilcan.addAffordance(new Take(oilcan, iface));
 		
-		// "And my axe!"
-		LightSaber axe = new LightSaber(iface);
+		// a lightsaber
+		LightSaber lightSaber = new LightSaber(iface);
 		loc = myGrid.getLocationByCoordinates(5,5);
-		entityManager.setLocation(axe, loc);
+		entityManager.setLocation(lightSaber, loc);
 		
 		// A blaster 
 		Blaster blaster = new Blaster(iface);
