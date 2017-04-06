@@ -27,7 +27,7 @@ public class SWGridController implements GridController {
 	 * @see {@link edu.monash.fit2024.gridworld.GridRenderer}*/
 	private static GridRenderer ui; 
 	
-	/**Hobbit grid of the world*/
+	/**SWgrid of the world*/
 	private SWGrid grid;
 	
 	/**
@@ -83,7 +83,7 @@ public class SWGridController implements GridController {
 		
 		//Get the UI to display the commands to the user and get a selection
 		//TO DO: Ensure the cmd list is not empty to avoid an infinite wait
-		assert (cmds.size()>0): "No commands for Hobbit Actor";
+		assert (cmds.size()>0): "No commands for Star Wars Actor";
 		
 		ActionInterface selectedAction = ui.getSelection(cmds);
 		

@@ -105,7 +105,7 @@ public class Attack extends SWAffordance implements SWActionInterface {
 		}
 					
 		
-		if (targetIsActor && (a.getTeam() == targetActor.getTeam())) { //don't attack HobbitActors in the same team
+		if (targetIsActor && (a.getTeam() == targetActor.getTeam())) { //don't attack SWActors in the same team
 			a.say("\t" + a.getShortDescription() + " says: Silly me! We're on the same team, " + target.getShortDescription() + ". No harm done");
 		}
 		else if (a.isHumanControlled() // a human-controlled player can attack anyone

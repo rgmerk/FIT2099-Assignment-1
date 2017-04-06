@@ -28,13 +28,13 @@ public class BenKenobi extends SWLegend {
 	private BenKenobi(MessageRenderer m, SWWorld world, Direction [] moves) {
 		super(Team.GOOD, 1000, m, world);
 		path = new Patrol(moves);
-		this.setShortDescription("Ben Kenobe");
-		this.setLongDescription("Ben Kenobe, an old man who has perhaps seen too much");
+		this.setShortDescription("Ben Kenobi");
+		this.setLongDescription("Ben Kenobi, an old man who has perhaps seen too much");
 		LightSaber bensweapon = new LightSaber(m);
 		setItemCarried(bensweapon);
 	}
 
-	public static BenKenobi getBenKenobe(MessageRenderer m, SWWorld world, Direction [] moves) {
+	public static BenKenobi getBenKenobi(MessageRenderer m, SWWorld world, Direction [] moves) {
 		ben = new BenKenobi(m, world, moves);
 		ben.activate();
 		return ben;

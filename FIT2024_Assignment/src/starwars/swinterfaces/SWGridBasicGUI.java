@@ -102,7 +102,7 @@ public class SWGridBasicGUI extends JFrame implements GridRenderer {
 		//setting a title and opening the window in full screen
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        this.setTitle("Hobbit World");
+        this.setTitle("Star Wars World");
         this.setVisible(true);
         
         drawLayout();
