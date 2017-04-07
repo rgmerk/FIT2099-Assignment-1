@@ -3,7 +3,6 @@ package starwars.entities;
 import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
 import starwars.SWAffordance;
 import starwars.SWEntity;
-import starwars.actions.Chop;
 import starwars.actions.Dip;
 
 /**
