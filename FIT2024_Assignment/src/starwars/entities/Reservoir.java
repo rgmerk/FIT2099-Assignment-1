@@ -11,7 +11,9 @@ import starwars.actions.Dip;
  * are assumed to have infinite capacity.
  * 
  * @author 	ram
- * @see 	{@link starwars.actions.Fill} 
+ * @see 	{@link starwars.entities.Canteen}
+ * @see {@link starwars.entites.Fillable}
+ * @see {@link starwars.actions.Fill} 
  */
 public class Reservoir extends SWEntity {
 
@@ -26,7 +28,7 @@ public class Reservoir extends SWEntity {
 	 * </ul>
 	 * 
 	 * @param 	m <code>MessageRenderer</code> to display messages.
-	 * @see 	{@link starwars.actions.Chop} 
+	 * @see 	{@link starwars.actions.Dip} 
 	 */
 	public Reservoir(MessageRenderer m) {
 		super(m);
