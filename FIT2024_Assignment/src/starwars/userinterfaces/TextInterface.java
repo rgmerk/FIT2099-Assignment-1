@@ -30,13 +30,10 @@ import starwars.SWGrid;
 import starwars.SWLocation;
 import starwars.SWWorld;
 
-/**
- * IMPORTANT
- * This UI is no longer required and is not compatible with the controller. Needs to be deleted! - Asel
- */
+
 public class TextInterface implements MessageRenderer, MapRenderer, SimulationController {
 	
-	/** Hobbit grid of the world*/
+	/** grid of the world*/
 	private SWGrid grid;
 	
 	/** The number of items to be displayed per location including the location label and colon ':'*/

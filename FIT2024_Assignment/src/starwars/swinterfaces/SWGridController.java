@@ -40,7 +40,7 @@ public class SWGridController implements GridController {
 	 * @param 	world the world to be considered by the controller
 	 * @pre 	the world should not be null
 	 */
-	public SWGridController(SWWorld world) {
+	public SWGridController(SWWorld wstorld) {
 		this.grid = world.getGrid();
 		
 		//change the user interface to be used here in the constructor
