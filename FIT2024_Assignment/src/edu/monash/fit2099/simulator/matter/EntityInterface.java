@@ -1,10 +1,10 @@
-package edu.monash.fit2024.simulator.matter;
-import edu.monash.fit2024.simulator.space.Location;
+package edu.monash.fit2099.simulator.matter;
+import edu.monash.fit2099.simulator.space.Location;
 
 /**
  * Interface for creating <code>Entities</code>. 
  * 
- * @see edu.monash.fit2024.simulator.matter.Entity
+ * @see edu.monash.fit2099.simulator.matter.Entity
  * 
  */
 public interface EntityInterface {
@@ -54,7 +54,7 @@ public interface EntityInterface {
 	 * This message would be displayed on the View (an implementation of <code>GridRenderer</code>)
 	 * 
 	 * @param 	message the String to display
-	 * @see 	edu.monash.fit2024.gridworld.GridRenderer
+	 * @see 	edu.monash.fit2099.gridworld.GridRenderer
 	 */
 	public abstract void say(String message);
 

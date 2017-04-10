@@ -1,9 +1,9 @@
 
-package edu.monash.fit2024.gridworld;
+package edu.monash.fit2099.gridworld;
 
-import edu.monash.fit2024.simulator.userInterface.MapRenderer;
-import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
-import edu.monash.fit2024.simulator.userInterface.SimulationController;
+import edu.monash.fit2099.simulator.userInterface.MapRenderer;
+import edu.monash.fit2099.simulator.userInterface.MessageRenderer;
+import edu.monash.fit2099.simulator.userInterface.SimulationController;
 
 /**
  * Interface for the Controller of the Model View Controller design pattern. Model is the {@link #Grid} and the View is {@link #GridRenderer}
@@ -13,8 +13,8 @@ import edu.monash.fit2024.simulator.userInterface.SimulationController;
  * They should also implement the <code>render(String)</code> method of the <code>MessageRenderer</code> to display messages on the View.
  * 
  * @author  Asel
- * @see		{@link edu.monash.fit2024.simulator.userInterface.MapRenderer#render()}
- * @see 	{@link edu.monash.fit2024.simulator.userInterface.MessageRenderer#render(String)}
+ * @see		{@link edu.monash.fit2099.simulator.userInterface.MapRenderer#render()}
+ * @see 	{@link edu.monash.fit2099.simulator.userInterface.MessageRenderer#render(String)}
  */
 public interface GridController extends MessageRenderer,MapRenderer,SimulationController{
 
@@ -25,8 +25,8 @@ public interface GridController extends MessageRenderer,MapRenderer,SimulationCo
 	 * Concrete implementations of this method should never handle the display of the <code>Grid</code> directly. 
 	 * Display of the map is a responsibility of the View (<code>GridRenderer</code>).
 	 * 
-	 * @see		{@link edu.monash.fit2024.simulator.userInterface.MapRenderer#render()}
-	 * @see		{@link edu.monash.fit2024.gridworld.GridRenderer#displayMap()}
+	 * @see		{@link edu.monash.fit2099.simulator.userInterface.MapRenderer#render()}
+	 * @see		{@link edu.monash.fit2099.gridworld.GridRenderer#displayMap()}
 	 */
 	public abstract void render();
 	
@@ -39,8 +39,8 @@ public interface GridController extends MessageRenderer,MapRenderer,SimulationCo
 	 * Display of messages is a responsibility of the View (<code>GridRenderer</code>).
 	 * 
 	 * @param 	message the message string to be displayed
-	 * @see		{@link edu.monash.fit2024.simulator.userInterface.MessageRenderer#render(String)}
-	 * @see		{@link edu.monash.fit2024.gridworld.GridRenderer#displayMessage(String)}
+	 * @see		{@link edu.monash.fit2099.simulator.userInterface.MessageRenderer#render(String)}
+	 * @see		{@link edu.monash.fit2099.gridworld.GridRenderer#displayMessage(String)}
 	 */
 	public abstract void render(String message);
 			

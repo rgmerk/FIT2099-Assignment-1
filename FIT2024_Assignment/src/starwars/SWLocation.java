@@ -1,9 +1,10 @@
 package starwars;
 
 import java.util.HashMap;
-import edu.monash.fit2024.simulator.space.Direction;
-import edu.monash.fit2024.simulator.space.Location;
-import edu.monash.fit2024.simulator.space.LocationMaker;
+
+import edu.monash.fit2099.simulator.space.Direction;
+import edu.monash.fit2099.simulator.space.Location;
+import edu.monash.fit2099.simulator.space.LocationMaker;
 
 /**
  * Class that models locations in Star Wars.

@@ -1,7 +1,7 @@
 package starwars;
 
-import edu.monash.fit2024.gridworld.Grid;
-import edu.monash.fit2024.simulator.space.LocationMaker;
+import edu.monash.fit2099.gridworld.Grid;
+import edu.monash.fit2099.simulator.space.LocationMaker;
 
 /**
  * Grid of <code>SWLocation</code>s.

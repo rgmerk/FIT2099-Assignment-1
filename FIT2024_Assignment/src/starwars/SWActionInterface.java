@@ -1,6 +1,6 @@
 package starwars;
 
-import edu.monash.fit2024.simulator.matter.ActionInterface;
+import edu.monash.fit2099.simulator.matter.ActionInterface;
 
 /**
  * Interface that allows <code>SWAction</code> and <code>SWAffordance</code> to have a common ancestor (and thus

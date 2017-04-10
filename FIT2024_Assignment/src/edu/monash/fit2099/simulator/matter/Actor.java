@@ -1,11 +1,11 @@
-package edu.monash.fit2024.simulator.matter;
+package edu.monash.fit2099.simulator.matter;
 
 import java.util.ArrayList;
 import java.util.Set;
 
-import edu.monash.fit2024.simulator.space.Location;
-import edu.monash.fit2024.simulator.time.Scheduler;
-import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
+import edu.monash.fit2099.simulator.space.Location;
+import edu.monash.fit2099.simulator.time.Scheduler;
+import edu.monash.fit2099.simulator.userInterface.MessageRenderer;
 import starwars.SWActionInterface;
 /**
  * Base class for Actors, i.e. entities that can perform <code>Actions</code>.
@@ -14,7 +14,7 @@ import starwars.SWActionInterface;
  * 
  * @author 	ram
  * @date 	17 February 2013
- * @see		{@link edu.monash.fit2024.simulator.matter.Action}
+ * @see		{@link edu.monash.fit2099.simulator.matter.Action}
  */
 
 /*

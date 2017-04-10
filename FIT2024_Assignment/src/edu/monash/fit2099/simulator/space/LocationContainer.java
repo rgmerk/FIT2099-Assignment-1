@@ -1,6 +1,6 @@
-package edu.monash.fit2024.simulator.space;
+package edu.monash.fit2099.simulator.space;
 
-import edu.monash.fit2024.simulator.userInterface.MapRenderer;
+import edu.monash.fit2099.simulator.userInterface.MapRenderer;
 
 /**
  * LocationContainer: base class for collections of <code>Location</code> subclasses.
@@ -22,8 +22,8 @@ public abstract class LocationContainer<T extends Location> {
 
 	/**
 	 * <code>MapRenderer</code> that allows a map of Locations to be displayed on a View/User Interface
-	 * @see {@link edu.monash.fit2024.gridworld.GridController}
-	 * @see {@link edu.monash.fit2024.simulator.userInterface.MapRenderer}
+	 * @see {@link edu.monash.fit2099.gridworld.GridController}
+	 * @see {@link edu.monash.fit2099.simulator.userInterface.MapRenderer}
 	 */
 	protected MapRenderer mapRenderer;
 	

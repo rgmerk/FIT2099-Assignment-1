@@ -1,4 +1,4 @@
-package edu.monash.fit2024.simulator.matter;
+package edu.monash.fit2099.simulator.matter;
 /*
  * Change Log
  * 2017/02/08	Added an abstract getter for priority (asel)
@@ -7,7 +7,7 @@ package edu.monash.fit2024.simulator.matter;
 /**
  * Interface for <code>Actions</code>
  * 
- * @see {@link edu.monash.fit2024.simulator.matter.Action}
+ * @see {@link edu.monash.fit2099.simulator.matter.Action}
  */
 public interface ActionInterface extends Comparable<ActionInterface> {
 
@@ -21,7 +21,7 @@ public interface ActionInterface extends Comparable<ActionInterface> {
 	 * of short duration complete before <code>Actions</code> of long duration.
 	 * 
 	 * @return 	the length of time an <code>Action</code> takes
-	 * @see		edu.monash.fit2024.simulator.time.Scheduler
+	 * @see		edu.monash.fit2099.simulator.time.Scheduler
 	 */
 	public abstract int getDuration();
 

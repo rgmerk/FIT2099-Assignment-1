@@ -6,9 +6,9 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
-import edu.monash.fit2024.gridworld.GridRenderer;
-import edu.monash.fit2024.simulator.matter.ActionInterface;
-import edu.monash.fit2024.simulator.matter.EntityManager;
+import edu.monash.fit2099.gridworld.GridRenderer;
+import edu.monash.fit2099.simulator.matter.ActionInterface;
+import edu.monash.fit2099.simulator.matter.EntityManager;
 import starwars.SWEntityInterface;
 import starwars.SWGrid;
 import starwars.SWLocation;

@@ -1,6 +1,6 @@
-package edu.monash.fit2024.simulator.matter;
+package edu.monash.fit2099.simulator.matter;
 
-import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
+import edu.monash.fit2099.simulator.userInterface.MessageRenderer;
 
 /**
  * Base class for simulator commands.
@@ -13,11 +13,11 @@ import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
  * 
  * @author 	ram
  * @date 	17 February 2013
- * @see		{@link edu.monash.fit2024.simulator.matter.Actor}
- * @see		{@link edu.monash.fit2024.simulator.space.World}
- * @see		{@link edu.monash.fit2024.simulator.userInterface.MessageRenderer}
- * @see		{@link edu.monash.fit2024.simulator.space.Location}
- * @see		{@link edu.monash.fit2024.simulator.matter.Entity}
+ * @see		{@link edu.monash.fit2099.simulator.matter.Actor}
+ * @see		{@link edu.monash.fit2099.simulator.space.World}
+ * @see		{@link edu.monash.fit2099.simulator.userInterface.MessageRenderer}
+ * @see		{@link edu.monash.fit2099.simulator.space.Location}
+ * @see		{@link edu.monash.fit2099.simulator.matter.Entity}
  * 
  */
 /*

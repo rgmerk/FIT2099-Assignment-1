@@ -1,7 +1,7 @@
-package edu.monash.fit2024.gridworld;
+package edu.monash.fit2099.gridworld;
 import java.util.ArrayList;
 
-import edu.monash.fit2024.simulator.matter.ActionInterface;
+import edu.monash.fit2099.simulator.matter.ActionInterface;
 
 /**
  * Interface for the View/User Interface of the Model View Controller design pattern. Model is the {@link #Grid} and the Controller is {@link #GridController}

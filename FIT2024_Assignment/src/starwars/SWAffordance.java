@@ -1,8 +1,8 @@
 package starwars;
 
-import edu.monash.fit2024.simulator.matter.Actor;
-import edu.monash.fit2024.simulator.matter.Affordance;
-import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
+import edu.monash.fit2099.simulator.matter.Actor;
+import edu.monash.fit2099.simulator.matter.Affordance;
+import edu.monash.fit2099.simulator.userInterface.MessageRenderer;
 import starwars.actions.Fill;
 
 /**
@@ -12,7 +12,7 @@ import starwars.actions.Fill;
  * be written at this stage, to minimize the amount of work that needs to be done to add new <code>Affordances</code>.
  * 
  * @author 	ram
- * @see 	edu.monash.fit2024.simulator.matter.Affordance
+ * @see 	edu.monash.fit2099.simulator.matter.Affordance
  * @see 	starwars.SWActionInterface
  */
 /*

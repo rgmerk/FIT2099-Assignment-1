@@ -1,11 +1,11 @@
-package edu.monash.fit2024.simulator.time;
+package edu.monash.fit2099.simulator.time;
 
 import java.util.PriorityQueue;
 
-import edu.monash.fit2024.simulator.matter.Action;
-import edu.monash.fit2024.simulator.matter.ActionInterface;
-import edu.monash.fit2024.simulator.matter.Actor;
-import edu.monash.fit2024.simulator.space.World;
+import edu.monash.fit2099.simulator.matter.Action;
+import edu.monash.fit2099.simulator.matter.ActionInterface;
+import edu.monash.fit2099.simulator.matter.Actor;
+import edu.monash.fit2099.simulator.space.World;
 
 /** 
  * This class handles time in the simulation by maintaining a priority queue of <code>Events</code>, prioritized by time and then

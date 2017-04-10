@@ -1,5 +1,5 @@
 
-package edu.monash.fit2024.simulator.space;
+package edu.monash.fit2099.simulator.space;
 
 
 /**

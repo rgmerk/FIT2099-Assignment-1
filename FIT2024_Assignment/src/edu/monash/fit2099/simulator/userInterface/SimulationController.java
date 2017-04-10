@@ -1,4 +1,4 @@
-package edu.monash.fit2024.simulator.userInterface;
+package edu.monash.fit2099.simulator.userInterface;
 
 /**
  * SimulationController: placeholder for control portion of UI

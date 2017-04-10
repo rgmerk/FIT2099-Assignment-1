@@ -1,6 +1,6 @@
 package starwars.entities.actors.behaviors;
 
-import edu.monash.fit2024.simulator.matter.Affordance;
+import edu.monash.fit2099.simulator.matter.Affordance;
 import starwars.SWEntityInterface;
 
 public class AttackInformation {

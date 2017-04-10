@@ -19,10 +19,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
-import edu.monash.fit2024.simulator.matter.EntityManager;
-import edu.monash.fit2024.simulator.userInterface.MapRenderer;
-import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
-import edu.monash.fit2024.simulator.userInterface.SimulationController;
+import edu.monash.fit2099.simulator.matter.EntityManager;
+import edu.monash.fit2099.simulator.userInterface.MapRenderer;
+import edu.monash.fit2099.simulator.userInterface.MessageRenderer;
+import edu.monash.fit2099.simulator.userInterface.SimulationController;
 import starwars.SWActionInterface;
 import starwars.SWActor;
 import starwars.SWEntityInterface;

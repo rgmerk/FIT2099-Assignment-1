@@ -2,7 +2,7 @@
  * Change log 
  * 2017-01-20:	Paragraph tags to the java doc (asel)
  */
-package edu.monash.fit2024.simulator.util;
+package edu.monash.fit2099.simulator.util;
 
 import java.util.ArrayList;
 import java.util.Collection;

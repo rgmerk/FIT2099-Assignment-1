@@ -1,9 +1,10 @@
-package edu.monash.fit2024.simulator.matter;
+package edu.monash.fit2099.simulator.matter;
 
 import java.util.HashSet;
 import java.util.Set;
-import edu.monash.fit2024.simulator.space.Location;
-import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
+
+import edu.monash.fit2099.simulator.space.Location;
+import edu.monash.fit2099.simulator.userInterface.MessageRenderer;
 /**
  * Base class for simulated items and actors. <code>Entity</code> implements the <code>EntityInterface</code>.
  * <p>
@@ -11,7 +12,7 @@ import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
  * 
  * @author 	ram
  * @date 	17 February 2013
- * @see 	edu.monash.fit2024.simulator.matter.EntityInterface
+ * @see 	edu.monash.fit2099.simulator.matter.EntityInterface
  */
 /*
  * Changelog

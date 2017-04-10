@@ -1,6 +1,6 @@
 package starwars;
 
-import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
+import edu.monash.fit2099.simulator.userInterface.MessageRenderer;
 
 /**
  * This class represents "legends" - major characters - in the Star Wars universe.  

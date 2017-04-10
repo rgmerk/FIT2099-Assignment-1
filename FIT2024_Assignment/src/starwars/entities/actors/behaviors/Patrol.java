@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
-import edu.monash.fit2024.simulator.space.Direction;
+import edu.monash.fit2099.simulator.space.Direction;
 
 public class Patrol {
 

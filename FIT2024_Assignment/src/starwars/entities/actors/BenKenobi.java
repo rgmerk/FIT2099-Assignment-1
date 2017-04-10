@@ -1,7 +1,7 @@
 package starwars.entities.actors;
 
-import edu.monash.fit2024.simulator.space.Direction;
-import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
+import edu.monash.fit2099.simulator.space.Direction;
+import edu.monash.fit2099.simulator.userInterface.MessageRenderer;
 import starwars.SWLegend;
 import starwars.SWWorld;
 import starwars.Team;

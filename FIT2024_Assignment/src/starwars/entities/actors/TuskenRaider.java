@@ -2,9 +2,9 @@ package starwars.entities.actors;
 
 import java.util.ArrayList;
 
-import edu.monash.fit2024.gridworld.Grid;
-import edu.monash.fit2024.simulator.space.Direction;
-import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
+import edu.monash.fit2099.gridworld.Grid;
+import edu.monash.fit2099.simulator.space.Direction;
+import edu.monash.fit2099.simulator.userInterface.MessageRenderer;
 import starwars.SWActor;
 import starwars.SWLocation;
 import starwars.SWWorld;

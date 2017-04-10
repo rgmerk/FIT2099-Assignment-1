@@ -1,8 +1,8 @@
-package edu.monash.fit2024.simulator.space;
+package edu.monash.fit2099.simulator.space;
 import java.util.Observable;
 
-import edu.monash.fit2024.simulator.matter.EntityInterface;
-import edu.monash.fit2024.simulator.matter.EntityManager;
+import edu.monash.fit2099.simulator.matter.EntityInterface;
+import edu.monash.fit2099.simulator.matter.EntityManager;
 
 /**
  * World: base class for simulated worlds.

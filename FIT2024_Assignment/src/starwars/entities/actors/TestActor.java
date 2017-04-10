@@ -2,7 +2,7 @@ package starwars.entities.actors;
 
 import java.util.List;
 
-import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
+import edu.monash.fit2099.simulator.userInterface.MessageRenderer;
 import starwars.SWActor;
 import starwars.SWEntityInterface;
 import starwars.SWLocation;
@@ -54,7 +54,7 @@ public class TestActor extends SWActor {
 	 * <p>
 	 * The output from this method would be through the <code>MessageRenderer</code>.
 	 * 
-	 *  @see {@link edu.monash.fit2024.simulator.userInterface.MessageRenderer}
+	 *  @see {@link edu.monash.fit2099.simulator.userInterface.MessageRenderer}
 	 */
 	public void describeScene() {
 		//get the location of the player and describe it

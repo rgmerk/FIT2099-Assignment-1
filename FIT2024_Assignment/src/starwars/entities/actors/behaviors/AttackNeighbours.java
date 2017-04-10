@@ -3,8 +3,8 @@ package starwars.entities.actors.behaviors;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.monash.fit2024.simulator.matter.Affordance;
-import edu.monash.fit2024.simulator.matter.EntityManager;
+import edu.monash.fit2099.simulator.matter.Affordance;
+import edu.monash.fit2099.simulator.matter.EntityManager;
 import starwars.SWActor;
 import starwars.SWEntityInterface;
 import starwars.SWLocation;

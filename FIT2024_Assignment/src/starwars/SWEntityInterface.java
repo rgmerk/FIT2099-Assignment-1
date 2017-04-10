@@ -1,6 +1,6 @@
 package starwars;
 
-import edu.monash.fit2024.simulator.matter.EntityInterface;
+import edu.monash.fit2099.simulator.matter.EntityInterface;
 
 /**
  * All <code>Entities</code> and <code>Actors</code> in the starwars client package should implement this interface.
@@ -8,8 +8,8 @@ import edu.monash.fit2024.simulator.matter.EntityInterface;
  * It allows them to be managed by the <code>EntityManager</code>.
  * 
  * @author ram
- * @see	edu.monash.fit2024.simulator.matter.EntityInterface
- * @see edu.monash.fit2024.simulator.matter.EntityManager
+ * @see	edu.monash.fit2099.simulator.matter.EntityInterface
+ * @see edu.monash.fit2099.simulator.matter.EntityManager
  */
 public interface SWEntityInterface extends EntityInterface {
 

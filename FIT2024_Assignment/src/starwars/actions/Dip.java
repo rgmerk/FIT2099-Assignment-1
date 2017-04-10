@@ -1,8 +1,8 @@
 package starwars.actions;
 
 import starwars.SWAffordance;
-import edu.monash.fit2024.simulator.matter.Affordance;
-import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
+import edu.monash.fit2099.simulator.matter.Affordance;
+import edu.monash.fit2099.simulator.userInterface.MessageRenderer;
 import starwars.Capability;
 import starwars.SWActionInterface;
 import starwars.SWActor;

@@ -1,6 +1,6 @@
-package edu.monash.fit2024.simulator.matter;
+package edu.monash.fit2099.simulator.matter;
 
-import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
+import edu.monash.fit2099.simulator.userInterface.MessageRenderer;
 
 /** Base class for simulator affordances
  * <p>
@@ -11,8 +11,8 @@ import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
  * 
  * @author 	ram
  * @date 	17 February 2013
- * @see		{@link edu.monash.fit2024.simulator.matter.Action}
- * @see		{@link edu.monash.fit2024.simulator.matter.Entity}
+ * @see		{@link edu.monash.fit2099.simulator.matter.Action}
+ * @see		{@link edu.monash.fit2099.simulator.matter.Entity}
  */
 /* Changelog
  * 2013-02-17: original version

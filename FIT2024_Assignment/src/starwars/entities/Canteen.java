@@ -1,6 +1,6 @@
 package starwars.entities;
 
-import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
+import edu.monash.fit2099.simulator.userInterface.MessageRenderer;
 import starwars.Capability;
 import starwars.SWEntity;
 import starwars.actions.Fill;

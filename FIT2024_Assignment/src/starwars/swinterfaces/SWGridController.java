@@ -2,9 +2,9 @@ package starwars.swinterfaces;
 
 import java.util.ArrayList;
 
-import edu.monash.fit2024.gridworld.GridController;
-import edu.monash.fit2024.gridworld.GridRenderer;
-import edu.monash.fit2024.simulator.matter.ActionInterface;
+import edu.monash.fit2099.gridworld.GridController;
+import edu.monash.fit2099.gridworld.GridRenderer;
+import edu.monash.fit2099.simulator.matter.ActionInterface;
 import starwars.SWActionInterface;
 import starwars.SWActor;
 import starwars.SWGrid;
@@ -16,7 +16,7 @@ import starwars.SWWorld;
  * This controller calls the UI methods to render map, messages and obtain user input.
  * 
  * @author 	Asel
- * @see 	{@link edu.monash.fit2024.gridworld.GridController}
+ * @see 	{@link edu.monash.fit2099.gridworld.GridController}
  *
  */
 public class SWGridController implements GridController {
@@ -24,7 +24,7 @@ public class SWGridController implements GridController {
 	/**The user interface to be used by the controller. All user interfaces should be concrete 
 	 * implementations of the <code>GridRenderer</code> interface
 	 * 
-	 * @see {@link edu.monash.fit2024.gridworld.GridRenderer}*/
+	 * @see {@link edu.monash.fit2099.gridworld.GridRenderer}*/
 	private static GridRenderer ui; 
 	
 	/**SWgrid of the world*/

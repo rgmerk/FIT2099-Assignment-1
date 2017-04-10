@@ -1,16 +1,16 @@
 package starwars;
 
-import edu.monash.fit2024.simulator.matter.Action;
-import edu.monash.fit2024.simulator.matter.Actor;
-import edu.monash.fit2024.simulator.matter.EntityManager;
-import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
+import edu.monash.fit2099.simulator.matter.Action;
+import edu.monash.fit2099.simulator.matter.Actor;
+import edu.monash.fit2099.simulator.matter.EntityManager;
+import edu.monash.fit2099.simulator.userInterface.MessageRenderer;
 
 /**
  * Base class for all intransitive commands/<code>Actions</code> in the starwars world. 
  * This class is an implementation of the <code>SWActionInterface</code>
  * 
  * @author 	ram
- * @see 	edu.monash.fit2024.simulator.matter.Action
+ * @see 	edu.monash.fit2099.simulator.matter.Action
  * @see 	SWActionInterface
  */
 /*

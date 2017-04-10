@@ -13,8 +13,8 @@ import starwars.SWActor;
 import starwars.SWAffordance;
 import starwars.SWEntityInterface;
 import starwars.SWLocation;
-import edu.monash.fit2024.simulator.matter.EntityManager;
-import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
+import edu.monash.fit2099.simulator.matter.EntityManager;
+import edu.monash.fit2099.simulator.userInterface.MessageRenderer;
 
 public class Leave extends SWAffordance {
 

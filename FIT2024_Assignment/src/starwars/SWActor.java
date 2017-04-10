@@ -18,13 +18,12 @@ package starwars;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-
-import edu.monash.fit2024.gridworld.Grid.CompassBearing;
-import edu.monash.fit2024.simulator.matter.Actor;
-import edu.monash.fit2024.simulator.matter.Affordance;
-import edu.monash.fit2024.simulator.space.Location;
-import edu.monash.fit2024.simulator.time.Scheduler;
-import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
+import edu.monash.fit2099.gridworld.Grid.CompassBearing;
+import edu.monash.fit2099.simulator.matter.Actor;
+import edu.monash.fit2099.simulator.matter.Affordance;
+import edu.monash.fit2099.simulator.space.Location;
+import edu.monash.fit2099.simulator.time.Scheduler;
+import edu.monash.fit2099.simulator.userInterface.MessageRenderer;
 import starwars.actions.Attack;
 import starwars.actions.Move;
 

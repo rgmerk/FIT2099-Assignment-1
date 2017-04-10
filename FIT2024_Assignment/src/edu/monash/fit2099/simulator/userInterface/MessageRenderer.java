@@ -1,4 +1,4 @@
-package edu.monash.fit2024.simulator.userInterface;
+package edu.monash.fit2099.simulator.userInterface;
 
 /**
  * Interface for messages that need to be displayed.  <code>MessageRenderers</code> are used

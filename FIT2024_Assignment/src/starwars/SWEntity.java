@@ -2,14 +2,14 @@ package starwars;
 
 import java.util.HashSet;
 
-import edu.monash.fit2024.simulator.matter.Entity;
-import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
+import edu.monash.fit2099.simulator.matter.Entity;
+import edu.monash.fit2099.simulator.userInterface.MessageRenderer;
 
 /**
  * Class that represents inanimate objects in the Star Wars world. Objects that cannot move for example trees.
  * 
  * @author 	ram
- * @see 	edu.monash.fit2024.simulator.matter.Entity
+ * @see 	edu.monash.fit2099.simulator.matter.Entity
  * @see 	SWEntityInterface
  */
 

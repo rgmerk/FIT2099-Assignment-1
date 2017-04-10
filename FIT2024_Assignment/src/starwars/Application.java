@@ -1,6 +1,6 @@
 package starwars;
 
-import edu.monash.fit2024.simulator.time.Scheduler;
+import edu.monash.fit2099.simulator.time.Scheduler;
 import starwars.swinterfaces.SWGridController;
 
 /**

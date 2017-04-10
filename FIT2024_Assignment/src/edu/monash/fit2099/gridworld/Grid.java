@@ -1,13 +1,13 @@
-package edu.monash.fit2024.gridworld;
+package edu.monash.fit2099.gridworld;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import edu.monash.fit2024.simulator.space.Direction;
-import edu.monash.fit2024.simulator.space.Location;
-import edu.monash.fit2024.simulator.space.LocationContainer;
-import edu.monash.fit2024.simulator.space.LocationMaker;
+import edu.monash.fit2099.simulator.space.Direction;
+import edu.monash.fit2099.simulator.space.Location;
+import edu.monash.fit2099.simulator.space.LocationContainer;
+import edu.monash.fit2099.simulator.space.LocationMaker;
 
 /**
  * <code>Grid</code> is a base class for a 2D array of <code>Locations</code>. It supports a maximum of 8-way movements in directions 

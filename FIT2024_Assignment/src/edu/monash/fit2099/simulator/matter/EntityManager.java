@@ -1,10 +1,10 @@
-package edu.monash.fit2024.simulator.matter;
+package edu.monash.fit2099.simulator.matter;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.monash.fit2024.simulator.space.Direction;
-import edu.monash.fit2024.simulator.space.Location;
-import edu.monash.fit2024.simulator.util.BiMultiMap;
+import edu.monash.fit2099.simulator.space.Direction;
+import edu.monash.fit2099.simulator.space.Location;
+import edu.monash.fit2099.simulator.util.BiMultiMap;
 /**
  * <code>EntityManager</code> stores an association between <code>Entities</code> and their <code>Locations</code>.
  * <p>
@@ -12,8 +12,8 @@ import edu.monash.fit2024.simulator.util.BiMultiMap;
  * 
  * @author 	ram
  * @date 	17 February 2013
- * @see		{@link edu.monash.fit2024.simulator.matter.Entity}
- * @see		{@link edu.monash.fit2024.simulator.space.Location}
+ * @see		{@link edu.monash.fit2099.simulator.matter.Entity}
+ * @see		{@link edu.monash.fit2099.simulator.space.Location}
  */
 /*
  * Changelog
