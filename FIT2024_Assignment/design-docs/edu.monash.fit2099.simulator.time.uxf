@@ -197,20 +197,4 @@ Action</panel_attributes>
     <panel_attributes>lt=&lt;.</panel_attributes>
     <additional_attributes>570.0;40.0;570.0;10.0;10.0;10.0;10.0;40.0</additional_attributes>
   </element>
-  <element>
-    <id>UMLNote</id>
-    <coordinates>
-      <x>1148</x>
-      <y>490</y>
-      <w>266</w>
-      <h>126</h>
-    </coordinates>
-    <panel_attributes>New dependency between 
-Scheduler and Action since 
-the Scheduler requires the 
-delay and cooldown from the 
-Actions to schedule
-bg=yellow</panel_attributes>
-    <additional_attributes/>
-  </element>
 </diagram>
