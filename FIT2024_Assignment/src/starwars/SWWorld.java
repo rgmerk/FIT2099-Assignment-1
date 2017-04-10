@@ -106,7 +106,7 @@ public class SWWorld extends World {
                 CompassBearing.NORTHWEST, CompassBearing.NORTHWEST};
 		
 		BenKenobi ben = BenKenobi.getBenKenobi(iface, this, patrolmoves);
-		
+		ben.setSymbol("B");
 		loc = myGrid.getLocationByCoordinates(4,  5);
 		entityManager.setLocation(ben, loc);
 		
