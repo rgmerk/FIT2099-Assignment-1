@@ -38,6 +38,8 @@ public class SWGridTextInterface implements GridRenderer {
 	/**If or not to show the banner*/
 	private static boolean showBanner;
 	
+	private static Scanner instream;
+	
 	/**
 	 * Constructor for the <code>SWGridTextInterface</code>. Will set showBanner flag to true to
 	 * show the text banner with the first map render.
@@ -47,7 +49,7 @@ public class SWGridTextInterface implements GridRenderer {
 	 */
 	public SWGridTextInterface(SWGrid grid) {
 		SWGridTextInterface.grid = grid;
-		
+		instream = new Scanner(System.in);
 		//set the show banner to true so that the banner would be displayed on the first map render
 		showBanner = true;
 	}
@@ -179,9 +181,7 @@ public class SWGridTextInterface implements GridRenderer {
 		
 		//assertion for the precondition
 		assert cmds.size()>0:"command list for the actor is empty";
-		
-		Scanner instream = new Scanner(System.in);
-					
+							
 		Collections.sort(cmds);//sorting the actions for a prettier output
 
 		//construct the commands to be displayed in the console
