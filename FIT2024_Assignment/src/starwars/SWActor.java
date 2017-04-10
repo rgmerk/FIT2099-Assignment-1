@@ -15,18 +15,20 @@
  */
 package starwars;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 
 import edu.monash.fit2024.gridworld.Grid.CompassBearing;
 import edu.monash.fit2024.simulator.matter.Actor;
+import edu.monash.fit2024.simulator.matter.Affordance;
 import edu.monash.fit2024.simulator.space.Location;
 import edu.monash.fit2024.simulator.time.Scheduler;
 import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
 import starwars.actions.Attack;
 import starwars.actions.Move;
 
-public abstract class SWActor extends Actor<SWAction> implements SWEntityInterface {
+public abstract class SWActor extends Actor<SWActionInterface> implements SWEntityInterface {
 	
 	/**the <code>Team</code> to which this <code>SWActor</code> belongs to**/
 	private Team team;
@@ -75,7 +77,7 @@ public abstract class SWActor extends Actor<SWAction> implements SWEntityInterfa
 	 */
 	public SWActor(Team team, int hitpoints, MessageRenderer m, SWWorld world) {
 		super(m);
-		actions = new HashSet<SWAction>();
+		actions = new HashSet<SWActionInterface>();
 		this.team = team;
 		this.hitpoints = hitpoints;
 		this.world = world;
@@ -120,6 +122,24 @@ public abstract class SWActor extends Actor<SWAction> implements SWEntityInterfa
 		return hitpoints;
 	}
 
+	/**
+	 * Returns an ArrayList containing this Actor's available Actions, including the Affordances of items
+	 * that the Actor is holding.
+	 * 
+	 * @author ram
+	 */
+	public ArrayList<SWActionInterface> getActions() {
+		ArrayList<SWActionInterface> actionList = super.getActions();
+		
+		//If the HobbitActor is carrying anything, look for its affordances and add them to the list
+		SWEntityInterface item = getItemCarried();
+		if (item != null)
+			for (Affordance aff : item.getAffordances())
+				if (aff instanceof SWAffordance)
+				actionList.add((SWAffordance)aff);
+		return actionList;
+	}
+	
 	/**
 	 * Returns the item carried by this <code>SWActor</code>. 
 	 * <p>
@@ -232,10 +252,10 @@ public abstract class SWActor extends Actor<SWAction> implements SWEntityInterfa
 	 * @pre		<code>loc</code> is the actual location of this <code>SWActor</code>
 	 */
 	public void resetMoveCommands(Location loc) {
-		HashSet<SWAction> newActions = new HashSet<SWAction>();
+		HashSet<SWActionInterface> newActions = new HashSet<SWActionInterface>();
 		
 		// Copy all the existing non-movement options to newActions
-		for (SWAction a: actions) {
+		for (SWActionInterface a: actions) {
 			if (!a.isMoveCommand())
 				newActions.add(a);
 		}

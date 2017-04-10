@@ -6,6 +6,7 @@ import java.util.Set;
 import edu.monash.fit2024.simulator.space.Location;
 import edu.monash.fit2024.simulator.time.Scheduler;
 import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
+import starwars.SWActionInterface;
 /**
  * Base class for Actors, i.e. entities that can perform <code>Actions</code>.
  * <p>
