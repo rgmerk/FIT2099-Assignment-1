@@ -5,6 +5,7 @@ import edu.monash.fit2099.simulator.userInterface.MessageRenderer;
 import starwars.SWLegend;
 import starwars.SWWorld;
 import starwars.Team;
+import starwars.actions.Move;
 import starwars.entities.LightSaber;
 import starwars.entities.actors.behaviors.AttackInformation;
 import starwars.entities.actors.behaviors.AttackNeighbours;
@@ -54,7 +55,9 @@ public class BenKenobi extends SWLegend {
 		else {
 			Direction newdirection = path.getNext();
 			say(getShortDescription() + " moves " + newdirection);
-			
+			Move myMove = new Move(newdirection, messageRenderer, world);
+
+			scheduler.schedule(myMove, this, 1);
 		}
 	}
 
