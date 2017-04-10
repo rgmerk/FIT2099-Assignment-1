@@ -40,7 +40,7 @@ public abstract class Affordance extends Action {
 		 * The "unused" warning is suppressed because the entire purpose of declaring this
 		 * constructor private is to prevent its use.
 		 */
-		@SuppressWarnings("unused")
+//		@SuppressWarnings("unused")
 		private Affordance(MessageRenderer m) {super(m);}
 		
 		/**

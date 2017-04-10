@@ -44,7 +44,7 @@ public class SWGridController implements GridController {
 		this.grid = world.getGrid();
 		
 		//change the user interface to be used here in the constructor
-		this.ui = new SWGridTextInterface(this.grid); //use a Text Interface to interact
+		SWGridController.ui = new SWGridTextInterface(this.grid); //use a Text Interface to interact
 		//this.ui = new SWGridBasicGUI(this.grid); //Use a Basic GUI to interact
 		//this.ui = new SWGridGUI(this.grid); //Use a GUI with better graphics to interact
 	}

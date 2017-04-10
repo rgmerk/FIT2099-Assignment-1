@@ -1,25 +1,17 @@
 package starwars.entities.actors;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.TreeSet;
 
 import edu.monash.fit2024.gridworld.Grid;
-import edu.monash.fit2024.simulator.matter.Affordance;
-import edu.monash.fit2024.simulator.matter.EntityManager;
 import edu.monash.fit2024.simulator.space.Direction;
 import edu.monash.fit2024.simulator.userInterface.MessageRenderer;
 import starwars.SWActor;
-import starwars.SWEntityInterface;
 import starwars.SWLocation;
 import starwars.SWWorld;
 import starwars.Team;
-import starwars.actions.Attack;
 import starwars.actions.Move;
 import starwars.entities.actors.behaviors.AttackInformation;
 import starwars.entities.actors.behaviors.AttackNeighbours;
-import starwars.swinterfaces.SWGridController;
 
 public class TuskenRaider extends SWActor {
 
