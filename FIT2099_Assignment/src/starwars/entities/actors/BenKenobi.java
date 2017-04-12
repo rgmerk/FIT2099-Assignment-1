@@ -44,6 +44,9 @@ public class BenKenobi extends SWLegend {
 	@Override
 	protected void legendAct() {
 
+		if(isDead()) {
+			return;
+		}
 		AttackInformation attack;
 		attack = AttackNeighbours.attackLocals(ben,  ben.world, true, true);
 		

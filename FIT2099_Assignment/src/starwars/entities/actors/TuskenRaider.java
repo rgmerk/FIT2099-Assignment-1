@@ -45,6 +45,9 @@ public class TuskenRaider extends SWActor {
 
 	@Override
 	public void act() {
+		if (isDead()) {
+			return;
+		}
 		say(describeLocation());
 
 		AttackInformation attack = AttackNeighbours.attackLocals(this, this.world, false, false);
