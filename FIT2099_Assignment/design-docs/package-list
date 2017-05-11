@@ -1,0 +1,13 @@
+edu.monash.fit2099.gridworld
+edu.monash.fit2099.simulator.matter
+edu.monash.fit2099.simulator.space
+edu.monash.fit2099.simulator.time
+edu.monash.fit2099.simulator.userInterface
+edu.monash.fit2099.simulator.util
+starwars
+starwars.actions
+starwars.entities
+starwars.entities.actors
+starwars.entities.actors.behaviors
+starwars.swinterfaces
+starwars.userinterfaces
