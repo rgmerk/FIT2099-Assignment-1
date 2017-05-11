@@ -22,7 +22,7 @@ public class SWEntity extends Entity implements SWEntityInterface {
 	protected HashSet<Capability> capabilities;
 	
 	/**The amount of <code>hitpoints</code> of this <code>SWEntity</code>.*/
-	protected int hitpoints = 0; // Not all non-actor entities will make use of this
+	protected static int hitpoints = 0; // Not all non-actor entities will make use of this
 
 	/**
 	 * Constructor for this <code>SWEntity</code>. Will initialize this <code>SWEntity</code>'s
