@@ -1,5 +1,6 @@
 package starwars.actions;
 
+import edu.monash.fit2099.gridworld.Grid.CompassBearing;
 import edu.monash.fit2099.simulator.matter.EntityManager;
 import edu.monash.fit2099.simulator.userInterface.MessageRenderer;
 import starwars.Capability;
@@ -8,6 +9,7 @@ import starwars.SWActionInterface;
 import starwars.SWActor;
 import starwars.SWAffordance;
 import starwars.SWEntityInterface;
+import starwars.SWWorld;
 import starwars.actions.Move;
 /**
  *
@@ -40,7 +42,9 @@ public class Control extends SWAffordance implements SWActionInterface {
 	}
 
 	
-	
+	/**
+	 * Return the description of 
+	 */
 	@Override
 	public String getDescription() {
 		return "Control the mind of " + this.target.getShortDescription();
@@ -55,28 +59,9 @@ public class Control extends SWAffordance implements SWActionInterface {
 	
 	@Override
 	public void act(SWActor a) {
-		SWEntityInterface target = this.getTarget();
-		boolean targetIsActor = target instanceof SWActor;
-		SWActor targetActor = null;
+		SWWorld world = ((SWActor) a).getworld();
+		world.moveEntity((SWActor) target, CompassBearing.NORTHWEST);
+		a.say(a.getShortDescription() + "is controlling" +target.getShortDescription());
 		
-		if (targetIsActor) {
-			targetActor = (SWActor) target;
-		}
-					
-		
-		else if (a.isHumanControlled() // a human-controlled player can attack anyone
-			|| (targetIsActor && (a.getTeam() != targetActor.getTeam()))) {  // others will only attack actors on different teams
-				
-			a.say(a.getShortDescription() + " is controling the weak mind of " + target.getShortDescription() );
-			
-			if (a.getForce() <= 0 && ((SWActor) target).getForce() > 0){
-				a.say(a.getShortDescription() + " can't perform mind control!");
-			}
-			else{
-				a.say(a.getShortDescription() + " can now control " + target.getShortDescription() + " movement!");
-		
-				
-			}	
-		}	
-		}
+	}
 }

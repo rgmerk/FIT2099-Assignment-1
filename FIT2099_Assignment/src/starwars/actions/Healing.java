@@ -8,11 +8,11 @@ import starwars.SWEntityInterface;
 import starwars.entities.Canteen;
 
 /**
- * This function allows the c=training of a player
+ * This class implements the healing of actor
  * @author user
  *
  */
-public class Train extends SWAffordance {
+public class Healing extends SWAffordance {
 
 	/**
 	 * Constructor for the <code>Take</code> Class. Will initialize the message renderer, the target and 
@@ -21,41 +21,44 @@ public class Train extends SWAffordance {
 	 * @param theTarget a <code>SWEntity</code> that is being taken
 	 * @param m the message renderer to display messages
 	 */
-	public Train(SWEntityInterface theTarget, MessageRenderer m) {
+	public Healing(SWEntityInterface theTarget, MessageRenderer m) {
 		super(theTarget, m);
-		//priority = 1;
+		priority = 1;
 	}
 
 
 	
 	@Override
 	/**
-	 * Increases the force power of a character
+	 * If the hitpoint of a character is less than 1000 healing increases the hitpoint of the character
 	 */
 	public void act(SWActor a) {
-		((SWActor) target).setForce(((SWActor) target).getForce() + 250);
+		if (target instanceof SWEntityInterface) {
+			if((a.getHitpoints() + ((Canteen)target).getHitpoints()) < 1000 ){
+				a.setHitpoints(a.getHitpoints() +  ((Canteen)target).getHitpoints());
+				Canteen.reduceLevel(-1);
+			}
+			else{
+				a.setHitpoints(1000) ;
 				
 				}
-	
+		}
+	}
 
 
 	@Override
 	public boolean canDo(SWActor a) {
 		// TODO Auto-generated method stub
-		return true;
+		return false;
 	}
-	@Override
-	public int getDuration() {
-		return 2;
-     }
+
+
 	@Override
 	public String getDescription() {
 		// TODO Auto-generated method stub
-		
-		return "";
+		return "Healing from the Canteen " + target.getShortDescription();
 	}
-	
-	
+
 
 
 }
