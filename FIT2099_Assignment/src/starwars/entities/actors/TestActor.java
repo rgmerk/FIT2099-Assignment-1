@@ -15,6 +15,8 @@ import starwars.Team;
 
 public class TestActor extends SWActor {
 
+	private String name;
+
 	/**
 	 * Constructor for the <code>TestActor</code> class. This constructor will,
 	 * <ul>
@@ -27,8 +29,10 @@ public class TestActor extends SWActor {
 	 * @param m <code>MessageRenderer</code> to display messages.
 	 * @param world the <code>SWWorld</code> world to which this <code>TestActor</code> belongs to
 	 */
-	public TestActor(MessageRenderer m, SWWorld world) {
-		super(Team.GOOD, 50, m, world);
+	public TestActor(String name, MessageRenderer m, SWWorld world) {
+		super(Team.GOOD, 50, 0,m, world);
+		this.name = name;
+	
 	}
 	
 	@Override
@@ -43,6 +47,14 @@ public class TestActor extends SWActor {
 		say(this.getShortDescription() + " is standing still at " + this.world.getEntityManager().whereIs(this).getShortDescription());
 		describeScene();
 	}
+	
+	
+	@Override
+	public String getShortDescription() {
+		return name + " Luke's Relative";
+	}
+	
+	
 	
 	/**
 	 * This method will describe, 
@@ -81,6 +93,12 @@ public class TestActor extends SWActor {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void setHitpoints(int i) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

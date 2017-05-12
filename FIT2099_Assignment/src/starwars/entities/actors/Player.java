@@ -9,6 +9,8 @@ import starwars.SWEntityInterface;
 import starwars.SWLocation;
 import starwars.SWWorld;
 import starwars.Team;
+import starwars.actions.Take;
+import starwars.actions.Train;
 import starwars.swinterfaces.SWGridController;
 
 /**
@@ -23,6 +25,8 @@ import starwars.swinterfaces.SWGridController;
  * 				A controller used to get user input rather than the UI directly (Asel)
  */
 public class Player extends SWActor {
+
+	private int force;;
 
 	/**
 	 * Constructor for the <code>Player</code> class. This constructor will,
@@ -40,9 +44,11 @@ public class Player extends SWActor {
 	 * @param world the <code>SWWorld</code> world to which this <code>Player</code> belongs to
 	 * 
 	 */
-	public Player(Team team, int hitpoints, MessageRenderer m, SWWorld world) {
-		super(team, hitpoints, m, world);
+	public Player(Team team,int hitpoints,int force, MessageRenderer m, SWWorld world) {
+		super(team, hitpoints,force, m, world);
 		humanControlled = true; // this feels like a hack. Surely this should be dynamic
+		// this part was added
+		this.addAffordance(new Train(this, m));
 	}
 	
 	/**
@@ -60,6 +66,15 @@ public class Player extends SWActor {
 		scheduler.schedule(SWGridController.getUserDecision(this), this, 1);
 		
 	}
+	public int getForce(){
+		return this.force;
+	}
+	public void setForce(int newforce) {
+		this.force = newforce;
+		
+		// TODO Auto-generated method stub
+		
+	}	
 	/**
 	 * This method will describe, 
 	 * <ul>
@@ -76,7 +91,7 @@ public class Player extends SWActor {
 		//get the location of the player and describe it
 		SWLocation location = this.world.getEntityManager().whereIs(this);
 		say(this.getShortDescription() + " [" + this.getHitpoints() + "] is at " + location.getShortDescription());
-		
+		say(this.getShortDescription() + "Force power" + " [" + this.getForce() + "] is at " + location.getShortDescription());
 		//get the items carried for the player
 		SWEntityInterface itemCarried = this.getItemCarried();
 		if (itemCarried != null) {
@@ -97,5 +112,11 @@ public class Player extends SWActor {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void setHitpoints(int i) {
+		// TODO Auto-generated method stub
+		
 	}
 }
