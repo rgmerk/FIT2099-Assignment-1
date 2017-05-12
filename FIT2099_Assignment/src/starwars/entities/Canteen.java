@@ -20,7 +20,7 @@ import starwars.actions.Fill;
  */
 public class Canteen extends SWEntity implements Fillable {
 
-	private int capacity;
+	private static int capacity;
 	private int level;
 	
 	public Canteen(MessageRenderer m, int capacity, int initialLevel)  {
@@ -46,5 +46,13 @@ public class Canteen extends SWEntity implements Fillable {
 	@Override
 	public String getLongDescription () {
 		return longDescription + " [" + level + "/" + capacity + "]";
+	}
+	public int getlevel(){
+		return level;
+		
+			
+	}
+	public static void reduceLevel(int c){
+		capacity = capacity - c;
 	}
 }

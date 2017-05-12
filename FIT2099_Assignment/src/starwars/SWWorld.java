@@ -1,14 +1,20 @@
 package starwars;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import edu.monash.fit2099.gridworld.Grid.CompassBearing;
 import edu.monash.fit2099.simulator.matter.EntityManager;
+import edu.monash.fit2099.simulator.matter.Entity;
 import edu.monash.fit2099.simulator.space.Direction;
 import edu.monash.fit2099.simulator.space.Location;
 import edu.monash.fit2099.simulator.space.World;
 import edu.monash.fit2099.simulator.userInterface.MessageRenderer;
+import starwars.actions.Control;
 import starwars.actions.Take;
 import starwars.entities.*;
 import starwars.entities.actors.*;
+import java.util.Random;
 
 /**
  * Class representing a world in the Star Wars universe. 
@@ -30,6 +36,8 @@ public class SWWorld extends World {
 	
 	/**The entity manager of the world which keeps track of <code>SWEntities</code> and their <code>SWLocation</code>s*/
 	private static final EntityManager<SWEntityInterface, SWLocation> entityManager = new EntityManager<SWEntityInterface, SWLocation>();
+
+	private static final String False = null;
 	
 	/**
 	 * Constructor of <code>SWWorld</code>. This will initialize the <code>SWLocationMaker</code>
@@ -107,18 +115,18 @@ public class SWWorld extends World {
 		
 		BenKenobi ben = BenKenobi.getBenKenobi(iface, this, patrolmoves);
 		ben.setSymbol("B");
-		loc = myGrid.getLocationByCoordinates(4,  5);
+		loc = myGrid.getLocationByCoordinates(4, 5);
 		entityManager.setLocation(ben, loc);
 		
 		
 		loc = myGrid.getLocationByCoordinates(5,9);
 		
 		// Luke
-		Player luke = new Player(Team.GOOD, 100, iface, this);
+		Player luke = new Player(Team.GOOD, 1000, 1000, iface, this);
 		luke.setShortDescription("Luke");
 		entityManager.setLocation(luke, loc);
 		luke.resetMoveCommands(loc);
-		
+	
 		
 		// Beggar's Canyon 
 		for (int col = 3; col < 8; col++) {
@@ -161,6 +169,7 @@ public class SWWorld extends World {
 		oilcan.setLongDescription("an oil can, which would theoretically be useful for fixing robots");
 		oilcan.setSymbol("x");
 		oilcan.setHitpoints(100);
+		
 		// add a Take affordance to the oil can, so that an actor can take it
 		entityManager.setLocation(oilcan, loc);
 		oilcan.addAffordance(new Take(oilcan, iface));
@@ -176,11 +185,88 @@ public class SWWorld extends World {
 		entityManager.setLocation(blaster, loc);
 		
 		// A Tusken Raider
-		TuskenRaider tim = new TuskenRaider(10, "Tim", iface, this);
+		TuskenRaider tim = new TuskenRaider(200, 0,"Tim", iface, this);
 		
 		tim.setSymbol("T");
 		loc = myGrid.getLocationByCoordinates(4,3);
 		entityManager.setLocation(tim, loc);
+		// A Tusken Raider new 1
+		TuskenRaider tim2 = new TuskenRaider(200,0, "Jin", iface, this);
+		tim2.addAffordance(new Control(tim2, iface));
+		tim2.setSymbol("J");
+		loc = myGrid.getLocationByCoordinates(5,9);
+		entityManager.setLocation(tim2, loc);
+				
+		// A Tusken Raider new 2
+		TuskenRaider tim3 = new TuskenRaider(200,0, "Kim", iface, this);
+						
+		tim3.setSymbol("K");
+		loc = myGrid.getLocationByCoordinates(1,7);
+		entityManager.setLocation(tim3, loc);
+				
+		// A Tusken Raider new 3
+		TuskenRaider tim4 = new TuskenRaider(200, 0,"Nim", iface, this);
+								
+		tim4.setSymbol("N");
+		loc = myGrid.getLocationByCoordinates(2,4);
+		entityManager.setLocation(tim4, loc);
+		
+		// Droid R2-D2
+		Direction [] patrolmoves1 = {CompassBearing.EAST, CompassBearing.EAST,
+                CompassBearing.EAST,
+                CompassBearing.EAST, CompassBearing.EAST,
+                CompassBearing.WEST,
+                CompassBearing.WEST, CompassBearing.WEST,
+                CompassBearing.WEST, CompassBearing.WEST};
+		
+		
+		Droid R2D2 = new Droid(200, "R2-D2", iface, this,patrolmoves1);
+				
+		R2D2.setSymbol("DR2");
+		loc = myGrid.getLocationByCoordinates(4,4);
+		entityManager.setLocation(R2D2, loc);
+		
+
+		// Droif C-3PO
+		Droid C3P0 = new DroidC3PO(200, "C-3PO", iface, this);
+		C3P0.setSymbol("DC3");
+		loc = myGrid.getLocationByCoordinates(7,6);
+		entityManager.setLocation(C3P0, loc);
+		
+		// Disabled Droids
+		Droid disable = new DisabledDroid(0, "disable droid", iface, this);
+		disable.setSymbol("dD");
+		loc = myGrid.getLocationByCoordinates(6,4);
+		entityManager.setLocation(disable, loc);
+		
+		// Disabled Droids
+		Droid disable1 = new DisabledDroid(0, "disable droid", iface, this);
+		disable1.setSymbol("dD");
+		loc = myGrid.getLocationByCoordinates(5,4);
+		entityManager.setLocation(disable1, loc);
+		
+		// Uncle Owen
+		TestActor Uncle = new TestActor("Uncle Owen",iface, this);
+				
+		Uncle.setSymbol("U");
+		loc = myGrid.getLocationByCoordinates(8,5);
+		entityManager.setLocation(Uncle, loc);
+		
+		// Aunt Beru
+		TestActor Aunt = new TestActor("Aunt Beru",iface, this);
+						
+		Aunt.setSymbol("A");
+		loc = myGrid.getLocationByCoordinates(9,7);
+		entityManager.setLocation(Aunt, loc);
+		
+		// a canteen
+		loc = myGrid.getLocationByCoordinates(6,6);
+		SWEntity canteen2 = new Canteen(iface, 10,10);
+		canteen2.setSymbol("o");
+		canteen2.setHitpoints(500);
+		entityManager.setLocation(canteen2, loc);
+		canteen.addAffordance(new Take(canteen2, iface));
+
 
 	}
 
@@ -188,6 +274,11 @@ public class SWWorld extends World {
 	 * Render method was removed from here
 	 */
 	
+	private void say(String shortDescription) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	/**
 	 * Determine whether a given <code>SWActor a</code> can move in a given direction
 	 * <code>whichDirection</code>.
