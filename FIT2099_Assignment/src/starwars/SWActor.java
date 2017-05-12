@@ -208,6 +208,7 @@ public abstract class SWActor extends Actor<SWActionInterface> implements SWEnti
 	}
 	
 	
+	
 	/**
 	 * Returns true if this <code>SWActor</code> is dead, false otherwise.
 	 * <p>
@@ -282,6 +283,17 @@ public abstract class SWActor extends Actor<SWActionInterface> implements SWEnti
 		
 		// TODO: This assumes that the only actions are the Move actions. This will clobber any others. Needs to be fixed.
 		/* Actually, that's not the case: all non-movement actions are transferred to newActions before the movements are transferred. --ram */
+	}
+
+	public void revertHumanControlled() {
+		humanControlled = !humanControlled;
+		// TODO Auto-generated method stub
+		
+	}
+
+	public SWWorld getworld() {
+		// TODO Auto-generated method stub
+		return this.world;
 	}
 
 	
