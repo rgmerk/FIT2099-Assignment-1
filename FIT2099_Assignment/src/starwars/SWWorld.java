@@ -10,6 +10,7 @@ import edu.monash.fit2099.simulator.space.Direction;
 import edu.monash.fit2099.simulator.space.Location;
 import edu.monash.fit2099.simulator.space.World;
 import edu.monash.fit2099.simulator.userInterface.MessageRenderer;
+import starwars.actions.Control;
 import starwars.actions.Take;
 import starwars.entities.*;
 import starwars.entities.actors.*;
@@ -114,14 +115,14 @@ public class SWWorld extends World {
 		
 		BenKenobi ben = BenKenobi.getBenKenobi(iface, this, patrolmoves);
 		ben.setSymbol("B");
-		loc = myGrid.getLocationByCoordinates(5,  9);
+		loc = myGrid.getLocationByCoordinates(4, 5);
 		entityManager.setLocation(ben, loc);
 		
 		
 		loc = myGrid.getLocationByCoordinates(5,9);
 		
 		// Luke
-		Player luke = new Player(Team.GOOD, 100, 0, iface, this);
+		Player luke = new Player(Team.GOOD, 1000, 1000, iface, this);
 		luke.setShortDescription("Luke");
 		entityManager.setLocation(luke, loc);
 		luke.resetMoveCommands(loc);
@@ -184,27 +185,27 @@ public class SWWorld extends World {
 		entityManager.setLocation(blaster, loc);
 		
 		// A Tusken Raider
-		TuskenRaider tim = new TuskenRaider(10, 0,"Tim", iface, this);
+		TuskenRaider tim = new TuskenRaider(200, 0,"Tim", iface, this);
 		
 		tim.setSymbol("T");
 		loc = myGrid.getLocationByCoordinates(4,3);
 		entityManager.setLocation(tim, loc);
 		// A Tusken Raider new 1
-		TuskenRaider tim2 = new TuskenRaider(20,0, "Jin", iface, this);
-						
+		TuskenRaider tim2 = new TuskenRaider(200,0, "Jin", iface, this);
+		tim2.addAffordance(new Control(tim2, iface));
 		tim2.setSymbol("J");
-		loc = myGrid.getLocationByCoordinates(3,2);
+		loc = myGrid.getLocationByCoordinates(5,9);
 		entityManager.setLocation(tim2, loc);
 				
 		// A Tusken Raider new 2
-		TuskenRaider tim3 = new TuskenRaider(20,0, "Kim", iface, this);
+		TuskenRaider tim3 = new TuskenRaider(200,0, "Kim", iface, this);
 						
 		tim3.setSymbol("K");
 		loc = myGrid.getLocationByCoordinates(1,7);
 		entityManager.setLocation(tim3, loc);
 				
 		// A Tusken Raider new 3
-		TuskenRaider tim4 = new TuskenRaider(20, 0,"Nim", iface, this);
+		TuskenRaider tim4 = new TuskenRaider(200, 0,"Nim", iface, this);
 								
 		tim4.setSymbol("N");
 		loc = myGrid.getLocationByCoordinates(2,4);
@@ -233,15 +234,15 @@ public class SWWorld extends World {
 		entityManager.setLocation(C3P0, loc);
 		
 		// Disabled Droids
-		Droid disable = new DroidC3PO(0, "disable droid", iface, this);
+		Droid disable = new DisabledDroid(0, "disable droid", iface, this);
 		disable.setSymbol("dD");
 		loc = myGrid.getLocationByCoordinates(6,4);
 		entityManager.setLocation(disable, loc);
 		
 		// Disabled Droids
-		Droid disable1 = new DroidC3PO(0, "disable droid", iface, this);
+		Droid disable1 = new DisabledDroid(0, "disable droid", iface, this);
 		disable1.setSymbol("dD");
-		loc = myGrid.getLocationByCoordinates(8,4);
+		loc = myGrid.getLocationByCoordinates(5,4);
 		entityManager.setLocation(disable1, loc);
 		
 		// Uncle Owen
