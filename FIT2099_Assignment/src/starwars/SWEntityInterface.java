@@ -65,4 +65,6 @@ public interface SWEntityInterface extends EntityInterface {
 	 */
 	public void takeDamage(int damage);
 
+	public abstract void setHitpoints(int i);
+
 }

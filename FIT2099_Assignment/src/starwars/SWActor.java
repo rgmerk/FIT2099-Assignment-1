@@ -33,7 +33,7 @@ public abstract class SWActor extends Actor<SWActionInterface> implements SWEnti
 	private Team team;
 	
 	/**The amount of <code>hitpoints</code> of this actor. If the hitpoints are zero or less this <code>Actor</code> is dead*/
-	private int hitpoints;
+	protected int hitpoints;
 	
 	/**The world this <code>SWActor</code> belongs to.*/
 	protected SWWorld world;
@@ -42,7 +42,7 @@ public abstract class SWActor extends Actor<SWActionInterface> implements SWEnti
 	protected static Scheduler scheduler;
 	
 	/**The item carried by this <code>SWActor</code>. <code>itemCarried</code> is null if this <code>SWActor</code> is not carrying an item*/
-	private SWEntityInterface itemCarried;
+	protected SWEntityInterface itemCarried;
 	
 	/**If or not this <code>SWActor</code> is human controlled. <code>SWActor</code>s are not human controlled by default*/
 	protected boolean humanControlled = false;
@@ -52,7 +52,8 @@ public abstract class SWActor extends Actor<SWActionInterface> implements SWEnti
 	
 	/**A set of <code>Capabilities</code> of this <code>SWActor</code>*/
 	private HashSet<Capability> capabilities;
-	
+
+	private int force;
 	/**
 	 * Constructor for the <code>SWActor</code>.
 	 * <p>
@@ -74,12 +75,14 @@ public abstract class SWActor extends Actor<SWActionInterface> implements SWEnti
 	 * @see 	#world
 	 * @see 	starwars.actions.Attack
 	 */
-	public SWActor(Team team, int hitpoints, MessageRenderer m, SWWorld world) {
+	public SWActor(Team team, int hitpoints, int force, MessageRenderer m, SWWorld world) {
 		super(m);
 		actions = new HashSet<SWActionInterface>();
 		this.team = team;
 		this.hitpoints = hitpoints;
+		this.force = force;
 		this.world = world;
+	
 		this.symbol = "@";
 		
 		//SWActors are given the Attack affordance hence they can be attacked
@@ -108,6 +111,15 @@ public abstract class SWActor extends Actor<SWActionInterface> implements SWEnti
 	public Team getTeam() {
 		return team;
 	}
+	
+	public int getForce() {
+		return force;
+	}
+	
+	public void setForce(int force) {
+		 this.force = force;
+	}
+
 
 	/**
 	 * Returns the hit points of this <code>SWActor</code>.
@@ -196,6 +208,7 @@ public abstract class SWActor extends Actor<SWActionInterface> implements SWEnti
 	}
 	
 	
+	
 	/**
 	 * Returns true if this <code>SWActor</code> is dead, false otherwise.
 	 * <p>
@@ -272,8 +285,17 @@ public abstract class SWActor extends Actor<SWActionInterface> implements SWEnti
 		/* Actually, that's not the case: all non-movement actions are transferred to newActions before the movements are transferred. --ram */
 	}
 
+	public void revertHumanControlled() {
+		humanControlled = !humanControlled;
+		// TODO Auto-generated method stub
+		
+	}
 
-	
+	public SWWorld getworld() {
+		// TODO Auto-generated method stub
+		return this.world;
+	}
+
 	
 	
 }
